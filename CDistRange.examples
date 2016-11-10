@@ -1,0 +1,32 @@
+Database : berlintest
+Restore  : NO
+
+Operator : cdist_range
+Number   : 5
+Signature: stream(tuple(()()()...)) x mpoint x real x real x int -> stream(tuple(x1 y2)(x2 y2)...(xn yn))
+Example  : query UTrains feed cdist_range [train2, 100.0, 1000.0, UTrip] count
+Result   : 10
+
+Operator : rtreefilter
+Number   : 5
+Signature: rel(tuple(()()()...)) x rtree x rect3 x real x real -> stream(tuple(x1 y2)(x2 y2)...(xn yn))
+Example  : query UTrains rtreefilter [rtree, bbox(train2), 100.0, 1000.0] count
+Result   : 10
+
+Operator : tbtreefilter
+Number   : 5
+Signature: rel(tuple(()()()...)) x tbtree x rect3 x real x real -> stream(tuple(x1 y2)(x2 y2)...(xn yn))
+Example  : query UTrains tbtreefilter [tbtree, bbox(train2), 100.0, 1000.0] count
+Result   : 10
+
+Operator : setifilter
+Number   : 4
+Signature: seti x rect3 x real x real -> stream(tuple(x1 y2)(x2 y2)...(xn yn))
+Example  : query seti setifilter [bbox(train2), 100.0, 1000.0] count
+Result   : 10
+
+Operator : updaterelrtree
+Number   : 3
+Signature: stream x rel x int -> rtree
+Example  : query SubTrains feed updaterelrtree [Trains, MBR] count
+Result   : rtree

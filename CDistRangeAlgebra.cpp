@@ -245,7 +245,7 @@ struct CDistRangeInfo : OperatorInfo {
 ***************************************************************/
 
 // type map function
-//rel (tuple([a1:d1, ..., an:dn])) x rtree x rect3 x real(dist1) x real(dist2)-> stream (tuple (a1:d1, ..., an:dn)
+// rel (tuple([a1:d1, ..., an:dn])) x rtree x rect3 x real(dist1) x real(dist2)-> stream (tuple (a1:d1, ..., an:dn)
 ListExpr RTreeFilterTM(ListExpr args)
 {
     int    flag = 0;     //1: dist2 is a real, 2: dist2 is a inf, 0: error
@@ -431,7 +431,7 @@ struct RTreeFilterInfo : OperatorInfo {
     {
         name      = "rtreefilter";
         signature = "((rel (tuple([a1:d1, ..., an:dn]))) x rtree x rect3 x real(dist1) x real(dist2) -> stream (tuple (a1:d1, ..., an:dn))";
-        syntax    = "_ RTreeFilter [ _, _]";
+        syntax    = "_ rtreefilter [ _, _, _, _]";
         meaning   = "using rtree to filter the relation";
     }
 };
@@ -630,7 +630,7 @@ struct TBTreeFilterInfo : OperatorInfo {
     {
         name      = "tbtreefilter";
         signature = "((rel (tuple([a1:d1, ..., an:dn]))) x tbtree x rect3 x real(dist1) x real(dist2) -> stream (tuple (a1:d1, ..., an:dn))";
-        syntax    = "_ tbtreefilter [ _, _]";
+        syntax    = "_ tbtreefilter [ _, _, _, _]";
         meaning   = "using tbtree to filter the relation";
     }
 };
@@ -718,7 +718,7 @@ public:
 };
 
 //value map function
-//rel (tuple([a1:d1, ..., an:dn])) x tbtree x rect3 x real(dist1) x real(dist2)-> stream (tuple (a1:d1, ..., an:dn)
+//seti x rect3 x real(dist1) x real(dist2)-> stream (tuple (a1:d1, ..., an:dn)
 int SETIFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
 {
     int                 flag = 0, condition = 0;
@@ -820,8 +820,8 @@ struct SETIFilterInfo : OperatorInfo {
     SETIFilterInfo()
     {
         name      = "setifilter";
-        signature = "((rel (tuple([a1:d1, ..., an:dn]))) x seti x rect3 x real(dist1) x real(dist2) -> stream (tuple (a1:d1, ..., an:dn))";
-        syntax    = "_ setifilter [ _, _]";
+        signature = "seti x rect3 x real(dist1) x real(dist2) -> stream (tuple (a1:d1, ..., an:dn))";
+        syntax    = "_ setifilter [ _, _, _]";
         meaning   = "using seti to filter the relation";
     }
 };
@@ -832,11 +832,11 @@ struct SETIFilterInfo : OperatorInfo {
 
 ***************************************************************/
 // type map function
-// stream(tuple(mpoint:Trip)) x rel x int(index of mpoint)-> rtree
+// stream(tuple(mpoint:Trip)) x rel x int(index of MBR)-> rtree
 ListExpr UpdateRelRTreeTM(ListExpr args)
 {
     //error message;
-    string msg = "stream(tuple(mpoint:Trip)) x rel x int(index of mpoint) expected";
+    string msg = "stream(tuple(mpoint:Trip)) x rel x S(index of mpoint) expected";
     //the number of args is 3: stream x rel x int
     if(nl->ListLength(args) != 3)
     {
@@ -860,7 +860,7 @@ ListExpr UpdateRelRTreeTM(ListExpr args)
         return listutils::typeError();
     }
     // check the stream tuple and rel tuple
-    if(! nl->IsEqual(nl->Second(stream), nl->Second(rel))){
+    if(! nl->Equal(nl->Second(stream), nl->Second(rel))){
         ErrorReporter::ReportError(msg + " (stream and relation has different tuple type)");
         return listutils::typeError();
     }
@@ -880,14 +880,17 @@ ListExpr UpdateRelRTreeTM(ListExpr args)
     {
         return NList::typeError( "Attribute name '" + attrname +"' is not known!");
     }else{
-        if (nl->SymbolValue(attrtype) != MPoint::BasicType()) //basic type
+        if (nl->SymbolValue(attrtype) != Rectangle<3u>::BasicType()) //basic type
         {
-            return NList::typeError("Attribute type is not of type upoint.");
+            return NList::typeError("Attribute type is not of type rectangle.");
         }
     }
     // construct the result type ListExpr
-    ListExpr resType = nl->OneElemList(
-            nl->SymbolAtom(R_Tree::BasicType)); 
+    ListExpr resType = nl->FourElemList(
+            nl->SymbolAtom(R_Tree<3, TupleId>::BasicType()),
+            nl->Second(stream),   // tuple type
+            attrtype,
+            nl->BoolAtom(false)); 
     return nl->ThreeElemList(nl->SymbolAtom(Symbol::APPEND()), nl->OneElemList(nl->IntAtom(index)), resType);
 }
 
@@ -895,32 +898,44 @@ ListExpr UpdateRelRTreeTM(ListExpr args)
 //stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
 int UpdateRelRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
 {
-    Stream   *stream;
-    Tuple    *told, *tnew;
-    Relation *rel;
-    int      attrindex;
-    MPoint   *mpoint;
-    R_Tree<3, TupleId> *rtree;
-    Rectangle<3>       rect;
-    TupleId            tid;
+    Stream<Tuple>       *stream;
+    Tuple               *told, *tnew;
+    Relation            *rel;
+    int                 attrindex, counter = 0;
+    R_Tree<3, TupleId>  *rtree;
+    Rectangle<3>       *box;
+    TupleId             tid;
+    static MessageCenter *msg = MessageCenter::GetInstance();
     stream = new Stream<Tuple>(args[0].addr);
     rel = (Relation *)args[1].addr;
     attrindex = ((CcInt *)(args[3].addr))->GetValue()-1;
-    rtree = new R_Tree<3, TupleId>();
+    rtree = (R_Tree<3, TupleId>*)qp->ResultStorage(s).addr;
+    result.setAddr(rtree);
     stream->open();
     // init the rtree bulk load
-    rtree->InitBulkLoad();
-    while((told = stream->request()) == NULL){
+    bool bulkloadinitialized = rtree->InitializeBulkLoad();
+    assert(bulkloadinitialized);
+    while((told = stream->request()) != NULL){
+        if((counter++ % 10000) == 0){
+            NList msgList(NList("simple"), NList(counter));
+            msg->Send(msgList);
+        }
         tnew = told->Clone();
-        rel.AppendTuple(tnew);
-        mpoint = (MPoint *)tnew->GetAttribute(attrindex);
+        rel->AppendTuple(tnew);
+        //mpoint = (MPoint *)tnew->GetAttribute(attrindex);
         tid = tnew->GetTupleId();
-        rect = mpoint->BoundingBox();
-        RTreeLeafEntry *le = new RTreeLeafEntry(tid, rect);
-        rtree->bulkInsert(le);
+        //rect = mpoint->BoundingBox();
+        box = (Rectangle<3> *)tnew->GetAttribute(attrindex);
+        if(box->IsDefined() && tid != 0){
+            R_TreeLeafEntry<3, TupleId> le(*box, tid);
+            rtree->InsertBulkLoad(le);
+        }
+        told->DeleteIfAllowed();
     }
-    rtree->finalbulkload();
-    result.setAddr(rtree);
+    bool finalizebulkload = rtree->FinalizeBulkLoad();
+    assert(finalizebulkload);
+    NList msgList(NList("simple"), NList(counter));
+    msg->Send(msgList);
     return 0;
 }
 
@@ -935,6 +950,7 @@ struct UpdateRelRTreeInfo : OperatorInfo {
         meaning   = "update the stream tuple to rel, and generate a new sub rtree of stream tuple";
     }
 };
+
 
 /****************************************************************************
  
@@ -951,6 +967,7 @@ public:
         AddOperator( RTreeFilterInfo(), RTreeFilterVM, RTreeFilterTM );
         AddOperator( TBTreeFilterInfo(), TBTreeFilterVM, TBTreeFilterTM );
         AddOperator( SETIFilterInfo(), SETIFilterVM, SETIFilterTM );
+        AddOperator( UpdateRelRTreeInfo(), UpdateRelRTreeVM, UpdateRelRTreeTM );
     }
 };
 
