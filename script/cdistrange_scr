@@ -1,0 +1,101 @@
+open database berlintest;
+
+# prepare data
+delete utrips;
+let utrips = Trains feed projectextendstream [Id; UTrip : units(.Trip)] extend [MBR:bbox(.UTrip)] consume;
+
+# rtree
+delete rtree;
+let rtree = utrips feed addid sortby[MBR asc] bulkloadrtree[MBR, TID];
+
+# tbtree
+delete tbtree;
+let tbtree = utrips feed addid bulkloadtbtree[Id, UTrip, TID];
+
+# query train
+delete train7;
+let train7 = Trains feed filter[.Id = 7] extract [Trip];
+
+# basic continuous distance range query
+
+delete res1;
+let res1 = utrips feed cdist_range [ train7, 0.0, 5000.0, UTrip] consume;
+
+delete res2;
+let res2 = utrips feed cdist_range [ train7, 5000.0, inf, UTrip] consume;
+
+delete res3;
+let res3 = utrips feed cdist_range [ train7, 0.0, inf, UTrip] consume;
+
+delete res4;
+let res4 = utrips feed cdist_range [ train7, 3000.0, 7000.0, UTrip] consume;
+
+query res1 feed count;
+query res2 feed count;
+query res3 feed count;
+query res4 feed count;
+
+# continuous distance range query using rtree filter
+
+delete res5;
+let res5 = rtreefilter (utrips, rtree, bbox(train7), 0.0, 5000.0) cdist_range [train7, 0.0, 5000.0, UTrip] consume;
+
+delete res6;
+let res6 = rtreefilter (utrips, rtree, bbox(train7), 5000.0, inf) cdist_range [train7, 5000.0, inf, UTrip] consume;
+
+delete res7;
+let res7 = rtreefilter (utrips, rtree, bbox(train7), 0.0, inf) cdist_range [train7, 0.0, inf, UTrip] consume;
+
+delete res8;
+let res8 = rtreefilter (utrips, rtree, bbox(train7), 3000.0, 7000.0) cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
+
+query res5 feed count;
+query res6 feed count;
+query res7 feed count;
+query res8 feed count;
+
+# continuous distance range query using tbtree filter
+
+delete res9;
+let res9 = tbtreefilter ( utrips, tbtree, bbox(train7), 0.0, 5000.0) cdist_range [train7, 0.0, 5000.0, UTrip] consume;
+
+delete res10;
+let res10 = tbtreefilter ( utrips, tbtree, bbox(train7), 5000.0, inf) cdist_range [train7, 5000.0, inf, UTrip] consume;
+
+delete res11;
+let res11 = tbtreefilter ( utrips, tbtree, bbox(train7), 0.0, inf) cdist_range [train7, 0.0, inf, UTrip] consume;
+
+delete res12;
+let res12 = tbtreefilter ( utrips, tbtree, bbox(train7), 3000.0, 7000.0) cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
+
+query res9 feed count;
+query res10 feed count;
+query res11 feed count;
+query res12 feed count;
+
+# continuous distance range query using SETI filter
+
+delete seti;
+let seti = createSETI( [const rect value (-3600.0 26000.0 1200.0 22000.0)], 256);
+
+delete uploads;
+let uploads = Trains feed convertMP2UU [1000000, Id, Trip] consume;
+
+query uploads feed insertStream [seti, Upload];
+
+delete res13;
+let res13 = setifilter ( seti, bbox(train7), 0.0, 5000.0) cdist_range [train7, 0.0, 5000.0, UTrip] consume;
+
+delete res14;
+let res14 = setifilter ( seti, bbox(train7), 5000.0, inf) cdist_range [train7, 5000.0, inf, UTrip] consume;
+
+delete res15;
+let res15 = setifilter ( seti, bbox(train7), 0.0, inf) cdist_range [train7, 0.0, inf, UTrip] consume;
+
+delete res16;
+let res16 = setifilter ( seti, bbox(train7), 3000.0, 7000.0) cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
+
+query res13 feed count;
+query res14 feed count;
+query res15 feed count;
+query res16 feed count;

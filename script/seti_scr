@@ -1,0 +1,11 @@
+delete res13;
+let res13 = setifilter ( seti, bbox(train7), 0.0, 5000.0) cdist_range [train7, 0.0, 5000.0, UTrip] consume;
+
+delete res14;
+let res14 = setifilter ( seti, bbox(train7), 5000.0, inf) cdist_range [train7, 5000.0, inf, UTrip] consume;
+
+delete res15;
+let res15 = setifilter ( seti, bbox(train7), 0.0, inf) cdist_range [train7, 0.0, inf, UTrip] consume;
+
+delete res16;
+let res16 = setifilter ( seti, bbox(train7), 3000.0, 7000.0) cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
