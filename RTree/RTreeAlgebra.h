@@ -2708,7 +2708,7 @@ SmiRecordId R_Tree<dim, LeafInfo>::AppendNode(const R_Tree<dim, LeafInfo> *rtree
  * than append all the son node of root to this rtree, else append the root node to this rtree
  *
  */
-    template <unsigned dim, class LeafInfo>
+/*    template <unsigned dim, class LeafInfo>
 void R_Tree<dim, LeafInfo>::InsertRTree( const R_Tree<dim, LeafInfo> *rtree)
 {
     R_Tree<dim, LeafInfo>     *rheight, *rlow;
@@ -2745,7 +2745,7 @@ void R_Tree<dim, LeafInfo>::InsertRTree( const R_Tree<dim, LeafInfo> *rtree)
         
     }
 }
-
+*/
 /*
    5.8 Method LocateBestNode
 
