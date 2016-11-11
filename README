@@ -1,0 +1,40 @@
+CDistRange
+├── CDistRange
+│   ├── CDistRangeAlgebra.cpp      // 主要实现代码
+│   ├── CDistRangeAlgebra.h
+│   ├── CDistRangeAlgebra.h.gch
+│   ├── CDistRangeAlgebra.spec
+│   ├── CDistRange.examples
+│   └── makefile
+├── RTree
+│   ├── CostFunctions.txt
+│   ├── makefile
+│   ├── ProgressCurvesWindowIntersectsSGettuples.xls
+│   ├── Progress Curves.xls
+│   ├── RTreeAlgebra.cpp
+│   ├── RTreeAlgebra.h        //添加一个R_Tree::GetEntry(int index)函数
+│   ├── RTreeAlgebra.spec
+│   └── RTree.examples
+├── script                   //演示脚本
+│   └── cdistrange
+├── Rectangle                   //修改后的Rectangle.h文件
+│   └── RectangleAlgebra.h       //添加了Rectangle::MaxDist()函数和Rectangle::MinDist()函数
+├── SETI                     // 修改后的SETI，可编译运行
+│   ├── makefile
+│   ├── SETIAlgebra.cpp
+│   ├── SETIAlgebra.h        //添加函数FindCells(SETI *seti, double dist1, double dist2, int condition, queue<SETICell *> &cellsqueue)
+│   │                        //查找所有可能的SETI Cells
+│   ├── SETIAlgebra.spec
+│   ├── SETI.examples
+│   ├── UploadUnit.cpp
+│   └── UploadUnit.h
+└── Temporal                 //修改过的Temporal Algebra， 在class UReal中添加PeriodsAtValA(double d, periods p)、
+    ├── CellGrid.h
+    ├── makefile
+    ├── RefinementStream.h
+    ├── TemporalAlgebra.cpp  //PeriodsAtValB(double d, periods p) 和 PeriodsAtValInterval(double d1, double d2, periods p)等函数。
+    ├── TemporalAlgebra.h    //PeriodsAtValA(double d, periods p)函数计算UReal中值大于d的时间区间，
+    │                        //PeriodsAtValB(double d, periods p)函数计算UReal中值小于d的时间区间，
+    │                        //PeriodsAtValInterval(double d1, double d2, periods p)函数计算UReal中值在[d1,d2]的区间。
+    ├── TemporalAlgebra.spec
+    └── Temporal.examples
