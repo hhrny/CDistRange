@@ -1,0 +1,68 @@
+Database : td
+Restore  : NO
+
+Operator : loaddata
+Number   : 1
+Signature: string->stream(tuple((x1 t1)..(xn tn)))
+Example  : query loaddata ( "filename" ) count
+Result   : 10
+
+Operator : loadtrajectory
+Number   : 1
+Signature: string->stream(tuple((x1 t1)...(xn tn)))
+Example  : query loadtrajectory ( "filename" ) count
+Result   : 10
+
+Operator : loaduploadunit
+Number   : 1
+Signature: string->stream(tuple((x1 t1)...(xn tn)))
+Example  : query loaduploadunit ( "filename" ) count
+Result   : 10
+
+Operator : breakup
+Number   : 1
+Signature: stream(tuple((x1 t1)...(xn tn)))->stream(tuple((x1 t1)...(xn tn)))
+Example  : query Trains feed breakup count
+Result   : 10
+
+Operator : trajectorysplit
+Number   : 3
+Signature: stream(tuple((x1 t1)(x2 t2)...(xn tn)))->stream(tuple((x1 t1 z1)(x2 t2 z2)...(xn tn zn)))
+Example  : query Trains feed trajectorysplit [1000.0, 3]  count
+Result   : 10
+
+Operator : sizetest1
+Number   : 1
+Signature: int->stream(tuple((x1 t1 z1)(x2 t2 z2)...(xn tn zn)))
+Example  : query sizetest1 ( 100 )  count
+Result   : 100
+
+Operator : sizetest2
+Number   : 1
+Signature: int->rel(tuple((x1 t1 z1)(x2 t2 z2)...(xn tn zn)))
+Example  : query sizetest2 ( 100 )
+Result   : (1 )
+
+Operator : convertUU2UP
+Number   : 2
+Signature: stream(tuple(x1 t1)(x2 t2)...(xn tn))) x int ->stream(tuple((x1 t1)(x2 t2)...(xn tn)))
+Example  : query uploads feed convertUU2UP [ Upload ] count
+Result   : 10
+
+Operator : convertUP2MP
+Number   : 3
+Signature: stream(tuple(x1 t1)(x2 t2)...(xn tn))) x int x int ->stream(tuple((x1 t1)(x2 t2)...(xn tn)))
+Example  : query trips feed convertUP2MP [ UTrip, Id ] count
+Result   : 10
+
+Operator : meanfilter
+Number   : 3
+Signature: stream(tuple(x1 t1)(x2 t2)...(xn tn))) x int x int ->stream(tuple((x1 t1)(x2 t2)...(xn tn)))
+Example  : query uploads feed meanfilter [ 10, Upload ] count
+Result   : 10
+
+Operator : medianfilter
+Number   : 3
+Signature: stream(tuple(x1 t1)(x2 t2)...(xn tn))) x int x int ->stream(tuple((x1 t1)(x2 t2)...(xn tn)))
+Example  : query uploads feed medianfilter [ 10, Upload ] count
+Result   : 10
