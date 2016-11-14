@@ -951,6 +951,235 @@ struct UpdateRelRTreeInfo : OperatorInfo {
     }
 };
 
+/****************************************************************
+
+    6.operator MergeRTree
+
+***************************************************************/
+// type map function
+// rtree x rtree -> rtree
+ListExpr MergeRTreeTM(ListExpr args)
+{
+    //error message;
+    string msg = "rtree x rtree expected";
+    //the number of args is 2: rtree
+    if(nl->ListLength(args) != 2)
+    {
+        ErrorReporter::ReportError(msg + " (invalid number of arguments)");
+        return nl->TypeError();
+    }
+    //
+    ListExpr rtree1 = nl->First(args);
+    ListExpr rtree2 = nl->Second(args);
+    ListExpr rtreeKeyType;
+    
+    // check the rtree
+    if(! listutils::isRTreeDescription(rtree1)){
+        ErrorReporter::ReportError(msg + " (first args is not a rtree)");
+        return listutils::typeError();
+    }
+    rtreeKeyType = listutils::getRTreeType(rtree1);
+    if((! listutils::isSpatialType(rtreeKeyType)) && (! listutils::isRectangle(rtreeKeyType))){
+        ErrorReporter::ReportError(msg + " (first rtree not over a spatial attribute)");
+        return listutils::typeError();
+    }
+    if(! listutils::isRTreeDescription(rtree2)){
+        ErrorReporter::ReportError(msg + " (second args is not a rtree)");
+        return listutils::typeError();
+    }
+    rtreeKeyType = listutils::getRTreeType(rtree2);
+    if((! listutils::isSpatialType(rtreeKeyType)) && (! listutils::isRectangle(rtreeKeyType))){
+        ErrorReporter::ReportError(msg + " (second rtree not over a spatial attribute)");
+        return listutils::typeError();
+    }
+    if(! nl->Equal(rtree1, rtree2)){
+        ErrorReporter::ReportError(msg + " (type of rtree1 and rtree2 are different!)");
+        return listutils::typeError();
+    }
+    /*
+    cout<<nl->ToString(rtree1)<<endl;
+    cout<<nl->ToString(rtree2)<<endl;
+    */
+    return rtree1;
+}
+
+//value map function
+//stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
+int MergeRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    R_Tree<3, TupleId>  *mrtree, *srtree, *tmp;  // master rtree and sub rtree
+    mrtree = (R_Tree<3, TupleId> *)args[0].addr;
+    srtree = (R_Tree<3, TupleId> *)args[1].addr;
+    result.setAddr(mrtree);
+    if(mrtree->FileId() == srtree->FileId()){
+        // mrtree and srtree in the same file
+        mrtree->SwitchHeader(srtree);
+    }
+    else{
+        // mrtree and srtree in different file
+        // create a new rtree in file of mrtree
+        // mrtree->CloseFile();
+        tmp = new R_Tree<3, TupleId>(mrtree->FileId(), 4000);
+        tmp->Clone(srtree);
+        mrtree->SwitchHeader(tmp);
+    }
+    // merge the mrtree and srtree in file of mrtree, and return mrtree
+    mrtree->MergeRtree();
+    return 0;
+}
+
+//
+// operator info
+struct MergeRTreeInfo : OperatorInfo {
+    MergeRTreeInfo()
+    {
+        name      = "mergertree";
+        signature = "rtree x rtree -> rtree";
+        syntax    = "mergertree ( _, _ )";
+        meaning   = "merge master rtree and sub rtree to the file master rtree and return the master rtree";
+    }
+};
+
+/****************************************************************
+
+    7.operator StreamUpdateRTree
+
+***************************************************************/
+// type map function
+// stream(tuple(mpoint:Trip)) x rel x rtree x attr(index of MBR)-> rtree
+ListExpr StreamUpdateRTreeTM(ListExpr args)
+{
+    //error message;
+    string msg = "stream(tuple(mpoint:Trip)) x rel x S(index of mpoint) expected";
+    //the number of args is 4: stream x rel x rtree x attr
+    if(nl->ListLength(args) != 4)
+    {
+        ErrorReporter::ReportError(msg + " (invalid number of arguments)");
+        return nl->TypeError();
+    }
+    //
+    ListExpr stream = nl->First(args);
+    ListExpr rel = nl->Second(args);
+    ListExpr rtree = nl->Third(args);
+    ListExpr attrindex = nl->Fourth(args);
+    /*
+    cout<<nl->ToString(stream)<<endl;
+    cout<<nl->ToString(rel)<<endl;
+    cout<<nl->ToString(rtree)<<endl;
+    cout<<nl->ToString(attrindex)<<endl;
+    */
+    // check the stream
+    if(! listutils::isStream(stream)){
+        ErrorReporter::ReportError(msg + " (first args is not a stream)");
+        return listutils::typeError();
+    }   
+    // check the rel
+    if(! listutils::isRelDescription(rel))
+    {
+        ErrorReporter::ReportError(msg + " (second args is not a relation)");
+        return listutils::typeError();
+    }
+    // check the rtree
+    if(! listutils::isRTreeDescription(rtree)){
+        ErrorReporter::ReportError(msg + " (third args is not a rtree)");
+        return listutils::typeError();
+    }
+    ListExpr rtreeKeyType = listutils::getRTreeType(rtree);
+    if((! listutils::isSpatialType(rtreeKeyType)) && (! listutils::isRectangle(rtreeKeyType))){
+        ErrorReporter::ReportError(msg + " (third rtree not over a spatial attribute)");
+        return listutils::typeError();
+    }
+    // check the stream tuple and rel tuple
+    if(! nl->Equal(nl->Second(stream), nl->Second(rel))){
+        ErrorReporter::ReportError(msg + " (stream and relation has different tuple type)");
+        return listutils::typeError();
+    }
+    // check the rtree and rel tuple
+    if(! nl->Equal(nl->Second(rtree), nl->Second(rel))){
+        ErrorReporter::ReportError(msg + " (rtree and relation has different tuple type)");
+        return listutils::typeError();
+    }
+    // check the attribute index
+    string   attrname = nl->SymbolValue(attrindex);
+    ListExpr attrtype = nl->Empty();
+    ListExpr attrlist = nl->Second(nl->Second(stream));
+    int index = listutils::findAttribute(attrlist, attrname, attrtype);
+
+    if (0 == index)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != Rectangle<3u>::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type is not of type rectangle.");
+        }
+    }
+    // construct the result type ListExpr
+    ListExpr resType = nl->SymbolAtom(CcBool::BasicType());
+    return nl->ThreeElemList(nl->SymbolAtom(Symbol::APPEND()), nl->OneElemList(nl->IntAtom(index)), resType);
+}
+
+//value map function
+//stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
+int StreamUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    Stream<Tuple>       *stream;
+    Tuple               *told, *tnew;
+    Relation            *rel;
+    int                 attrindex, counter = 0;
+    R_Tree<3, TupleId>  *rtree, *orginrtree;
+    Rectangle<3>       *box;
+    TupleId             tid;
+    static MessageCenter *msg = MessageCenter::GetInstance();
+    stream = new Stream<Tuple>(args[0].addr);
+    rel = (Relation *)args[1].addr;
+    orginrtree = (R_Tree<3, TupleId> *)args[2].addr;
+    attrindex = ((CcInt *)(args[4].addr))->GetValue()-1;
+    stream->open();
+    rtree = new R_Tree<3, TupleId>(orginrtree->FileId(), 4000);
+    // init the rtree bulk load
+    bool bulkloadinitialized = rtree->InitializeBulkLoad();
+    assert(bulkloadinitialized);
+    while((told = stream->request()) != NULL){
+        if((counter++ % 10000) == 0){
+            NList msgList(NList("simple"), NList(counter));
+            msg->Send(msgList);
+        }
+        tnew = told->Clone();
+        rel->AppendTuple(tnew);
+        //mpoint = (MPoint *)tnew->GetAttribute(attrindex);
+        tid = tnew->GetTupleId();
+        //rect = mpoint->BoundingBox();
+        box = (Rectangle<3> *)tnew->GetAttribute(attrindex);
+        if(box->IsDefined() && tid != 0){
+            R_TreeLeafEntry<3, TupleId> le(*box, tid);
+            rtree->InsertBulkLoad(le);
+        }
+        told->DeleteIfAllowed();
+    }
+    bool finalizebulkload = rtree->FinalizeBulkLoad();
+    assert(finalizebulkload);
+    NList msgList(NList("simple"), NList(counter));
+    msg->Send(msgList);
+    // merge rtree to ogrin rtree
+    orginrtree->SwitchHeader(rtree);
+    orginrtree->MergeRtree();
+    result.setAddr(new CcBool(true, true));
+    return 0;
+}
+
+//
+// operator info
+struct StreamUpdateRTreeInfo : OperatorInfo {
+    StreamUpdateRTreeInfo()
+    {
+        name      = "streamupdatertree";
+        signature = "((stream (tuple([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x (rel(stream([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x rtree x attr -> rtree";
+        syntax    = "_ streamupdatertree [ _, _, _]";
+        meaning   = "update the stream tuple to rel, and generate a new sub rtree of stream tuple, and merge to orgin rtree";
+    }
+};
+
 
 /****************************************************************************
  
@@ -968,6 +1197,8 @@ public:
         AddOperator( TBTreeFilterInfo(), TBTreeFilterVM, TBTreeFilterTM );
         AddOperator( SETIFilterInfo(), SETIFilterVM, SETIFilterTM );
         AddOperator( UpdateRelRTreeInfo(), UpdateRelRTreeVM, UpdateRelRTreeTM );
+        AddOperator( MergeRTreeInfo(), MergeRTreeVM, MergeRTreeTM );
+        AddOperator( StreamUpdateRTreeInfo(), StreamUpdateRTreeVM, StreamUpdateRTreeTM );
     }
 };
 

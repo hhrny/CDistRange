@@ -1813,7 +1813,7 @@ class R_Tree
         void Insert( const R_TreeLeafEntry<dim, LeafInfo>& );
 
         SmiRecordId AppendNode(const R_Tree<dim, LeafInfo> *rtree, const R_TreeNode<dim, LeafInfo> *node);
-        void InsertRTree( const R_Tree<dim, LeafInfo> *rtree);
+        void InsertSubRTree( const R_Tree<dim, LeafInfo> *rtree);
 
         /*
            Inserts the given entry somewhere in the tree.
@@ -2423,9 +2423,16 @@ R_Tree<dim, LeafInfo>::R_Tree( const SmiFileId fileid,const int pageSize ) :
     int nodeEmptySize = R_TreeNode<dim, LeafInfo>::SizeOfEmptyNode();
     int leafEntrySize = sizeof( R_TreeLeafEntry<dim, LeafInfo> ),
         internalEntrySize = sizeof( R_TreeInternalEntry<dim> );
+    int maxLeaf, maxInternal;
 
-    int maxLeaf = ( pageSize - nodeEmptySize ) / leafEntrySize,
+    if(pageSize != 0){
+        maxLeaf = ( pageSize - nodeEmptySize ) / leafEntrySize;
         maxInternal = ( pageSize - nodeEmptySize ) / internalEntrySize;
+    }
+    else{
+        maxLeaf = ( file->GetRecordLength() - nodeEmptySize ) / leafEntrySize;
+        maxInternal = ( file->GetRecordLength() - nodeEmptySize ) / internalEntrySize;
+    }        
 
     header.maxLeafEntries = maxLeaf;
     header.minLeafEntries = (int)(maxLeaf * 0.4);
@@ -2704,48 +2711,86 @@ SmiRecordId R_Tree<dim, LeafInfo>::AppendNode(const R_Tree<dim, LeafInfo> *rtree
 }
 
 /*
- * insert rtree, if the root node count less than MinInternalEntries, 
- * than append all the son node of root to this rtree, else append the root node to this rtree
+ * insert sub rtree to orgin rtree, if the root node count of sub rtree less than MinInternalEntries, 
+ * than append all the son node of root to orgin rtree, else append the root node to orgin rtree
  *
  */
-/*    template <unsigned dim, class LeafInfo>
-void R_Tree<dim, LeafInfo>::InsertRTree( const R_Tree<dim, LeafInfo> *rtree)
+    template <unsigned dim, class LeafInfo>
+void R_Tree<dim, LeafInfo>::InsertSubRTree( const R_Tree<dim, LeafInfo> *subrtree)
 {
-    R_Tree<dim, LeafInfo>     *rheight, *rlow;
-    R_TreeNode<dim, LeafInfo> *rootnode;
-    R_TreeInternalEntry<dim>  rtreeInternalEntry;
-    int                       i, insertHeight;
-    if(Height() >= rtree->Height()){
-        rheight = this;
-        rlow = rtree;
-    }else{
-        rheight = rtree;
-        rlow = this;
-    }
-    if(rheight->FileId() == rlow->FileId()){
-        // this rtree and rtree is in the same file
-        rtree->GotoLevel(0);
-        if(rtree->nodePtr->EntryCount()>MinInternalEntries()){
-            // add the root node as a new entry, and insert to this rtree
-            rtreeInternalEntry.box = rtree->nodePtr->BoundingBox();
-            rtreeInternalEntry.pointer = rtree->RootRecordId();
-            insertHeight = this->Height() - rtree->Height();
-            LocateBestNode(rtreeInternalEntry, insertHeight);
-            InsertEntry(rtreeInternalEntry);
-            header.EntryCount += rtree->header.EntryCount;
+    R_TreeNode<dim, LeafInfo>       *rootnode, *rnode;
+    R_TreeInternalEntry<dim>        rtreeInternalEntry, *rie;
+    R_TreeLeafEntry<dim, LeafInfo>  *rle;
+    int                             i, insertHeight;
+    if(Height() >= subrtree->Height()){
+        // subrtree go to level 0
+        subrtree->GotoLevel(0);
+        if(FileId() == subrtree->FileId()){
+            // this orgin rtree and sub rtree is in the same file
+            if(subrtree->nodePtr->EntryCount() >= MinInternalEntries()){
+                // add the root node of sub rtree as a new entry, and insert to orgin rtree
+                rtreeInternalEntry.box = subrtree->nodePtr->BoundingBox();
+                rtreeInternalEntry.pointer = subrtree->RootRecordId();
+                insertHeight = Height() - subrtree->Height();
+                LocateBestNode(rtreeInternalEntry, insertHeight);
+                InsertEntry(rtreeInternalEntry);
+                header.EntryCount += subrtree->header.EntryCount;
+            }
+            else{
+                // the number of entry of root node of sub rtree less than Minimum Internal Entry count,
+                // add all the son node of root of sub rtree to orgin rtree
+                insertHeight = Height() - subrtree->Height() + 1;
+                for(i = 0; i < subrtree->nodePtr->EntryCount(); i ++){
+                    if(subrtree->nodePtr->IsLeaf()){
+                        rle = subrtree->nodePtr->GetLeafEntry(i);
+                        LocateBestNode(*rle, insertHeight);
+                        InsertEntry(*rle);
+                    }
+                    else{
+                        rie = subrtree->nodePtr->GetInternalEntry(i);
+                        LocateBestNode(*rie, insertHeight);
+                        InsertEntry(*rie);
+                    }
+                }
+                header.EntryCount += subrtree->header.EntryCount;
+            }
         }
         else{
-            // the number of entry of root node less than Minimum Internal Entry count,
-            // add all the son node of root to this rtree
-            for(i = 0; i < rtree
+            // this rtree and rtree is not in same file, should copy the rtree to this rtree
+            if(subrtree->nodePtr->EntryCount() >= MinInternalEntries()){
+                rtreeInternalEntry.box = subrtree->nodePtr->BoundingBox();
+                rtreeInternalEntry.pointer = AppendNode(subrtree, subrtree->nodePtr);
+                insertHeight = Height() - subrtree->Height();
+                LocateBaseNode(rtreeInternalEntry, insertHeight);
+                InsertEntry(rtreeInternalEntry);
+                header.EntryCount += subrtree->header.EntryCount;
+            }
+            else{
+                insertHeight = Height() - subrtree->Height() + 1;
+                for(i = 0; i < subrtree->nodePtr->EntryCount(); i ++){
+                    if(subrtree->nodePtr->IsLeaf()){
+                        rle = subrtree->nodePtr->GetLeafEntry(i);
+                        Insert(*rle);
+                    }
+                    else{
+                        rie = subrtree->nodePtr->GetInternalEntry(i);
+                        rnode = new R_TreeNode<dim, LeafInfo>(false, MinInternalEntries(), MaxInternalEntries());
+                        subrtree->GetNode(rie->pointer, *rnode);
+                        rtreeInternalEntry.box = rie->box;
+                        rtreeInternalEntry.pointer = AppendNode(rnode);
+                        LocateBestNode(rtreeInternalEntry, insertHeight);
+                        InsertEntry(rtreeInternalEntry);
+                    }
+                }
+            }
         }
     }
-    else{
-        // this rtree and rtree is not in same file, should copy the rtree to this rtree
+    else
+    {
         
     }
 }
-*/
+
 /*
    5.8 Method LocateBestNode
 
@@ -4566,6 +4611,10 @@ void R_Tree<dim, LeafInfo>::Clone(R_Tree<dim,LeafInfo>* rtree_in)
     header.entryCount = rtree_in->EntryCount();
     header.height = rtree_in->Height();
     header.rootRecordId = root_id;
+    //***********************
+    // added by huang huorong
+    WriteHeader();
+    //***********************
     delete rootnode;
 }
 

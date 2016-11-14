@@ -15,3 +15,9 @@ operator setifilter alias SETIFILTER pattern op (_, _, _, _)
 
 # operator to update relation and generate rtree
 operator updaterelrtree alias UPDATERELRTREE pattern _ op [_, _]
+
+# merge two rtree
+operator mergertree alias MERGERTREE pattern op ( _, _ )
+
+# stream update relation , and generate new rtree, and merge to orgin rtree
+operator streamupdatertree alias STREAMUPDATERTREE pattern _ op [ _, _, _ ]

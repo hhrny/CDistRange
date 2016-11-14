@@ -29,4 +29,16 @@ Operator : updaterelrtree
 Number   : 3
 Signature: stream x rel x attr -> rtree
 Example  : query SubTrains feed updaterelrtree [Trains, MBR] count
-Result   : rtree
+Result   : file
+
+Operator : mergertree
+Number   : 2
+Signature: rtree x rtree -> rtree
+Example  : query mergertree(rtree1, rtree2)
+Result   : file
+
+Operator : streamupdatertree
+Number   : 4
+Signature: stream x rel x rtree x attr -> bool
+Example  : query SubTrains feed streamupdatertree [Trains, rtree, MBR];
+Result   : TRUE
