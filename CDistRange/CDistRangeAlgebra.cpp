@@ -1180,6 +1180,232 @@ struct StreamUpdateRTreeInfo : OperatorInfo {
     }
 };
 
+/****************************************************************
+
+    7.operator StreamUpdateTBTree
+
+***************************************************************/
+// type map function
+// stream(tuple(int:Id,upoint:UTrip)) x rel x tbtree -> tbtree
+ListExpr StreamUpdateTBTreeTM(ListExpr args)
+{
+    //error message;
+    string msg = "stream(tuple(int:Id, mpoint:Trip)) x rel x tbtree expected";
+    //the number of args is 5: stream x rel x tbtree
+    if(nl->ListLength(args) != 3)
+    {
+        ErrorReporter::ReportError(msg + " (invalid number of arguments)");
+        return nl->TypeError();
+    }
+    //
+    ListExpr stream = nl->First(args);
+    ListExpr rel = nl->Second(args);
+    ListExpr tbt = nl->Third(args);   // tbtree ((Id int)(UTrip upoint)(MBR rect3)(TID tid)) Id UTrip
+    /*
+    cout<<nl->ToString(stream)<<endl;
+    cout<<nl->ToString(rel)<<endl;
+    cout<<nl->ToString(tbt)<<endl;
+    */
+    // check the stream
+    if(! listutils::isStream(stream)){
+        ErrorReporter::ReportError(msg + " (first args is not a stream)");
+        return listutils::typeError();
+    }   
+    // check the rel
+    if(! listutils::isRelDescription(rel))
+    {
+        ErrorReporter::ReportError(msg + " (second args is not a relation)");
+        return listutils::typeError();
+    }
+    // check the TBTree
+    if(! tbtree::TBTree::checkType(tbt)){
+        ErrorReporter::ReportError(msg + " (third args is not a TBTree)");
+        return listutils::typeError();
+    }
+    // check the stream tuple and rel tuple
+    if(! nl->Equal(nl->Second(stream), nl->Second(rel))){
+        ErrorReporter::ReportError(msg + " (stream and relation has different tuple type)");
+        return listutils::typeError();
+    }
+    // check the TBTree and rel tuple
+    if(! nl->Equal(nl->Second(tbt), nl->Second(nl->Second(rel)))){
+        ErrorReporter::ReportError(msg + " (tbtree and relation has different tuple type)");
+        return listutils::typeError();
+    }
+    // check the attribute index
+    string   attrname = nl->SymbolValue(nl->Third(tbt));  // Id: nl->Third(tbt)
+    ListExpr attrtype = nl->Empty();
+    ListExpr attrlist = nl->Second(nl->Second(stream));
+    int index = listutils::findAttribute(attrlist, attrname, attrtype);
+    if (0 == index)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != CcInt::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type is not of type rectangle.");
+        }
+    }
+    int idindex = index;
+    attrname = nl->SymbolValue(nl->Fourth(tbt));   // UTrip: nl->Fouth(tbt)
+    attrtype = nl->Empty();
+    index = listutils::findAttribute(attrlist, attrname, attrtype);
+    if (0 == index)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != UPoint::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type is not of type rectangle.");
+        }
+    }
+    int upointindex = index;
+    attrname = "TID";
+    attrtype = nl->Empty();
+    index = listutils::findAttribute(attrlist, attrname, attrtype);
+    if (0 == index)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != TupleIdentifier::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type is not of type rectangle.");
+        }
+    }
+    int tidindex = index;
+    // construct the result type ListExpr
+    ListExpr resType = tbt;
+    return nl->ThreeElemList(nl->SymbolAtom(Symbol::APPEND()), nl->ThreeElemList(nl->IntAtom(idindex), nl->IntAtom(upointindex), nl->IntAtom(tidindex)), resType);
+}
+
+//value map function
+//stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x tbtree -> tbtree
+int StreamUpdateTBTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    Stream<Tuple>       *stream;
+    Tuple               *told, *tnew;
+    Relation            *rel;
+    UPoint              *upoint;
+    int                 id, idindex, upointindex, tidindex, counter = 0;
+    tbtree::TBTree      *tbt;
+    TupleId             tid;
+    vector<int>         cIndex;
+    vector<Attribute *> newAttr;
+    static MessageCenter *msg = MessageCenter::GetInstance();
+    stream = new Stream<Tuple>(args[0].addr);
+    rel = (Relation *)args[1].addr;
+    tbt = (tbtree::TBTree *)args[2].addr;
+    idindex = ((CcInt *)(args[3].addr))->GetValue()-1;
+    upointindex = ((CcInt *)(args[4].addr))->GetValue()-1;
+    tidindex = ((CcInt *)(args[5].addr))->GetValue()-1;
+    stream->open();
+    // push the change index of tuple of tid to cIndexs;
+    cIndex.push_back(tidindex);
+    // insert the trajectory into rel
+    while((told = stream->request()) != NULL){
+        if((counter++ % 10000) == 0){
+            NList msgList(NList("simple"), NList(counter));
+            msg->Send(msgList);
+        }
+        tnew = told->Clone();
+        rel->AppendTuple(tnew);
+        tid = tnew->GetTupleId();
+        // push the new attribute into newAttr
+        newAttr.clear();
+        newAttr.push_back(new TupleIdentifier(true, tid));
+        // update the rel with tuple tnew
+        rel->UpdateTuple(tnew, cIndex, newAttr);
+        // construct the leaf entry and insert into tbtree
+        id = ((CcInt *)told->GetAttribute(idindex))->GetValue();
+        upoint = (UPoint *)told->GetAttribute(upointindex);
+        tbt->insert(*upoint, id, tid);
+        told->DeleteIfAllowed();
+    }
+    NList msgList(NList("simple"), NList(counter));
+    msg->Send(msgList);
+    result.setAddr(tbt);
+    return 0;
+}
+
+//
+// operator info
+struct StreamUpdateTBTreeInfo : OperatorInfo {
+    StreamUpdateTBTreeInfo()
+    {
+        name      = "streamupdatetbtree";
+        signature = "((stream (tuple([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x (rel(stream([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x tbtree -> tbtree";
+        syntax    = "_ streamupdatetbtree [ _, _ ]";
+        meaning   = "update the stream tuple to rel, and insert the new entry to tbtree";
+    }
+};
+
+
+/****************************************************************
+
+    8.operator StreamUpdateBLTBTree
+
+***************************************************************/
+//value map function
+//stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x tbtree -> tbtree
+int StreamUpdateBLTBTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    Stream<Tuple>       *stream;
+    Tuple               *told, *tnew;
+    Relation            *rel;
+    UPoint              *upoint;
+    int                 id, idindex, upointindex, tidindex, counter = 0;
+    tbtree::TBTree      *tbt;
+    TupleId             tid;
+    vector<int>         cIndex;
+    vector<Attribute *> newAttr;
+    static MessageCenter *msg = MessageCenter::GetInstance();
+    stream = new Stream<Tuple>(args[0].addr);
+    rel = (Relation *)args[1].addr;
+    tbt = (tbtree::TBTree *)args[2].addr;
+    idindex = ((CcInt *)(args[3].addr))->GetValue()-1;
+    upointindex = ((CcInt *)(args[4].addr))->GetValue()-1;
+    tidindex = ((CcInt *)(args[5].addr))->GetValue()-1;
+    stream->open();
+    // push the change index of tuple of tid to cIndexs;
+    cIndex.push_back(tidindex);
+    // insert the trajectory into rel
+    while((told = stream->request()) != NULL){
+        if((counter++ % 10000) == 0){
+            NList msgList(NList("simple"), NList(counter));
+            msg->Send(msgList);
+        }
+        tnew = told->Clone();
+        rel->AppendTuple(tnew);
+        tid = tnew->GetTupleId();
+        // push the new attribute into newAttr
+        newAttr.clear();
+        newAttr.push_back(new TupleIdentifier(true, tid));
+        // update the rel with tuple tnew
+        rel->UpdateTuple(tnew, cIndex, newAttr);
+        // construct the leaf entry and insert into tbtree
+        id = ((CcInt *)told->GetAttribute(idindex))->GetValue();
+        upoint = (UPoint *)told->GetAttribute(upointindex);
+        tbt->insert(*upoint, id, tid);
+        told->DeleteIfAllowed();
+    }
+    NList msgList(NList("simple"), NList(counter));
+    msg->Send(msgList);
+    result.setAddr(tbt);
+    return 0;
+}
+
+//
+// operator info
+struct StreamUpdateBLTBTreeInfo : OperatorInfo {
+    StreamUpdateBLTBTreeInfo()
+    {
+        name      = "streamupdatebltbtree";
+        signature = "((stream (tuple([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x (rel(stream([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x tbtree -> tbtree";
+        syntax    = "_ streamupdatebltbtree [ _, _ ]";
+        meaning   = "update the stream tuple to rel, and insert the new entry to tbtree using bulk load";
+    }
+};
+
 
 /****************************************************************************
  
@@ -1199,6 +1425,8 @@ public:
         AddOperator( UpdateRelRTreeInfo(), UpdateRelRTreeVM, UpdateRelRTreeTM );
         AddOperator( MergeRTreeInfo(), MergeRTreeVM, MergeRTreeTM );
         AddOperator( StreamUpdateRTreeInfo(), StreamUpdateRTreeVM, StreamUpdateRTreeTM );
+        AddOperator( StreamUpdateTBTreeInfo(), StreamUpdateTBTreeVM, StreamUpdateTBTreeTM );
+        AddOperator( StreamUpdateBLTBTreeInfo(), StreamUpdateBLTBTreeVM, StreamUpdateTBTreeTM );
     }
 };
 

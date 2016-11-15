@@ -21,3 +21,6 @@ operator mergertree alias MERGERTREE pattern op ( _, _ )
 
 # stream update relation , and generate new rtree, and merge to orgin rtree
 operator streamupdatertree alias STREAMUPDATERTREE pattern _ op [ _, _, _ ]
+
+# stream update relation , and insert new leaf entries into tbtree
+operator streamupdatetbtree alias STREAMUPDATETBTREE pattern _ op [ _, _ ]
