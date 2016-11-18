@@ -1358,6 +1358,12 @@ int StreamUpdateBLTBTreeVM(Word* args, Word& result, int message, Word& local, S
     TupleId             tid;
     vector<int>         cIndex;
     vector<Attribute *> newAttr;
+    // parameter of bulk load tbtree
+    map<int, tbtree::BasicNode<3> *> nodemap;
+    map<int, tbtree::BasicNode<3> *>::iterator it;
+    map<int, SmiRecordId>            sidmap;
+    tbtree::BasicNode<3> *basicnode, *tmpnode;
+    SmiRecordId          sid;
     static MessageCenter *msg = MessageCenter::GetInstance();
     stream = new Stream<Tuple>(args[0].addr);
     rel = (Relation *)args[1].addr;
@@ -1385,11 +1391,38 @@ int StreamUpdateBLTBTreeVM(Word* args, Word& result, int message, Word& local, S
         // construct the leaf entry and insert into tbtree
         id = ((CcInt *)told->GetAttribute(idindex))->GetValue();
         upoint = (UPoint *)told->GetAttribute(upointindex);
-        tbt->insert(*upoint, id, tid);
+        //tbt->insert(*upoint, id, tid);
+        // bulk load tbtree
+        it = nodemap.find(id);
+        if(it == nodemap.end()){
+            // node map has not id
+            // find the node in tbtree
+            sid = tbt->getLastLeafNodeofTrjId(id);
+            basicnode = tbt->getNode(sid);
+            nodemap[id] = basicnode;
+            sidmap[id] = sid;
+        }
+        if(((tbtree::Node<3, tbtree::TBLeafInfo> *)nodemap[id])->isFull()){
+            // the leaf node is full
+            // add a new empty node
+            basicnode = tbt->getEmptyLeaf(id);
+            sid = tbt->saveNode(*basicnode);
+            // set the sid of new leaf node as processor's next, and update the processor
+            (tbtree::TBLeafNode<3, tbtree::TBLeafInfo>*)nodemap[id]->setNext(sid);
+            tbt->update(sidmap[id], *nodemap[id]);
+            // update the node map and sid map
+            nodemap[id] = basicnode;
+            sidmap[id] = sid;
+        }
+        // insert the leaf entry to leaf node
+        ((TBLeafNode<3> *)nodemap[id])->insert(tbtree::Entry<3, tbtree::TBLeafInfo>(upoint->BoundingBox(), tid));
         told->DeleteIfAllowed();
     }
     NList msgList(NList("simple"), NList(counter));
     msg->Send(msgList);
+    for(it = nodemap.begin(); it != nodemap.end(); it++){
+        tbt->updateNode(sidmap[it->first], *it);
+    }
     result.setAddr(tbt);
     return 0;
 }
