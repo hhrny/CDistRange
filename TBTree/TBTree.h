@@ -1548,7 +1548,7 @@ namespace tbtree{
                     return;
                 }
                 for(it = nodemap.begin(); it != nodemap.end(); it++){
-                    updateNode(sidmap[it->first], *it);
+                    updateNode(sidmap[it->first], *(it->second));
                 }
                 nodemap.clear();
                 sidmap.clear();
@@ -1564,20 +1564,46 @@ namespace tbtree{
                     nodemap[trjid] = basicnode;
                     sidmap[trjid] = sid;
                 }
-                if(((tbtree::Node<3, TBLeafInfo> *)nodemap[id])->isFull()){
+                if(((tbtree::Node<3, TBLeafInfo> *)(nodemap[trjid]))->isFull()){
                     // the leaf node is full
                     // add a new empty node
                     basicnode = getEmptyLeaf(trjid);
                     sid = saveNode(*basicnode);
                     // set the sid of new leaf node as processor's next, and update the processor
-                    (TBLeafNode<3, TBLeafInfo>*)(nodemap[id])->setNext(sid);
-                    updateNode(sidmap[id], *(nodemap[id]));
+                    ((TBLeafNode<3, TBLeafInfo>*)(nodemap[trjid]))->setNext(sid);
+                    updateNode(sidmap[trjid], *(nodemap[trjid]));
                     // update the node map and sid map
-                    nodemap[id] = basicnode;
-                    sidmap[id] = sid;
+                    nodemap[trjid] = basicnode;
+                    sidmap[trjid] = sid;
                 }
                 // insert the leaf entry to leaf node
-                ((TBLeafNode<3> *)(nodemap[id]))->insert(tbtree::Entry<3, tbtree::TBLeafInfo>(upoint->BoundingBox(), tid));
+                ((TBLeafNode<3, TBLeafInfo> *)(nodemap[trjid]))->insert(Entry<3, TBLeafInfo>(upoint.BoundingBox(), tid));
+            }
+            void bulkLoadInsert(const Rectangle<3> &upointbbox, int trjid, TupleId tid){
+                // bulk load tbtree
+                it = nodemap.find(trjid);
+                if(it == nodemap.end()){
+                    // node map has not id
+                    // find the node in tbtree
+                    sid = getLastLeafNodeofTrjId(trjid);
+                    basicnode = getNode(sid);
+                    nodemap[trjid] = basicnode;
+                    sidmap[trjid] = sid;
+                }
+                if(((tbtree::Node<3, TBLeafInfo> *)(nodemap[trjid]))->isFull()){
+                    // the leaf node is full
+                    // add a new empty node
+                    basicnode = getEmptyLeaf(trjid);
+                    sid = saveNode(*basicnode);
+                    // set the sid of new leaf node as processor's next, and update the processor
+                    ((TBLeafNode<3, TBLeafInfo>*)(nodemap[trjid]))->setNext(sid);
+                    updateNode(sidmap[trjid], *(nodemap[trjid]));
+                    // update the node map and sid map
+                    nodemap[trjid] = basicnode;
+                    sidmap[trjid] = sid;
+                }
+                // insert the leaf entry to leaf node
+                ((TBLeafNode<3, TBLeafInfo> *)(nodemap[trjid]))->insert(Entry<3, TBLeafInfo>(upointbbox, tid));
             }
 
 
