@@ -1525,7 +1525,7 @@ namespace tbtree{
                 }
                 // append a new empty leaf node, and save to tbtree
                 node = getEmptyLeaf(trjid);
-                sid = saveNode(*node);
+                sid = appendLeafNode(*node);
                 return sid;
             }
 
@@ -1568,7 +1568,7 @@ namespace tbtree{
                     // the leaf node is full
                     // add a new empty node
                     basicnode = getEmptyLeaf(trjid);
-                    sid = saveNode(*basicnode);
+                    sid = appendLeafNode(*basicnode);
                     // set the sid of new leaf node as processor's next, and update the processor
                     ((TBLeafNode<3, TBLeafInfo>*)(nodemap[trjid]))->setNext(sid);
                     updateNode(sidmap[trjid], *(nodemap[trjid]));
@@ -1577,7 +1577,9 @@ namespace tbtree{
                     sidmap[trjid] = sid;
                 }
                 // insert the leaf entry to leaf node
-                ((TBLeafNode<3, TBLeafInfo> *)(nodemap[trjid]))->insert(Entry<3, TBLeafInfo>(upoint.BoundingBox(), tid));
+                TBLeafInfo li(tid);
+                ((TBLeafNode<3, TBLeafInfo> *)(nodemap[trjid]))->insert(Entry<3, TBLeafInfo>(upoint.BoundingBox(), li));
+                noEntries ++;
             }
             void bulkLoadInsert(const Rectangle<3> &upointbbox, int trjid, TupleId tid){
                 // bulk load tbtree
@@ -1594,7 +1596,7 @@ namespace tbtree{
                     // the leaf node is full
                     // add a new empty node
                     basicnode = getEmptyLeaf(trjid);
-                    sid = saveNode(*basicnode);
+                    sid = appendLeafNode(*basicnode);
                     // set the sid of new leaf node as processor's next, and update the processor
                     ((TBLeafNode<3, TBLeafInfo>*)(nodemap[trjid]))->setNext(sid);
                     updateNode(sidmap[trjid], *(nodemap[trjid]));
@@ -1603,7 +1605,9 @@ namespace tbtree{
                     sidmap[trjid] = sid;
                 }
                 // insert the leaf entry to leaf node
-                ((TBLeafNode<3, TBLeafInfo> *)(nodemap[trjid]))->insert(Entry<3, TBLeafInfo>(upointbbox, tid));
+                TBLeafInfo li(tid);
+                ((TBLeafNode<3, TBLeafInfo> *)(nodemap[trjid]))->insert(Entry<3, TBLeafInfo>(upointbbox, li));
+                noEntries ++;
             }
 
 
@@ -1759,6 +1763,27 @@ namespace tbtree{
                         dynamic_cast<const InnerNode<3, InnerInfo>*>(n2);
                     return *in1 == *in2;
                 }
+            }
+            
+            SmiRecordId appendLeafNode(const BasicNode<3>& n){
+                noNodes++;
+                noLeafNodes++;
+                unsigned int size = recordLength;
+                char buffer[size];
+                memset(buffer,0,size);
+                char leaf = n.isLeaf()?1:0;
+                unsigned int offset = 0;
+                memcpy(buffer , &leaf, sizeof(char));
+                offset += sizeof(char);
+                n.writeTo(buffer, offset);
+                SmiRecordId id = 0;
+                SmiRecord record;
+                file.AppendRecord(id, record);
+                SmiSize os = 0; // offset
+                SmiSize rss = record.Write(buffer, size, os);
+                assert(rss == size);
+                record.Finish();
+                return id;
             }
 
             SmiRecordId saveNode(const BasicNode<3>& n){

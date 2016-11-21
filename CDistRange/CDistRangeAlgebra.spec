@@ -24,3 +24,4 @@ operator streamupdatertree alias STREAMUPDATERTREE pattern _ op [ _, _, _ ]
 
 # stream update relation , and insert new leaf entries into tbtree
 operator streamupdatetbtree alias STREAMUPDATETBTREE pattern _ op [ _, _ ]
+operator streamupdatebltbtree alias STREAMUPDATEBLTBTREE pattern _ op [ _, _ ]
