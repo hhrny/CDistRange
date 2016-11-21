@@ -1,0 +1,30 @@
+open database berlintest;
+
+delete seti;
+let seti = createSETI( [const rect value (-3600.0 26000.0 1200.0 22000.0)], 256);
+
+delete uploads;
+let uploads = Trains feed convertMP2UU [1000000, Id, Trip] consume;
+
+query uploads feed insertStream [seti, Upload];
+
+delete res1;
+let res1 = seti setifilter [ bbox(train7), 0.0, 5000.0] cdist_range [train7, 0.0, 5000.0, UTrip] consume;
+#let res1 = seti setifilter [ bbox(train7), 0.0, 5000.0] consume;
+
+delete res2;
+let res2 = seti setifilter [ bbox(train7), 5000.0, inf] cdist_range [train7, 5000.0, inf, UTrip] consume;
+#let res2 = seti setifilter [ bbox(train7), 5000.0, inf] consume;
+
+delete res3;
+let res3 = seti setifilter [ bbox(train7), 0.0, inf] cdist_range [train7, 0.0, inf, UTrip] consume;
+#let res3 = seti setifilter [ bbox(train7), 0.0, inf] consume;
+
+delete res4;
+let res4 = seti setifilter [ bbox(train7), 3000.0, 7000.0] cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
+#let res4 = seti setifilter [ bbox(train7), 3000.0, 7000.0] consume;
+
+query res1 feed count;
+query res2 feed count;
+query res3 feed count;
+query res4 feed count;

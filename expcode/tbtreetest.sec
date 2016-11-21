@@ -1,0 +1,29 @@
+open database berlintest;
+
+delete t1;
+let t1 = Trains feed filter[.Id < 256] projectextendstream[Id; UTrip: units(.Trip)] addid consume;
+
+delete t2;
+let t2 = Trains feed filter[.Id >= 256] projectextendstream[Id; UTrip: units(.Trip)] addid consume;
+
+delete tbt;
+let tbt = t1 feed bulkloadtbtree[Id, UTrip, TID];
+
+query t2 feed streamupdatebltbtree[t1, tbt];
+
+delete res1;
+let res1 = tbtreefilter (t1, tbt, bbox(train7), 0.0, 5000.0) cdist_range [train7, 0.0, 5000.0, UTrip] consume;
+
+delete res2;
+let res2 = tbtreefilter (t1, tbt, bbox(train7), 0.0, inf) cdist_range [train7, 0.0, inf, UTrip] consume;
+
+delete res3;
+let res3 = tbtreefilter (t1, tbt, bbox(train7), 5000.0, inf) cdist_range [train7, 5000.0, inf, UTrip] consume;
+
+delete res4;
+let res4 = tbtreefilter (t1, tbt, bbox(train7), 3000.0, 7000.0) cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
+
+query res1 feed count;
+query res2 feed count;
+query res3 feed count;
+query res4 feed count;

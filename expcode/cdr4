@@ -1,0 +1,18 @@
+open database berlintest;
+
+delete res1;
+let res1 = utrips feed cdist_range [ train7, 0.0, 5000.0, UTrip] consume;
+
+delete res2;
+let res2 = utrips feed cdist_range [ train7, 5000.0, inf, UTrip] consume;
+
+delete res3;
+let res3 = utrips feed cdist_range [ train7, 0.0, inf, UTrip] consume;
+
+delete res4;
+let res4 = utrips feed cdist_range [ train7, 3000.0, 7000.0, UTrip] consume;
+
+query res1 feed count;
+query res2 feed count;
+query res3 feed count;
+query res4 feed count;

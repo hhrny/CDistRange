@@ -1,0 +1,19 @@
+open database trips;
+
+delete utrips;
+let utrips = Trip1 feed projectextendstream [Id; UTrip : units(.Trip)] consume;
+
+delete t1;
+let t1 = Trip1 feed filter[.Id = 1] extract [Trip];
+
+delete res1;
+let res1 = utrips feed cdist_range [ t1, 0.0, 5.0, UTrip] consume;
+
+delete res2;
+let res2 = utrips feed cdist_range [ t1, 5.0, inf, UTrip] consume;
+
+delete res3;
+let res3 = utrips feed cdist_range [ t1, 0.0, inf, UTrip] consume;
+
+delete res4;
+let res4 = utrips feed cdist_range [ t1, 3.0, 7.0, UTrip] consume;

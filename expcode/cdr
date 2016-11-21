@@ -1,0 +1,25 @@
+open database berlintest;
+
+delete utrips;
+let utrips = Trains feed projectextendstream [Id; UTrip : units(.Trip)] extend [MBR:bbox(.UTrip)] consume;
+
+delete rtree;
+let rtree = utrips feed addid sortby[MBR asc] bulkloadrtree[MBR, TID];
+
+delete tbtree;
+let tbtree = utrips feed addid bulkloadtbtree[Id, UTrip, TID];
+
+delete train7;
+let train7 = Trains feed filter[.Id = 7] extract [Trip];
+
+delete res1;
+let res1 = utrips feed cdist_range [ train7, 0.0, 5000.0, UTrip] consume;
+
+delete res2;
+let res2 = utrips feed cdist_range [ train7, 5000.0, inf, UTrip] consume;
+
+delete res3;
+let res3 = utrips feed cdist_range [ train7, 0.0, inf, UTrip] consume;
+
+delete res4;
+let res4 = utrips feed cdist_range [ train7, 3000.0, 7000.0, UTrip] consume;

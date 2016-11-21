@@ -1549,6 +1549,7 @@ namespace tbtree{
                 }
                 for(it = nodemap.begin(); it != nodemap.end(); it++){
                     updateNode(sidmap[it->first], *(it->second));
+                    insertLeaf(sidmap[it->first], it->second->getBox());
                 }
                 nodemap.clear();
                 sidmap.clear();
@@ -1572,6 +1573,7 @@ namespace tbtree{
                     // set the sid of new leaf node as processor's next, and update the processor
                     ((TBLeafNode<3, TBLeafInfo>*)(nodemap[trjid]))->setNext(sid);
                     updateNode(sidmap[trjid], *(nodemap[trjid]));
+                    insertLeaf(sidmap[trjid], nodemap[trjid]->getBox());
                     // update the node map and sid map
                     nodemap[trjid] = basicnode;
                     sidmap[trjid] = sid;

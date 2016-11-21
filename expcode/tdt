@@ -1,0 +1,15 @@
+
+(DATABASE TDT
+ (TYPES)
+ (OBJECTS
+  (OBJECT carloc
+   ()
+	points
+	(
+	 (1 3)
+	 (3 4)
+	 (4 5)
+	 )
+   )
+  )
+ )
