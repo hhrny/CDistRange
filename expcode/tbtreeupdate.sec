@@ -1,0 +1,9 @@
+open database uutrip;
+
+delete t1;
+let t1 = trips feed filter[.Id < 256] addid consume;
+
+delete tbt;
+let tbt = t1 feed bulkloadtbtree[Id, UTrip, TID];
+
+query t2 feed streamupdatebltbtree[t1, tbt];

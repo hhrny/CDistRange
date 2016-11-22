@@ -1,0 +1,33 @@
+open database berlintest;
+
+delete t1;
+let t1 = Trains feed projectextendstream[Id; UTrip: units(.Trip)] filter[.Id < 256] addid consume;
+
+delete t2;
+let t2 = Trains feed projectextendstream[Id; UTrip: units(.Trip)] filter[.Id >= 256] addid consume;
+
+delete tbt;
+let tbt = t1 feed bulkloadtbtree[Id, UTrip, TID];
+
+query t2 feed streamupdatebltbtree[t1, tbt];
+
+# continuous distance range query using tbtree filter
+
+delete res9;
+#let res9 = tbtreefilter ( t1, tbt, bbox(train7), 0.0, 5000.0) cdist_range [train7, 0.0, 5000.0, UTrip] consume;
+query tbtreefilter ( t1, tbt, bbox(train7), 0.0, 5000.0) count;
+
+delete res10;
+let res10 = tbtreefilter ( t1, tbt, bbox(train7), 5000.0, inf) cdist_range [train7, 5000.0, inf, UTrip] consume;
+
+delete res11;
+let res11 = tbtreefilter ( t1, tbt, bbox(train7), 0.0, inf) cdist_range [train7, 0.0, inf, UTrip] consume;
+
+delete res12;
+let res12 = tbtreefilter ( t1, tbt, bbox(train7), 3000.0, 7000.0) cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
+
+query res9 feed count;
+query res10 feed count;
+query res11 feed count;
+query res12 feed count;
+
