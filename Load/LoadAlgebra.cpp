@@ -107,6 +107,7 @@ int LoadDataValueMap(Word *args, Word &result, int message, Word &local, Supplie
                 // get next record, gps record
                 if(! localinfo->rm->getNextRecord(gr)){
                     cout<<"Warning: end to read record!"<<endl;
+                    return CANCEL;
                 }
                 dt = new DateTime(instanttype);
                 dt->Set(gr.yy, gr.mm, gr.dd, gr.h, gr.m, gr.s);
