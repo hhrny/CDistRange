@@ -19,12 +19,6 @@ Signature: string->stream(tuple((x1 t1)...(xn tn)))
 Example  : query loaduploadunit ( "filename" ) count
 Result   : 10
 
-Operator : breakup
-Number   : 1
-Signature: stream(tuple((x1 t1)...(xn tn)))->stream(tuple((x1 t1)...(xn tn)))
-Example  : query Trains feed breakup count
-Result   : 10
-
 Operator : trajectorysplit
 Number   : 3
 Signature: stream(tuple((x1 t1)(x2 t2)...(xn tn)))->stream(tuple((x1 t1 z1)(x2 t2 z2)...(xn tn zn)))
@@ -55,6 +49,12 @@ Signature: stream(tuple(x1 t1)(x2 t2)...(xn tn))) x int x int ->stream(tuple((x1
 Example  : query trips feed convertUP2MP [ UTrip, Id ] count
 Result   : 10
 
+Operator : convertP2UU
+Number   : 4
+Signature: stream(tuple(x1 t1)(x2 t2)...(xn tn))) x attr x attr ->stream(tuple((x1 t1)(x2 t2)...(xn tn)))
+Example  : query trips feed convertP2UU [ Id, Datetime, Position ] count
+Result   : 10
+
 Operator : meanfilter
 Number   : 3
 Signature: stream(tuple(x1 t1)(x2 t2)...(xn tn))) x int x int ->stream(tuple((x1 t1)(x2 t2)...(xn tn)))
@@ -66,3 +66,15 @@ Number   : 3
 Signature: stream(tuple(x1 t1)(x2 t2)...(xn tn))) x int x int ->stream(tuple((x1 t1)(x2 t2)...(xn tn)))
 Example  : query uploads feed medianfilter [ 10, Upload ] count
 Result   : 10
+
+Operator : gkproject
+Number   : 1
+Signature: point -> point
+Example  : query gkproject ( [const point value (1.0 1.0)]);
+Result   : (100.0 100.0)
+
+Operator : pointminus
+Number   : 2
+Signature: point x point -> point
+Example  : query [const point value(2.0 3.0)] pointminus [const point value (1.0 1.0)];
+Result   : (1.0 2.0)

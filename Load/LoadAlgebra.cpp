@@ -15,16 +15,16 @@ extern QueryProcessor *qp;
 
 /****************************************************************
 
-    1.operator LoadData
+  1.operator LoadData
 
-***************************************************************/
+ ***************************************************************/
 // Type mapping function for the operators -loaddata-
 // string -> stream(tuple(Id, Datetime, Position))
 ListExpr LoadDataTypeMap(ListExpr args)
 {
     //error message;
     string msg = "string expected";
-    
+
     if( nl->ListLength(args) != 1){
         ErrorReporter::ReportError(msg + " (invalid number of arguments)");
         return nl->TypeError();
@@ -107,6 +107,7 @@ int LoadDataValueMap(Word *args, Word &result, int message, Word &local, Supplie
                 // get next record, gps record
                 if(! localinfo->rm->getNextRecord(gr)){
                     cout<<"Warning: end to read record!"<<endl;
+                    return CANCEL;
                 }
                 dt = new DateTime(instanttype);
                 dt->Set(gr.yy, gr.mm, gr.dd, gr.h, gr.m, gr.s);
@@ -141,16 +142,16 @@ struct LoadDataInfo : OperatorInfo {
 };
 /****************************************************************
 
-    2.operator LoadDataFromDir
+  2.operator LoadDataFromDir
 
-***************************************************************/
+ ***************************************************************/
 // Type mapping function for the operators -LoadDataFromDir-
 // string -> stream(tuple(Id, Datetime, Position))
 ListExpr LoadDataFromDirTypeMap(ListExpr args)
 {
     //error message;
     string msg = "string x string expected";
-    
+
     if( nl->ListLength(args) != 2){
         ErrorReporter::ReportError(msg + " (invalid number of arguments)");
         return nl->TypeError();
@@ -275,16 +276,16 @@ struct LoadDataFromDirInfo : OperatorInfo {
 
 /****************************************************************
 
-    3.operator LoadUploadUnit
+  3.operator LoadUploadUnit
 
-***************************************************************/
+ ***************************************************************/
 //Type mapping function for the operators -loaddata-
 //
 ListExpr LoadUploadUnitTypeMap(ListExpr args)
 {
     //error message;
     string msg = "string expected";
-    
+
     if( nl->ListLength(args) != 1){
         ErrorReporter::ReportError(msg + " (invalid number of arguments)");
         return nl->TypeError();
@@ -419,148 +420,9 @@ struct loadUploadUnitInfo : OperatorInfo
 
 /****************************************************************
 
-    4.operator BreakUp
+  4.operator TrajectorySplit
 
-***************************************************************/
-//type mapping function of operator ~BreakUp~
-ListExpr BreakUpTypeMap(ListExpr args)
-{
-    //cout<<"program is here: BreakUpTypeMap"<<endl;
-
-    ListExpr res = nl->TwoElemList(
-            nl->SymbolAtom("stream"),
-            nl->TwoElemList(
-                nl->SymbolAtom("tuple"),
-                nl->FiveElemList(
-                    nl->TwoElemList(
-                        nl->SymbolAtom("Id"),
-                        nl->SymbolAtom("int")),
-                    nl->TwoElemList(
-                        nl->SymbolAtom("Line"),
-                        nl->SymbolAtom("int")),
-                    nl->TwoElemList(
-                        nl->SymbolAtom("Up"),
-                        nl->SymbolAtom("bool")),
-                    nl->TwoElemList(
-                        nl->SymbolAtom("Trip"),
-                        nl->SymbolAtom("mpoint")),
-                    nl->TwoElemList(
-                        nl->SymbolAtom("Segid"),
-                        nl->SymbolAtom("int"))
-                    )));
-    if(nl->ListLength(args) == 1)
-    {
-
-        ListExpr arg1 = nl->First(args);
-        if(IsStreamDescription(arg1))
-        {
-
-            return res;
-        }
-    }
-    return nl->SymbolAtom(Symbol::TYPEERROR());
-}
-// break up local info
-class BreakUpLocalInfo
-{
-    public:
-        BreakUpInfo *bui;
-        TupleType   *resulttype;
-};
-
-//value mapping function of operator ~BreakUp~
-int BreakUpValueMap(Word *args, Word &result, int message, Word &local, Supplier s)
-{
-    Word wTuple;
-    BreakUpLocalInfo *buli;// = new BreakUpLocalInfo();
-    //BreakUpInfo *breakupinfo;
-    MPoint *tempmpoint;
-
-    switch(message)
-    {
-        case OPEN:
-            {
-                buli = new BreakUpLocalInfo();
-                buli->bui = new BreakUpInfo();
-                ListExpr rt = GetTupleResultType(s);
-                TupleType *tupleType = new TupleType(nl->Second(rt));
-                buli->resulttype = tupleType;
-                //breakupinfo = new BreakUpInfo();
-                local.addr = buli;
-                qp->Open(args[0].addr);
-                return 0;
-            }
-        case REQUEST:
-            {
-                if(!local.addr)
-                {
-                    return CANCEL;
-                }
-                //cout<<"Program is here: value map!"<<endl;
-                buli = (BreakUpLocalInfo*)local.addr;
-                while(buli->bui->IsEmpty())
-                {
-                    qp->Request(args[0].addr, wTuple);
-                    if(!qp->Received(args[0].addr))
-                    {
-                        return CANCEL;
-                    }
-                    buli->bui->Init((Tuple*)wTuple.addr);
-                }
-                //cout<<"Program is here: end while!"<<endl;
-                Tuple *t = buli->bui->tuple->Clone();
-                tempmpoint = buli->bui->GetNextMPoint();
-                if(tempmpoint == NULL)
-                {
-                    //
-                    cout<<"the result is null!"<<endl;
-                    tempmpoint = new MPoint(0);
-                }
-                //cout<<"Program is here: before put attribute!"<<endl;
-                //t->PutAttribute(3, (Attribute*)tempmpoint);
-                //t->PutAttribute(4, (Attribute*)(new CcInt(buli->bui->GetSId())));
-                Tuple *tupleresult = new Tuple(buli->resulttype);
-                tupleresult->PutAttribute(0, t->GetAttribute(0));
-                tupleresult->PutAttribute(1, t->GetAttribute(1));
-                tupleresult->PutAttribute(2, t->GetAttribute(2));
-                tupleresult->PutAttribute(3, (Attribute*)tempmpoint);
-                tupleresult->PutAttribute(4, (Attribute*)(new CcInt(buli->bui->GetSId())));
-                result.setAddr(tupleresult);
-                return YIELD;
-            }
-        case CLOSE:
-            {
-                if(local.addr)
-                {
-                    buli = (BreakUpLocalInfo*)local.addr;
-                    if(buli->bui)
-                    {
-                        delete buli->bui;
-                    }
-                }
-                qp->Close(args[0].addr);
-                return 0;
-            }
-    }
-    return 0;
-}
-
-// operator info of breakup
-struct breakupInfo : OperatorInfo {
-    breakupInfo()
-    {
-        name      = "breakup";
-        signature = "stream(tuple(MPoint)) -> stream(tuple(MPoint))";
-        syntax    = "_ breakup";
-        meaning   = "break up trajectories of objects into piece";
-    }
-};
-
-/****************************************************************
-
-    4.operator TrajectorySplit
-
-***************************************************************/
+ ***************************************************************/
 // type map for the ~trajectorysplit~
 //     stream x real x int-> stream
 ListExpr TrajectorySplitTypeMap(ListExpr args)
@@ -809,9 +671,9 @@ struct trasplitInfo : OperatorInfo
 
 /****************************************************************
 
-    4.operator sizetest
+  4.operator sizetest
 
-***************************************************************/
+ ***************************************************************/
 //
 //
 struct sizetest1Info : OperatorInfo
@@ -1166,6 +1028,8 @@ int ConvertUU2UPVM(Word* args, Word& result, int message, Word& local, Supplier 
         case CLOSE:
             if(local.addr){
                 localinfo = (ConvertUU2UPLocalInfo *)local.addr;
+                localinfo->stream->close();
+                delete localinfo->stream;
                 delete localinfo;
             }
             return 0;
@@ -1408,6 +1272,7 @@ int MeanFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
             if(local.addr){
                 localinfo = (MeanFilterLocalInfo *)local.addr;
                 localinfo->stream->close();
+                delete localinfo->stream;
                 while(! localinfo->uuqueue.empty()){
                     delete localinfo->uuqueue.front();
                     localinfo->uuqueue.pop_front();
@@ -1592,6 +1457,7 @@ int MedianFilterVM(Word* args, Word& result, int message, Word& local, Supplier 
             if(local.addr){
                 localinfo = (MedianFilterLocalInfo *)local.addr;
                 localinfo->stream->close();
+                delete localinfo->stream;
                 // clear and delete
                 while(! localinfo->uuqueue.empty()){
                     delete localinfo->uuqueue.front();
@@ -1800,6 +1666,8 @@ int ConvertUP2MPVM(Word* args, Word& result, int message, Word& local, Supplier 
         case CLOSE:
             if(local.addr){
                 localinfo = (ConvertUP2MPLocalInfo *)local.addr;
+                localinfo->stream->close();
+                delete localinfo->stream;
                 delete localinfo;
             }
             return 0;
@@ -1818,8 +1686,267 @@ struct ConvertUP2MPInfo : OperatorInfo {
         meaning   = "convert upoints to mpoints";
     }
 };
+/****************************************************************
+
+  10.operator GKProject
+
+ ***************************************************************/
+/*
+   Type Mapping for ~gkproject~
+
+*/
+ListExpr GKProjectTM(ListExpr args){
+    int len = nl->ListLength(args);
+    if( len != 1 ){
+        return listutils::typeError(" one arguments expected");
+    }
+    string err = "point expected";
+    ListExpr arg = nl->First(args);
+    if(!listutils::isSymbol(arg)){
+        return listutils::typeError(err);
+    }
+    string t = nl->SymbolValue(arg);
+    if(t != Point::BasicType()){
+        return listutils::typeError(err);
+    }
+    return nl->SymbolAtom(t); // Zone provided by user
+}
+/*
+   Value Mapping for ~gkproject~
+
+*/
+int GKProjectVM(Word* args, Word& result, int message, Word& local, Supplier s){
+    result = qp->ResultStorage(s);
+    Point* p = static_cast<Point*>(args[0].addr);
+    Point* res = static_cast<Point*>(result.addr);
+    MyGK(*p, *res);
+    return 0;
+}
 //
+// operator info
+struct GKProjectInfo : OperatorInfo {
+    GKProjectInfo()
+    {
+        name      = "gkproject";
+        signature = "point -> point";
+        syntax    = "gkproject(  _ )";
+        meaning   = "gk projection of point";
+    }
+};
+/****************************************************************
+
+  11.operator PointMinus
+
+ ***************************************************************/
+/*
+   Type Mapping for ~PointMinus~
+
+*/
+ListExpr PointMinusTM(ListExpr args){
+    int len = nl->ListLength(args);
+    if( len != 2 ){
+        return listutils::typeError(" one arguments expected");
+    }
+    string err = "point x point expected";
+    ListExpr p1 = nl->First(args);
+    ListExpr p2 = nl->Second(args);
+    if(! nl->IsEqual(p1, Point::BasicType())){
+        return listutils::typeError("first arg is not a point");
+    }
+    if(! nl->IsEqual(p2, Point::BasicType())){
+        return listutils::typeError("second arg is not a point");
+    }
+    return nl->SymbolAtom(Point::BasicType()); // Zone provided by user
+}
+/*
+   Value Mapping for ~PointMinus~
+
+*/
+int PointMinusVM(Word* args, Word& result, int message, Word& local, Supplier s){
+    result = qp->ResultStorage(s);
+    Point* p1 = static_cast<Point*>(args[0].addr);
+    Point* p2 = static_cast<Point*>(args[1].addr);
+    Point* res = static_cast<Point*>(result.addr);
+    *res = *p1 - *p2;
+    return 0;
+}
 //
+// operator info
+struct PointMinusInfo : OperatorInfo {
+    PointMinusInfo()
+    {
+        name      = "pointminus";
+        signature = "point x point -> point";
+        syntax    = "_ pointminus _";
+        meaning   = "point minus";
+    }
+};
+/****************************************************************
+
+  12.operator ConvertP2UU
+
+ ***************************************************************/
+/*
+   Type Mapping for ~ConvertP2UU~
+
+*/
+ListExpr ConvertP2UUTM(ListExpr args){
+    int len = nl->ListLength(args);
+    if( len != 4 ){
+        return listutils::typeError(" four arguments expected");
+    }
+    string msg = "stream(tuple(point)) x id x datetime x position expected";
+    ListExpr stream = nl->First(args);
+    ListExpr idindex = nl->Second(args);
+    ListExpr dtindex = nl->Third(args);
+    ListExpr posindex = nl->Fourth(args);
+    if(! listutils::isStream(stream)){
+        ErrorReporter::ReportError(msg+ " (first args is not a stream tuple");
+        return listutils::typeError();
+    }
+    // check the attribute index of upoint
+    string   attrname = nl->SymbolValue(idindex);
+    ListExpr attrtype = nl->Empty();
+    ListExpr attrlist = nl->Second(nl->Second(stream));
+    int index = listutils::findAttribute(attrlist, attrname, attrtype);
+    if (0 == index)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != CcInt::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type of first is not of type int.");
+        }
+    }
+    // check the attribute index of id
+    attrname = nl->SymbolValue(dtindex);
+    attrtype = nl->Empty();
+    int index2 = listutils::findAttribute(attrlist, attrname, attrtype);
+    if (0 == index2)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != DateTime::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type of second is not of type instant.");
+        }
+    }
+    // check the attribute index of id
+    attrname = nl->SymbolValue(posindex);
+    attrtype = nl->Empty();
+    int index3 = listutils::findAttribute(attrlist, attrname, attrtype);
+    if (0 == index3)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != Point::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type of second is not of type point.");
+        }
+    }
+    // construct the result type ListExpr
+    ListExpr resType = nl->TwoElemList(
+            nl->SymbolAtom("stream"),
+            nl->TwoElemList(
+                nl->SymbolAtom("tuple"),
+                nl->OneElemList(
+                    nl->TwoElemList(
+                        nl->SymbolAtom("Pos"),
+                        nl->SymbolAtom(UploadUnit::BasicType())))));
+    // return the result type and attribute index
+    return nl->ThreeElemList(
+            nl->SymbolAtom(Symbol::APPEND()),
+            nl->ThreeElemList(
+                nl->IntAtom(index),
+                nl->IntAtom(index2),
+                nl->IntAtom(index3)),
+            resType);
+}
+
+class ConvertP2UULocalInfo
+{
+    public:
+        Stream<Tuple> *stream;
+        ListExpr      resulttype;
+        int    id, dt, pos;
+};
+/*
+   Value Mapping for ~ConvertP2UU~
+
+*/
+int ConvertP2UUVM(Word* args, Word& result, int message, Word& local, Supplier s){
+    int      oid;
+    DateTime *datetime;
+    Point    *point;
+    Tuple *tuple = NULL, *res = NULL;
+    ConvertP2UULocalInfo *localinfo = NULL;
+
+    switch( message )
+    {
+        case OPEN:
+            if(local.addr){
+                localinfo = (ConvertP2UULocalInfo *)local.addr;
+                delete localinfo;
+            }
+            localinfo = new ConvertP2UULocalInfo();
+            // get the arguments
+            localinfo->stream = new Stream<Tuple>(args[0].addr);
+            localinfo->id = ((CcInt *)(args[4].addr))->GetValue()-1;
+            localinfo->dt = ((CcInt *)(args[5].addr))->GetValue()-1;
+            localinfo->pos = ((CcInt *)(args[6].addr))->GetValue()-1;
+            // get the result tuple type
+            localinfo->resulttype = nl->Second(GetTupleResultType(s));
+            // open the stream
+            localinfo->stream->open();
+            // set the local
+            local = SetWord(localinfo);
+            return 0;
+
+        case REQUEST:
+            if(! local.addr){
+                cout<<"local.addr is null!"<<endl;
+                return CANCEL;
+            }
+            localinfo = (ConvertP2UULocalInfo *)local.addr;
+            while((tuple = localinfo->stream->request()) != NULL){
+                oid = ((CcInt *)tuple->GetAttribute(localinfo->id))->GetValue();
+                datetime = (DateTime *)tuple->GetAttribute(localinfo->dt);
+                point = (Point *)tuple->GetAttribute(localinfo->pos);
+                res = new Tuple(localinfo->resulttype);
+                res->PutAttribute(0, new UploadUnit(oid, *datetime, UnitPos(point->GetX(), point->GetY())));
+                result.setAddr(res);
+                tuple->DeleteIfAllowed();
+                return YIELD;
+            }
+            return CANCEL;
+
+        case CLOSE:
+            if(local.addr){
+                localinfo = (ConvertP2UULocalInfo *)local.addr;
+                localinfo->stream->close();
+                delete localinfo->stream;
+                delete localinfo;
+            }
+            return 0;
+    }
+    return 0;
+}
+//
+// operator info
+struct ConvertP2UUInfo : OperatorInfo {
+    ConvertP2UUInfo()
+    {
+        name      = "convertP2UU";
+        signature = "stream(tuple(point)) -> uploadunit";
+        syntax    = "_ ConvertP2UU [ _, _, _]";
+        meaning   = "convert point to uploadunit";
+    }
+};
+/****************************************************************
+
+  Algebra Load
+
+ ***************************************************************/
 class LoadAlgebra : public Algebra
 {
     public:
@@ -1827,7 +1954,6 @@ class LoadAlgebra : public Algebra
     {
         AddOperator(LoadDataInfo(), LoadDataValueMap, LoadDataTypeMap);
         AddOperator(LoadDataFromDirInfo(), LoadDataFromDirValueMap, LoadDataFromDirTypeMap);
-        AddOperator(breakupInfo(), BreakUpValueMap, BreakUpTypeMap);
         AddOperator(trasplitInfo(), TrajectorySplitValueMap, TrajectorySplitTypeMap);
         AddOperator(sizetest1Info(), SizeTest1ValueMap, SizeTest1TypeMap);
         AddOperator(sizetest2Info(), SizeTest2ValueMap, SizeTest2TypeMap);
@@ -1836,6 +1962,9 @@ class LoadAlgebra : public Algebra
         AddOperator(ConvertUP2MPInfo(), ConvertUP2MPVM, ConvertUP2MPTM);
         AddOperator(MeanFilterInfo(), MeanFilterVM, MeanFilterTM);
         AddOperator(MedianFilterInfo(), MedianFilterVM, MeanFilterTM);
+        AddOperator(GKProjectInfo(), GKProjectVM, GKProjectTM);
+        AddOperator(PointMinusInfo(), PointMinusVM, PointMinusTM);
+        AddOperator(ConvertP2UUInfo(), ConvertP2UUVM, ConvertP2UUTM);
     }
 
         ~LoadAlgebra() {}

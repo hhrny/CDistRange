@@ -15,7 +15,6 @@
 #include <queue>
 #include <vector>
 #include <math.h>
-#include "breakupinfo.h"
 #include "SpatialAlgebra.h"
 using namespace std;
 

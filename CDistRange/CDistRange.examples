@@ -7,6 +7,12 @@ Signature: stream(tuple(()()()...)) x mpoint x real x real x attr -> stream(tupl
 Example  : query UTrains feed cdist_range [train2, 100.0, 1000.0, UTrip] count
 Result   : 10
 
+Operator : cdrange
+Number   : 5
+Signature: stream(tuple(()()()...)) x mpoint x real x real x attr -> stream(tuple(x1 y2)(x2 y2)...(xn yn))
+Example  : query Trains feed cdist_range [train2, 100.0, 1000.0, Trip] count
+Result   : 10
+
 Operator : rtreefilter
 Number   : 5
 Signature: rel(tuple(()()()...)) x rtree x rect3 x real x real -> stream(tuple(x1 y2)(x2 y2)...(xn yn))

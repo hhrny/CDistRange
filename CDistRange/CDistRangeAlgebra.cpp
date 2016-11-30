@@ -1409,6 +1409,217 @@ struct StreamUpdateBLTBTreeInfo : OperatorInfo {
 };
 
 
+/****************************************************************
+
+    10.operator CDistRangeMM
+
+***************************************************************/
+
+// type map function
+//
+ListExpr CDistRangeMMTM(ListExpr args)
+{
+    int    flag = 0;     //1: dist2 is a real, 2: dist2 is a inf, 0: error
+    
+    //error message;
+    string msg = "stream x mpoint x real(dist1) x real(dist2) x int(attrindex) expected";
+    //the number of args is 5: stream x mpoint x double x double x int
+    if(nl->ListLength(args) != 5)
+    {
+        ErrorReporter::ReportError(msg + " (invalid number of arguments)");
+        return nl->TypeError();
+    }
+    //
+    ListExpr stream = nl->First(args);
+    ListExpr mpoint = nl->Second(args);
+    ListExpr dist1 = nl->Third(args);
+    ListExpr dist2 = nl->Fourth(args);
+    ListExpr attrindex = nl->Fifth(args);
+
+    if(! listutils::isStream(stream))
+    {
+        ErrorReporter::ReportError(msg + " (first args is not a relation)");
+        return listutils::typeError();
+    }
+    if(! nl->IsEqual(mpoint, MPoint::BasicType()))
+    {
+        ErrorReporter::ReportError(msg + " (second args is not a mpoint)");
+        return nl->TypeError();
+    }
+    /*
+    cout<<nl->ToString(stream)<<endl;
+    cout<<nl->ToString(mpoint)<<endl;
+    cout<<nl->ToString(dist1)<<endl;
+    cout<<nl->ToString(dist2)<<endl;
+    cout<<nl->ToString(attrindex)<<endl;
+    */
+    if(! (nl->IsEqual(dist1, CcReal::BasicType()))){
+        ErrorReporter::ReportError(msg + " (third args is not real)");
+        return nl->TypeError();
+    }
+    if(nl->IsEqual(dist2, CcReal::BasicType())){     // 0.0 < d2 < inf
+        flag = 1;
+    }else if(nl->IsEqual(dist2, "inf") or nl->IsEqual(dist2, "INF")){       // d2 = inf
+        flag = 2;
+    }else{                                             // type error
+        ErrorReporter::ReportError(msg + " (fourth args is not real or inf)");
+        return nl->TypeError();
+    }
+
+    // check the attribute index
+    string   attrname = nl->SymbolValue(attrindex);
+    ListExpr attrtype = nl->Empty();
+    ListExpr attrlist = nl->Second(nl->Second(stream));
+    int index = listutils::findAttribute(attrlist, attrname, attrtype);
+
+    if (0 == index)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != MPoint::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type is not of type mpoint.");
+        }
+    }
+    // construct the result type ListExpr
+    //ListExpr resType = stream;
+    //return NList( NList(Symbol::APPEND()), NList(j).enclose(), resType ).listExpr();
+    return nl->ThreeElemList(nl->SymbolAtom(Symbol::APPEND()), nl->TwoElemList(nl->IntAtom(index), nl->IntAtom(flag)), stream);
+}
+
+//      1: d1 = 0.0,  0.0 < d2 < inf
+//      2: 0.0 < d1 < inf, d2 = inf
+//      3: d1 = 0.0, d2 = inf
+//      4: 0.0 < d1 < inf, 0.0 < d2 < inf
+//
+
+
+
+//value map function
+// stream x mpoint x real(dist1) x real(dist2) x string(attrindex) x int(attrindex) x int(condition)
+int CDistRangeMMVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    MPoint *mp = NULL, *mpoint = NULL;
+    Tuple  *tuple = NULL;
+    int    i,
+           noattr = 0,
+           flag = 0;
+
+    // local information
+    CDistRangeMMLocalInfo *localinfo = NULL;
+
+    switch( message )
+    {
+        case OPEN:
+            if(local.addr){
+                localinfo = (CDistRangeMMLocalInfo *)(local.addr);
+                delete localinfo;
+            }
+            localinfo = new CDistRangeMMLocalInfo();
+
+            // get the arguments
+            //
+            localinfo->stream = new Stream<Tuple>(args[0].addr);
+            localinfo->mpoint = (MPoint *)(args[1].addr);
+            localinfo->dist1 = ((CcReal *)(args[2].addr))->GetValue();
+            localinfo->attrindex = ((CcInt *)(args[5].addr))->GetValue()-1;
+            
+            // deal with condition
+            flag = ((CcInt *)(args[6].addr))->GetValue();
+            if(flag == 1){
+                localinfo->dist2 = ((CcReal *)(args[3].addr))->GetValue();
+                if(localinfo->dist1 < 0.0 || localinfo->dist1 >= localinfo->dist2){
+                    cout<<"Error: dist1 less than 0.0 or dist2 less than dist1!"<<endl;
+                    return CANCEL;
+                }else if(localinfo->dist1 == 0.0){
+                    localinfo->condition = 1;
+                }else{
+                    localinfo->condition = 4;
+                }
+            }else if(flag == 2){
+                localinfo->dist2 = -1.0;
+                if(localinfo->dist1 < 0.0){
+                    cout<<"Error: dist1 less than 0.0!"<<endl;
+                    return CANCEL;
+                }else if(localinfo->dist1 == 0.0){
+                    localinfo->condition = 3;
+                }else{
+                    localinfo->condition = 2;
+                }
+            }else{
+                cout<<"Error: dist2 error!"<<endl;
+                return CANCEL;
+            }
+
+            localinfo->tupletype = nl->Second(GetTupleResultType(s));
+            // open the stream
+            //
+            localinfo->stream->open();
+
+            // set the local informantion
+            local = SetWord(localinfo);
+            return 0;
+
+        case REQUEST:
+            if(! local.addr){
+                cout<<"local.addr is null"<<endl;
+                return CANCEL;
+            }
+            localinfo = (CDistRangeMMLocalInfo *)local.addr;
+
+            mpoint = new MPoint(0);
+
+            while((localinfo->tuple = localinfo->stream->request()) != NULL){
+                // get next tuple from stream
+                mp = (MPoint *)(localinfo->tuple->GetAttribute(localinfo->attrindex));
+                // computer the result mpoints
+                if(1 == MMCDistRange(*mp, *localinfo->mpoint, localinfo->dist1, localinfo->dist2, *mpoint, localinfo->condition)){
+                    // deal with the result upoint, construct the tuple with result upoint and add to result stream
+                    tuple = new Tuple(localinfo->tupletype);
+                    // copy the data to new tuple
+                    noattr = localinfo->tuple->GetNoAttributes();
+                    for(i = 0; i < noattr; i ++){
+                        if(i != localinfo->attrindex){
+                            tuple->CopyAttribute(i, localinfo->tuple, i);
+                        }else{
+                            tuple->PutAttribute(i, (Attribute*)mpoint);
+                        }
+                    }
+                    result.setAddr(tuple);
+                    return YIELD;
+                }
+                delete mp;
+            }
+            delete mpoint;
+            // There is no tuple to deal with
+            //cout<<"There is no tuple to deal with!"<<endl;
+            return CANCEL;
+
+        case CLOSE:
+            if(local.addr){
+                localinfo = (CDistRangeMMLocalInfo *)local.addr;
+                localinfo->stream->close();
+                delete localinfo->stream;
+                delete localinfo;
+            }
+            //cout<<"local.addr is null"<<endl;
+            return 0;
+    }
+    return 0;
+}
+
+//
+// operator info
+struct CDistRangeMMInfo : OperatorInfo {
+    CDistRangeMMInfo()
+    {
+        name      = "cdrange";
+        signature = "stream(tuple([a1:d1, ..., ai:upoint, ..., an:dn])) x mpoint x double x double x ai"
+                    " -> stream(tuple([a1:d1, ..., ai:upoint, ..., an:dn]))";
+        syntax    = "_ cdrange [ _, _, _, _ ]";
+        meaning   = "continuous distace range query between mpoint and mpoint";
+    }
+};
 
 /****************************************************************
 
@@ -1430,6 +1641,7 @@ public:
     CDistRangeAlgebra() : Algebra()
     {
         AddOperator( CDistRangeInfo(), CDistRangeVM, CDistRangeTM );
+        AddOperator( CDistRangeMMInfo(), CDistRangeMMVM, CDistRangeMMTM );
         AddOperator( RTreeFilterInfo(), RTreeFilterVM, RTreeFilterTM );
         AddOperator( TBTreeFilterInfo(), TBTreeFilterVM, TBTreeFilterTM );
         AddOperator( SETIFilterInfo(), SETIFilterVM, SETIFilterTM );

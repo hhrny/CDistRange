@@ -220,11 +220,26 @@ public:
         return tmpresult.empty();
     }
 };
+// local information
+//
+class CDistRangeMMLocalInfo
+{
+public:
+    Stream<Tuple>   *stream;
+    MPoint          *mpoint;        // mpoint of query
+    int             attrindex;     //index of the upoint in tuple 
+    int             condition;  // the condition of distance [d1,d2]
+    double          dist1,dist2;     
+    Tuple           *tuple;
+    ListExpr        tupletype;
+};
 
 //upoint<->upoint query
 int UUCDistRange(const UPoint &upq, const UPoint &up, double dist1, double dist2, queue<UPoint *> &result, int condition);  
 //upoint<->mpoint query
 int UMCDistRange(const UPoint &upoint, const MPoint &mpoint, double d1, double d2, queue<UPoint *> &result, int condition);
+//mpoint<->mpoint query
+int MMCDistRange(const MPoint &mp, const MPoint &mq, double d1, double d2, MPoint &result, int condition);
 //
 int CalcResultType(const Rectangle<2u> &r1, const Rectangle<2u> &r2, double dist1, double dist2, int cond);
 //
@@ -699,6 +714,85 @@ int UUCDistRange(const UPoint &upq, const UPoint &up, double dist1, double dist2
         result.push(up3);
     }
     return result.size();
+}
+
+//mpoint<->mpoint query
+int MMCDistRange(const MPoint &mp, const MPoint &mq, double d1, double d2, MPoint &result, int condition)
+{
+    int               rplen, i, j, pos1, pos2, no_result = 0;
+    UPoint            up1, up2, up3;
+    Periods           result_periods(2);
+    Interval<Instant> tiv;
+    result.Clear();
+    if(! mp.IsDefined() || ! mq.IsDefined()){
+        result.SetDefined(false);
+        return 0;
+    }
+    result.SetDefined(true);
+    result.StartBulkLoad();
+
+    UReal udist(true);
+    RefinementPartition<MPoint, MPoint, UPoint, UPoint> rp(mp, mq);
+    rplen = rp.Size();
+    for(i = 0; i < rplen; i ++){
+        rp.Get(i, tiv, pos1, pos2);
+        if(pos1 == -1 || pos2 == -1){
+            continue;
+        }
+        // get the upoint in the same time interval
+        mp.Get(pos1, up1);
+        mq.Get(pos2, up2);
+
+        // assert up1 and up2 defined
+        assert(up1.IsDefined());
+        assert(up2.IsDefined());
+
+        up1.Distance(up2, udist, NULL);
+        if(! udist.IsDefined())
+        {
+            cerr << __PRETTY_FUNCTION__ << "Invalid geographic coord found!" << endl;
+            result.EndBulkLoad(false, false);
+            result.Clear();
+            result.SetDefined(false);
+            return -1;
+        }
+        // deal with 4 different conditions
+        switch(condition){
+            case 1:
+                // 1: d1 = 0.0,  0.0 < d2 < inf
+                no_result = udist.PeriodsAtValB(d2, result_periods);
+                break;
+            case 2:
+                // 2: 0.0 < d1 < inf, d2 = inf
+                no_result = udist.PeriodsAtValA(d1, result_periods);
+                break;
+            case 3:
+                // 3: d1 = 0.0, d2 = inf
+                no_result = 1;
+                result_periods.StartBulkLoad();
+                result_periods.Add(udist.timeInterval);
+                result_periods.EndBulkLoad();
+                break;
+            case 4:
+                // 4: 0.0 < d1 < inf, 0.0 < d2 < inf
+                no_result = udist.PeriodsAtValInterval(d1, d2, result_periods);
+                break;
+            default:
+                return 0;
+        }
+        for(j = 0; j < no_result; j ++){
+            result_periods.Get(j, tiv);
+            up1.AtInterval(tiv, up3, 0);
+            result.MergeAdd(up3);
+        }
+    }
+    result.EndBulkLoad();
+    if(result.IsEmpty()){
+        result.SetDefined(false);
+        return 0;
+    }else{
+        return 1;
+    }
 }
 
 //
