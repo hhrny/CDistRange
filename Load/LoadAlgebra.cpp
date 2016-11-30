@@ -3,15 +3,12 @@
 #include "QueryProcessor.h"
 #include "StandardTypes.h"
 #include "LoadAlgebra.h"
-#include <dirent.h>
 #include "Stream.h"
 #include "../Spatial/Point.h"
 #include "../Spatial/SpatialAlgebra.h"
 #include "../Relation-C++/RelationAlgebra.h"
 #include "../Temporal/TemporalAlgebra.h"
 #include "../SETI/UploadUnit.h"
-#include <list>
-
 
 extern NestedList     *nl;
 extern QueryProcessor *qp;

@@ -1,3 +1,6 @@
+#ifndef LOADALGEBRA_H
+#define LOADALGEBRA_H
+
 #include <iostream>
 #include <fstream>
 #include <DateTime.h>
@@ -17,6 +20,8 @@
 using namespace std;
 
 ////////////////////////////////////////////
+// file operator
+//
 const int PATH_MAX_SIZE = 128;
 
 bool strContain(const char *source, const char *dest)
@@ -44,8 +49,6 @@ bool strContain(const char *source, const char *dest)
     }
     return false;
 }
-
-
 //
 // Check the directory, if the directory is exist, return 1, else create
 // directory and return 1; if create failed, return -1;
@@ -176,7 +179,7 @@ list<char*> *getAllFileList(char *file_dir = NULL, char *subname = NULL)
     queue<char*> dirs;
     list<char*> *result = NULL;
     //cur_dir = getAbsolutePath();
-    cout<<"test in get all files function!"<<endl;
+    //cout<<"test in get all files function!"<<endl;
     if(file_dir == NULL)
     {
         cout<<"test1 in get all files function!"<<endl;
@@ -209,7 +212,7 @@ list<char*> *getAllFileList(char *file_dir = NULL, char *subname = NULL)
     //strcpy(basepath, cur_dir);
     dirs.push(cur_dir);
 
-    cout<<"test!"<<endl;
+    //cout<<"test!"<<endl;
 
     result = new list<char*>();
 
@@ -277,6 +280,9 @@ void freeFileList(list<char *> *fl)
     delete fl;
 }
 //////////////////////////////////////////////////////
+// gk project and class MyRecord
+//
+
 //#define DEBUG
 
 // is number
@@ -501,6 +507,8 @@ int MyRecord::Clear()
 	return 1;
 }
 /////////////////////////////////////////////////
+// class GPSRecord
+//
 class GPSRecord
 {
 public:
@@ -509,6 +517,9 @@ public:
     double lo, la;   //longitude and latitude
 };
 
+////////////////////////////////////////////////
+// class RecordManager
+//
 class RecordManager
 {
 private:
@@ -737,4 +748,4 @@ public:
     }
 };
 
-
+#endif
