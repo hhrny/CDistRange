@@ -1,0 +1,40 @@
+#/bin/bash
+# args: input directory, output directory
+if [ $# -ne 2 ]
+then
+    echo
+    echo Usage: convertscript input_dir output_dir
+    echo
+else
+    inputdir=$1
+    outputdir=$2
+    if [ -d ${inputdir} ]
+    then
+    # input directory exist
+        # output directory
+        if [ -d ${outputdir} ]
+        then
+            echo dir ${outputdir} exist!
+            rm -r ${outputdir}
+        fi
+        mkdir ${outputdir}
+        # object id
+        oid=1
+        find ${inputdir} -name \*.gps > files
+        for file in $(cat files)
+        do
+            echo ${file}
+            convertdata ${file} ${outputdir}\/${oid}.dat ${oid}
+            oid=$[ ${oid} + 1 ]
+        done
+        rm files
+    else
+    # input directory no exist
+        echo
+        echo input directory no exist!
+        echo 
+    fi
+fi
+
+
+
