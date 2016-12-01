@@ -1,0 +1,15 @@
+#/bin/bash
+
+# args: input file, output file, object id
+#
+if [ $# -ne 3 ]
+then
+    echo
+    echo Three arguments expected!
+    echo
+else
+    input=$1
+    output=$2
+    oid=$3
+    sed -n '/[0-9]*\.[0-9]*/p' ${input} | gawk -F "," '{print '${oid}'","$6" "$7","$2","$1}' | sed 's/\r//' > $output
+fi
