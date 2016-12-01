@@ -430,32 +430,27 @@ ListExpr TrajectorySplitTypeMap(ListExpr args)
     ListExpr first, second, third, rest, listn, lastlistn, outList;
     string   argstr;
 
-    cout<<"Trajectory Split Type Map~"<<endl;
+    //cout<<"Trajectory Split Type Map~"<<endl;
     if(nl->ListLength(args) != 3)
     {
-        return listutils::typeError("Two arguments expected");
+        return listutils::typeError("Three arguments expected");
     }
-
     first = nl->First(args);
     if(!listutils::isTupleStream(first))
     {
         return listutils::typeError("first arg : tuple stream expected");
     }
-
     second = nl->Second(args);
     if(!nl->IsEqual(second, CcReal::BasicType()))
     {
         return listutils::typeError("second arg is not a ccreal");
     }
-
     third = nl->Third(args);
     if(!nl->IsEqual(third, CcInt::BasicType()))
     {
         return listutils::typeError("third arg is not a ccint");
     }
-    //
-    //build resultlist
-    //
+    // construct resultlist
     rest = nl->Second(nl->Second(first));
     listn = nl->OneElemList(nl->First(rest));
     lastlistn = listn;
@@ -1944,6 +1939,258 @@ struct ConvertP2UUInfo : OperatorInfo {
 };
 /****************************************************************
 
+  13.operator TrajSplit
+
+ ***************************************************************/
+// type map for the ~TrajSplit~
+//     stream x real(length) x real(width) x attr(index of mpoint) -> stream
+ListExpr TrajSplitTM(ListExpr args)
+{
+    if(nl->ListLength(args) != 4){
+        return listutils::typeError("Three arguments expected");
+    }
+    ListExpr stream = nl->First(args);
+    ListExpr length = nl->Second(args);
+    ListExpr width = nl->Third(args);
+    ListExpr attrindex = nl->Fourth(args);
+    if(!listutils::isTupleStream(stream)){
+        return listutils::typeError("first arg : tuple stream expected");
+    }
+    if(! nl->IsEqual(length, CcReal::BasicType()) || ! nl->IsEqual(width, CcReal::BasicType())){
+        return listutils::typeError("second or third arg is not a real");
+    }
+    // check the attribute index
+    string   attrname = nl->SymbolValue(attrindex);
+    ListExpr attrtype = nl->Empty();
+    ListExpr attrlist = nl->Second(nl->Second(stream));
+    int index = listutils::findAttribute(attrlist, attrname, attrtype);
+    if (0 == index)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != MPoint::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type is not of type mpoint.");
+        }
+    }
+    //construct resultlist
+    ListExpr rest = nl->Second(nl->Second(stream));
+    // copy the tuple type
+    ListExpr listn = nl->OneElemList(nl->First(rest));
+    ListExpr lastlistn = listn;
+    rest = nl->Rest(rest);
+    while(!(nl->IsEmpty(rest)))
+    {
+        lastlistn = nl->Append(lastlistn, nl->First(rest));
+        rest = nl->Rest(rest);
+    }
+    lastlistn = 
+        nl->Append(
+                lastlistn,
+                nl->TwoElemList(
+                    nl->SymbolAtom("St"),   // start time of this segment
+                    nl->SymbolAtom(CcReal::BasicType())));
+    ListExpr outList =
+        nl->TwoElemList(
+                nl->SymbolAtom(Symbol::STREAM()),
+                nl->TwoElemList(
+                    nl->SymbolAtom(Tuple::BasicType()),
+                    listn));
+    // return the result type
+    return nl->ThreeElemList(
+            nl->SymbolAtom(Symbol::APPEND()),
+            nl->OneElemList(
+                nl->IntAtom(index)),
+            outList);
+}
+
+
+class TrajSplitLocalInfo
+{
+    public:
+        Stream<Tuple> *stream;
+        double        length, width;
+        list<MPoint*> trips;
+        list<double>  starttimes;
+        Tuple         *tuple;
+        ListExpr      resulttype;
+        int           mpindex;
+
+        TrajSplitLocalInfo()
+        {
+            stream = NULL;
+            length = width = 0;
+            trips.clear();
+            starttimes.clear();
+            tuple = NULL;
+            mpindex = -1;
+        }
+        
+        bool Init(){
+            MPoint *mp;
+            if(! trips.empty() || ! starttimes.empty()){
+                trips.clear();
+                starttimes.clear();
+            }
+            tuple = stream->request();
+            if(tuple == NULL){
+                // there is no tuple to deal with
+                return false;
+            }
+            mp = (MPoint *)tuple->GetAttribute(mpindex);
+            TrajSplitLocalInfo::TrajSplit(mp, length, width, trips, starttimes);
+            delete mp;
+            return true;
+        }
+
+        bool hasNextMPoint(){
+            MPoint *mp;
+            if(! trips.empty()){
+                return true;
+            }
+            while((tuple = stream->request()) != NULL){
+                mp = (MPoint *)tuple->GetAttribute(mpindex);
+                if(TrajSplitLocalInfo::TrajSplit(mp, length, width, trips, starttimes) > 0){
+                    delete mp;
+                    return true;
+                }
+                delete mp;
+                tuple->DeleteIfAllowed();
+            }
+            // there is no tuple to deal with
+            return false;
+        }
+
+        static int TrajSplit(const MPoint *mp, double l, double w, list<MPoint *> &t, list<double> &st){
+            int pointer = 0;
+            double lasttime, area = l*w;
+            MPoint *tmp = NULL;
+            UPoint up;
+            Rectangle<3> bbox(false);
+            // clear the list of trips and starttimes
+            t.clear();
+            st.clear();
+            // assert the mp
+            assert(mp->IsDefined());
+            if(mp->GetNoComponents() <= 0){
+                return 0;
+            }
+            // begin to split trajectory
+            tmp = new MPoint(0);
+            t.push_back(tmp);
+            mp->Get(0, up);
+            assert(up.IsDefined());
+            st.push_back(up.timeInterval.start.ToDouble());
+            lasttime = up.timeInterval.end.ToDouble();
+            bbox = up.BoundingBox();
+            tmp->StartBulkLoad();
+            tmp->MergeAdd(up);
+            tmp->EndBulkLoad();
+
+            for(pointer = 1; pointer < mp->GetNoComponents(); pointer ++){
+                mp->Get(pointer, up);
+                assert(up.IsDefined());
+                
+                if(! AlmostEqual(lasttime, up.timeInterval.start.ToDouble()) || bbox.Project2D(0,1).Area() > area){
+                    // start a new mpoint
+                    tmp = new MPoint(0);
+                    t.push_back(tmp);
+                    st.push_back(up.timeInterval.start.ToDouble());
+                    lasttime = up.timeInterval.end.ToDouble();
+                    bbox = up.BoundingBox();
+                }
+                else{
+                    // union a bounding box of up to bbox
+                    bbox = bbox.Union(up.BoundingBox());
+                    lasttime = up.timeInterval.end.ToDouble();
+                }
+                tmp->StartBulkLoad();
+                tmp->MergeAdd(up);
+                tmp->EndBulkLoad();
+            }
+            return t.size();
+        }
+};
+
+// Value Map for the ~TrajSplit~
+//     stream x real(length) x real(width) x attr(index of mpoint) -> stream
+int TrajSplitVM(Word *args, Word &result, int message, Word &local, Supplier s)
+{
+    int nofattr, i;
+    Tuple *tuple;
+    TrajSplitLocalInfo *localinfo;
+    switch(message)
+    {
+        case OPEN:
+            localinfo = new TrajSplitLocalInfo();
+            localinfo->stream = new Stream<Tuple>(args[0].addr);
+            localinfo->length = ((CcReal*)args[1].addr)->GetValue();
+            localinfo->width = ((CcReal*)args[2].addr)->GetValue();
+            localinfo->mpindex = ((CcInt*)args[4].addr)->GetValue()-1;
+            localinfo->resulttype = nl->Second(GetTupleResultType(s));
+            // test out
+            //cout<<"length: "<<localinfo->length<<endl;
+            //cout<<"width : "<<localinfo->width<<endl;
+            // open the stream
+            localinfo->stream->open();
+            // initial the trajectory split
+            localinfo->Init();
+            local.setAddr(localinfo);
+            return 0;
+
+        case REQUEST:
+            if(! local.addr){
+                cout<<"error: local is null"<<endl;
+                return CANCEL;
+            }
+            localinfo = (TrajSplitLocalInfo *)local.addr;
+            // check has next mpoint
+            if(! localinfo->hasNextMPoint()){
+                return CANCEL;
+            }
+            // construct tuple
+            tuple = new Tuple(localinfo->resulttype);
+            nofattr = localinfo->tuple->GetNoAttributes();
+            for(i = 0; i < nofattr; i ++){
+                if(i != localinfo->mpindex){
+                    tuple->CopyAttribute(i, localinfo->tuple, i);
+                }
+                else{
+                    tuple->PutAttribute(i, (Attribute*)localinfo->trips.front());
+                    localinfo->trips.pop_front();
+                }
+            }
+            tuple->PutAttribute(i, (Attribute*)(new CcReal(localinfo->starttimes.front())));
+            localinfo->starttimes.pop_front();
+            result.setAddr(tuple);
+            return YIELD;
+
+        case CLOSE:
+            if(local.addr){
+                localinfo = (TrajSplitLocalInfo *)local.addr;
+                localinfo->stream->close();
+                delete localinfo->stream;
+                delete localinfo;
+            }
+            local.setAddr(Address(0));
+            return 0;
+    }
+    return 0;
+}
+
+//
+struct TrajSplitInfo : OperatorInfo
+{
+    TrajSplitInfo()
+    {
+        name      = "trajsplit";
+        signature = "(stream(tuple((x1 t1)(x2 t2)...(xn tn))))->(stream(tuple((x1 t1)(x2 t2)...(xn tn))))";
+        syntax    = "_ trajsplit [_, _, _]";
+        meaning   = "split trajectories of objects into a piece of segment";
+    }
+};
+/****************************************************************
+
   Algebra Load
 
  ***************************************************************/
@@ -1955,6 +2202,7 @@ class LoadAlgebra : public Algebra
         AddOperator(LoadDataInfo(), LoadDataValueMap, LoadDataTypeMap);
         AddOperator(LoadDataFromDirInfo(), LoadDataFromDirValueMap, LoadDataFromDirTypeMap);
         AddOperator(trasplitInfo(), TrajectorySplitValueMap, TrajectorySplitTypeMap);
+        AddOperator(TrajSplitInfo(), TrajSplitVM, TrajSplitTM);
         AddOperator(sizetest1Info(), SizeTest1ValueMap, SizeTest1TypeMap);
         AddOperator(sizetest2Info(), SizeTest2ValueMap, SizeTest2TypeMap);
         AddOperator(loadUploadUnitInfo(), LoadUploadUnitValueMap, LoadUploadUnitTypeMap);

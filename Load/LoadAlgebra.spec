@@ -2,6 +2,7 @@ operator loaddata alias LOADDATA pattern op ( _ )
 operator loaddatafromdir alias LOADDATAFROMDIR pattern op ( _ )
 operator loaduploadunit alias LOADUPLOADUNIT pattern op ( _ )
 operator trajectorysplit alias TRAJECTORYSPLIT pattern _ op [_, _]
+operator trajsplit alias TRAJSPLIT pattern _ op [_, _]
 operator sizetest1 alias SIZETEST1 pattern op ( _ )
 operator sizetest2 alias SIZETEST2 pattern op ( _ )
 operator convertUU2UP alias CONVERTUU2UP pattern _ op [ _ ]

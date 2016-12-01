@@ -25,6 +25,12 @@ Signature: stream(tuple((x1 t1)(x2 t2)...(xn tn)))->stream(tuple((x1 t1 z1)(x2 t
 Example  : query Trains feed trajectorysplit [1000.0, 3]  count
 Result   : 10
 
+Operator : trajsplit
+Number   : 4
+Signature: stream(tuple((x1 t1)(x2 t2)...(xn tn)))->stream(tuple((x1 t1 z1)(x2 t2 z2)...(xn tn zn)))
+Example  : query Trains feed trajectorysplit [1000.0, 1000.0, Trip]  count
+Result   : 10
+
 Operator : sizetest1
 Number   : 1
 Signature: int->stream(tuple((x1 t1 z1)(x2 t2 z2)...(xn tn zn)))
