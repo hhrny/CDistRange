@@ -2171,6 +2171,141 @@ class R_Tree
 };
 
 /*
+ * 3D Point
+ */
+
+class Point3D
+{
+    public:
+        static const int MaxVal = 1<<20, MinVal = -(1<<20);
+        int x, y, t;
+        unsigned long long toULL(){
+            unsigned long long result = 0, tmp;
+            if(! (t >= MinVal && t <= MaxVal)){
+                cout<<"Error: value t out of range!"<<endl;
+                return 0;
+            }
+            if(! (y >= MinVal && y <= MaxVal)){
+                cout<<"Error: value y out of range!"<<endl;
+                return 0;
+            }
+            if(! (x >= MinVal && x <= MaxVal)){
+                cout<<"Error: value x out of range!"<<endl;
+                return 0;
+            }
+            result = t + MaxVal;
+            result = result << 21;
+            tmp = y + MaxVal;
+            result |= tmp;
+            result = result << 21;
+            tmp = x + MaxVal;
+            result |= tmp;
+            return result;
+        }
+        void readFromULL(unsigned long long val){
+            unsigned long long tmp = (1 << 21) - 1;
+            x = (int)(val & tmp) - MaxVal;
+            val = val >> 21;
+            y = (int)(val & tmp) - MaxVal;
+            val = val >> 21;
+            t = (int)(val & tmp) - MaxVal;
+        }
+        void Print(ostream &out){
+            out<<"3D Point:(x:"<<x<<",\ty:"<<y<<",\tt:"<<t<<")";
+        }
+};
+
+/*
+   bulk load using grid
+
+   class RTreeLevel : the one level of rtree node when bulk load using grid
+
+*/
+// 3 dimission, x, y and t
+class RTreeLevel
+{
+    private:
+        // rtree to bulk load
+        R_Tree<3, TupleId> *rtree;
+        // the next level pointer, when the number of node entry in this level gird is bigger than max entries number
+        // generate a next level, and insert the entries to next level
+        RTreeLevel *nextlevel;
+        // all the entries in this level
+        int     noentries;
+        // length, width and time of each grid unit 
+        double  unitx, unity, unittime;
+        // leaf
+        bool isleaf;
+        map<unsigned long long, R_TreeNode<3, TupleId> *> grid;
+        
+        //
+        int Insert(Point3D p, R_TreeNode<3, TupleId> *node);
+
+    public:
+        RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt);
+        RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut);
+        
+        Point3D convertMBR2P(const Rectangle<3> &box){
+            Point3D result;
+            result.x = (box.MaxD(0)-box.Min(0))/2/unitx;
+            result.y = (box.MaxD(1)-box.Min(1))/2/unity;
+            result.t = (box.MaxD(2)-box.Min(2))/2/unittime;
+            return result;
+        }
+
+        int Insert(TupleId tid, const Rectangle<3> &box);
+        int Insert(SmiRecordId sid, const Rectangle<3> &box);
+        // get the root of all the node
+        SmiRecordId GetRoot();
+};
+
+RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt){
+    this->isleaf = isleaf;
+    this->rtree = rt;
+    this->unitx = 1000.0;
+    this->unity = 1000.0;
+    this.unittime = 1.0/24;  // one hour
+}
+
+RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut){
+    this->isleaf = isleaf;
+    this->rtree = rt;
+    this->unitx = ux;
+    this->unity = uy;
+    this.unittime = ut;
+}
+
+int RTreeLevel::Insert(TupleId tid, const Rectangle<3> &box){
+    if(! isleaf){
+        cout<<"this is no a leaf level!"<<endl;
+        return -1;
+    }
+}
+
+int RTreeLevel::Insert(SmiRecordId sid, const Rectangle<3> &box){
+    if(isleaf){
+        cout<<"this is a leaf level!"<<endl;
+        return -1;
+    }
+}
+
+int RTreeLevel::Insert(Point3D p, R_TreeNode<3, TupleId> *node){
+    if(node == NULL){
+        cout<<"node is null!"<<endl;
+        return -1;
+    }
+    if(isleaf == node->IsLeaf()){
+        cout<<"error in insert node to rtreelevel!"<<endl;
+        return -1;
+    }
+
+}
+
+SmiRecordId RTreeLevel::GetRoot(){
+}
+
+
+/*
    5.1 The constructors
 
 */
