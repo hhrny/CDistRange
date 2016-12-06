@@ -1,0 +1,321 @@
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/bin/sh: 1: [[: not found
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2237: multiple definition of `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2237: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::GetHeight()':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2546: multiple definition of `RTreeLevel::GetHeight()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2546: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::EntryCount()':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2648: multiple definition of `RTreeLevel::EntryCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2648: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::NodeCount()':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2655: multiple definition of `RTreeLevel::NodeCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2655: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2455: multiple definition of `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2455: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2429: multiple definition of `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2429: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2492: multiple definition of `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2492: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::Append(RTreeLevel*)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2531: multiple definition of `RTreeLevel::Append(RTreeLevel*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2531: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2254: multiple definition of `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2254: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::GetRoot()':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2552: multiple definition of `RTreeLevel::GetRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2552: first defined here
+/home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `RTreeLevel::SetRTreeRoot()':
+/home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2662: multiple definition of `RTreeLevel::SetRTreeRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2662: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2237: multiple definition of `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2237: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::GetHeight()':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2546: multiple definition of `RTreeLevel::GetHeight()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2546: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::EntryCount()':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2648: multiple definition of `RTreeLevel::EntryCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2648: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::NodeCount()':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2655: multiple definition of `RTreeLevel::NodeCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2655: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2455: multiple definition of `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2455: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2429: multiple definition of `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2429: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2492: multiple definition of `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2492: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::Append(RTreeLevel*)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2531: multiple definition of `RTreeLevel::Append(RTreeLevel*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2531: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2254: multiple definition of `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2254: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::GetRoot()':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2552: multiple definition of `RTreeLevel::GetRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2552: first defined here
+/home/nuaa/secondo/lib/libMarginAlgebra.a(MarginQueryAlgebra.o): In function `RTreeLevel::SetRTreeRoot()':
+/home/nuaa/secondo/Algebras/Margin/../RTree/RTreeAlgebra.h:2662: multiple definition of `RTreeLevel::SetRTreeRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2662: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2237: multiple definition of `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2237: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::GetHeight()':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2546: multiple definition of `RTreeLevel::GetHeight()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2546: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::EntryCount()':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2648: multiple definition of `RTreeLevel::EntryCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2648: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::NodeCount()':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2655: multiple definition of `RTreeLevel::NodeCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2655: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2455: multiple definition of `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2455: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2429: multiple definition of `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2429: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2492: multiple definition of `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2492: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::Append(RTreeLevel*)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2531: multiple definition of `RTreeLevel::Append(RTreeLevel*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2531: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2254: multiple definition of `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2254: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::GetRoot()':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2552: multiple definition of `RTreeLevel::GetRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2552: first defined here
+/home/nuaa/secondo/lib/libDistanceAlgebra.a(DistanceAlgebra.o): In function `RTreeLevel::SetRTreeRoot()':
+/home/nuaa/secondo/Algebras/Distance/../RTree/RTreeAlgebra.h:2662: multiple definition of `RTreeLevel::SetRTreeRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2662: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2237: multiple definition of `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2237: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::GetHeight()':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2546: multiple definition of `RTreeLevel::GetHeight()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2546: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::EntryCount()':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2648: multiple definition of `RTreeLevel::EntryCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2648: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::NodeCount()':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2655: multiple definition of `RTreeLevel::NodeCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2655: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2455: multiple definition of `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2455: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2429: multiple definition of `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2429: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2492: multiple definition of `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2492: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::Append(RTreeLevel*)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2531: multiple definition of `RTreeLevel::Append(RTreeLevel*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2531: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2254: multiple definition of `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2254: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::GetRoot()':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2552: multiple definition of `RTreeLevel::GetRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2552: first defined here
+/home/nuaa/secondo/lib/libSETIAlgebra.a(SETIAlgebra.o): In function `RTreeLevel::SetRTreeRoot()':
+/home/nuaa/secondo/Algebras/SETI/../RTree/RTreeAlgebra.h:2662: multiple definition of `RTreeLevel::SetRTreeRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2662: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2237: multiple definition of `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2237: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::GetHeight()':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2546: multiple definition of `RTreeLevel::GetHeight()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2546: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::EntryCount()':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2648: multiple definition of `RTreeLevel::EntryCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2648: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::NodeCount()':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2655: multiple definition of `RTreeLevel::NodeCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2655: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2455: multiple definition of `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2455: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2429: multiple definition of `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2429: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2492: multiple definition of `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2492: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::Append(RTreeLevel*)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2531: multiple definition of `RTreeLevel::Append(RTreeLevel*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2531: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2254: multiple definition of `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2254: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::GetRoot()':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2552: multiple definition of `RTreeLevel::GetRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2552: first defined here
+/home/nuaa/secondo/lib/libCDistRangeAlgebra.a(CDistRangeAlgebra.o): In function `RTreeLevel::SetRTreeRoot()':
+/home/nuaa/secondo/Algebras/CDistRange/../RTree/RTreeAlgebra.h:2662: multiple definition of `RTreeLevel::SetRTreeRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2662: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2237: multiple definition of `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2237: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2374: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: multiple definition of `RTreeLevel::RTreeLevel(bool, R_Tree<3u, unsigned int>*, double, double, double)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2395: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::GetHeight()':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2546: multiple definition of `RTreeLevel::GetHeight()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2546: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::EntryCount()':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2648: multiple definition of `RTreeLevel::EntryCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2648: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::NodeCount()':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2655: multiple definition of `RTreeLevel::NodeCount()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2655: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::~RTreeLevel()':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: multiple definition of `RTreeLevel::~RTreeLevel()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2416: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2455: multiple definition of `RTreeLevel::Insert(unsigned int, Rectangle<3u> const&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2455: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2429: multiple definition of `RTreeLevel::SaveNode2RTree(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2429: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2492: multiple definition of `RTreeLevel::Insert(R_TreeNode<3u, unsigned int>*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2492: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::Append(RTreeLevel*)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2531: multiple definition of `RTreeLevel::Append(RTreeLevel*)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2531: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2254: multiple definition of `KMeans(unsigned int, std::vector<Point3D, std::allocator<Point3D> >&, std::vector<std::vector<Point3D, std::allocator<Point3D> >, std::allocator<std::vector<Point3D, std::allocator<Point3D> > > >&)'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2254: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::GetRoot()':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2552: multiple definition of `RTreeLevel::GetRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2552: first defined here
+/home/nuaa/secondo/lib/libsdbnl.a(ListUtils.o): In function `RTreeLevel::SetRTreeRoot()':
+/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2662: multiple definition of `RTreeLevel::SetRTreeRoot()'
+/home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2662: first defined here
+collect2: error: ld returned 1 exit status
+make[1]: *** [/home/nuaa/secondo/bin/SecondoBDB] Error 1
+make: *** [buildapps] Error 2
