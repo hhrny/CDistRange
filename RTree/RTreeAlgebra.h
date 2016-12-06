@@ -2203,7 +2203,7 @@ class Point3D
             result |= tmp;
             return result;
         }
-        void readFromULL(unsigned long long val){
+        void ReadFromULL(unsigned long long val){
             unsigned long long tmp = (1 << 21) - 1;
             x = (int)(val & tmp) - MaxVal;
             val = val >> 21;
@@ -2214,7 +2214,108 @@ class Point3D
         void Print(ostream &out){
             out<<"3D Point:(x:"<<x<<",\ty:"<<y<<",\tt:"<<t<<")";
         }
+        double DistanceSquare(Point3D &p){
+            return (p.x-x)*(p.x-x) + (p.y-y)*(p.y-y) + (p.t-t)*(p.t-t);
+        }
+        double Distance(Point3D &p){
+            return sqrt(DistanceSquare(p));
+        }
+        bool operator==(Point3D &p) const{
+            if(p.x == x && p.y == y && p.t == t){
+                return true;
+            }
+            return false;
+        }
+        bool operator!=(Point3D &p) const{
+            if(p.x == x && p.y == y && p.t == t){
+                return false;
+            }
+            return true;
+        }
 };
+
+Point3D GetCenterofPoints(vector<Point3D> points){
+    int sumx = 0, sumy = 0, sumt = 0;
+    vector<Point3D>::iterator it;
+    Point3D result;
+
+    for(it = points.begin(); it != points.end(); it ++){
+        sumx += it->x;
+        sumy += it->y;
+        sumt += it->t;
+    }
+    result.x = sumx/points.size();
+    result.y = sumy/points.size();
+    result.t = sumt/points.size();
+    return result;
+}
+
+// k-means 
+int KMeans(int k, vector<Point3D> &points, vector<vector<Point3D> > &result){
+    int j = 0, i = 0, min;
+    bool changed;
+    double mindist, dist;
+    Point3D tmppoint;
+    vector<Point3D> center, tmp;
+    vector<Point3D>::iterator it;
+    tmp.clear();
+    result.clear();
+    // size < k
+    if(points.size() < k){
+        cout<<"error: the number of points is less than k value!"<<endl;
+        return -1;
+    }
+    // size == k
+    if(points.size() == k){
+        for(i = 0; i < k; i ++){
+            tmp[0] = points[i];
+            result.push_back(tmp);
+        }
+        return k;
+    }
+    // initialize k center
+    for(i = 0; i < k; i ++){
+        center[i] = points[i];
+        result[i] = tmp;
+    }
+    for(j = 0; j < 100; j ++){
+        changed = false;
+        for(it = points.begin(); it != points.end(); it++){
+            // despatch all the points to k collection
+            mindist = it->DistanceSquare(center[0]);
+            min = 0;
+            for(i = 1; i < k; i ++){
+                // find the minimum distance center
+                dist = it->DistanceSquare(center[i]);
+                if(dist < mindist){
+                    min = i;
+                    mindist = dist;
+                }
+            }
+            // push the point to minimum distance center
+            result[min].push_back(*it);
+        }
+        for(i = 0; i < k; i ++){
+            // compute the new center
+            tmppoint = GetCenterofPoints(result[i]);
+            if(tmppoint != center[i]){
+                // update the center
+                center[i] = tmppoint;
+                changed = true;
+            }
+        }
+        if(! changed){
+            // end to k-means
+            return k;
+        }
+        // clear the result
+        for(i = 0; i < k; i ++){
+            result[i].clear();
+        }
+    }
+    cout<<"Warning: can not divide points to k collection!"<<endl;
+    return -1;
+}
 
 /*
    bulk load using grid
@@ -2429,11 +2530,16 @@ int RTreeLevel::Append(RTreeLevel *rl){
 
 
 SmiRecordId RTreeLevel::GetRoot(){
-    int          AppendRecord, i;
+    int          AppendRecord, i, j;
+    unsigned long long key;
     SmiRecord    record;
     SmiRecordId  sid;
     R_TreeNode<3, TupleId> *n;
-    RTreeLevel *rl, *oldrl = this;
+    Point3D                p;
+    vector<Point3D>        points;
+    vector<Point3D>::iterator pit;
+    vector<vector<Point3D> > result;
+    RTreeLevel             *rl, *oldrl = this;
     while(oldrl->noentries > (maxentries * 2)){
         // more than two node to save
         rl = new RTreeLevel(isleaf, rtree, oldrl->unitx*2, oldrl->unity*2, oldrl->unittime*2);
@@ -2459,7 +2565,25 @@ SmiRecordId RTreeLevel::GetRoot(){
     // old rtreelevel
     if(oldrl->noentries > maxentries){
         // devide all the entries in this level to two node
-        
+        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
+            p.ReadFromULL(it->first);
+            points.push_back(p);
+        }
+        if(2 != KMeans(2, points, result)){
+            cout<<"error in dispatch all entries to two node!"<<endl;
+            return -1;
+        }
+        for(i = 0; i < 2; i ++){
+            n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
+            for(pit = result[i].begin(); pit != result[i].end(); pit++){
+                key = pit->toULL();
+                for(j = 0; j < (oldrl->grid[key])->EntryCount(); j++){
+                    n->Insert((*(oldrl->grid[key]))[j]);
+                }
+            }
+            SaveNode2RTree(n);
+            delete n;
+        }
     }
     else if(oldrl->noentries >= minentries){
         // the left entries of this level is less than max entries, collect all the entries as a node
