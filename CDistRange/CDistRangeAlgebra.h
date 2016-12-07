@@ -810,6 +810,508 @@ UPoint *getUPointFromTrjSeg(const TrjSeg &trjseg)
     return result;
 }
 
+/*
+ * 3D Point
+ */
 
+class Point3D
+{
+    public:
+        static const int MaxVal = 1<<20, MinVal = -(1<<20);
+        int x, y, t;
+        unsigned long long toULL(){
+            unsigned long long result = 0, tmp;
+            if(! (t >= MinVal && t <= MaxVal)){
+                cout<<"Error: value t out of range!"<<endl;
+                return 0;
+            }
+            if(! (y >= MinVal && y <= MaxVal)){
+                cout<<"Error: value y out of range!"<<endl;
+                return 0;
+            }
+            if(! (x >= MinVal && x <= MaxVal)){
+                cout<<"Error: value x out of range!"<<endl;
+                return 0;
+            }
+            result = t + MaxVal;
+            result = result << 21;
+            tmp = y + MaxVal;
+            result |= tmp;
+            result = result << 21;
+            tmp = x + MaxVal;
+            result |= tmp;
+            return result;
+        }
+        void ReadFromULL(unsigned long long val){
+            unsigned long long tmp = (1 << 21) - 1;
+            x = (int)(val & tmp) - MaxVal;
+            val = val >> 21;
+            y = (int)(val & tmp) - MaxVal;
+            val = val >> 21;
+            t = (int)(val & tmp) - MaxVal;
+        }
+        void Print(ostream &out){
+            out<<"3D Point:(x:"<<x<<",\ty:"<<y<<",\tt:"<<t<<")";
+        }
+        double DistanceSquare(Point3D &p){
+            return (p.x-x)*(p.x-x) + (p.y-y)*(p.y-y) + (p.t-t)*(p.t-t);
+        }
+        double Distance(Point3D &p){
+            return sqrt(DistanceSquare(p));
+        }
+        bool operator==(Point3D &p) const{
+            if(p.x == x && p.y == y && p.t == t){
+                return true;
+            }
+            return false;
+        }
+        bool operator!=(Point3D &p) const{
+            if(p.x == x && p.y == y && p.t == t){
+                return false;
+            }
+            return true;
+        }
+};
+
+Point3D GetCenterofPoints(vector<Point3D> points){
+    int sumx = 0, sumy = 0, sumt = 0;
+    vector<Point3D>::iterator it;
+    Point3D result;
+
+    for(it = points.begin(); it != points.end(); it ++){
+        sumx += it->x;
+        sumy += it->y;
+        sumt += it->t;
+    }
+    result.x = sumx/points.size();
+    result.y = sumy/points.size();
+    result.t = sumt/points.size();
+    return result;
+}
+
+// k-means 
+int KMeans(unsigned int k, vector<Point3D> &points, vector<vector<Point3D> > &result){
+    unsigned int j = 0, i = 0, min;
+    bool changed;
+    double mindist, dist;
+    Point3D tmppoint;
+    vector<Point3D> center, tmp;
+    vector<Point3D>::iterator it;
+    tmp.clear();
+    result.clear();
+    // size < k
+    if(points.size() < k){
+        cout<<"error: the number of points is less than k value!"<<endl;
+        return -1;
+    }
+    // size == k
+    if(points.size() == k){
+        for(i = 0; i < k; i ++){
+            tmp.push_back(points[i]);
+            result.push_back(tmp);
+            tmp.clear();
+        }
+        return k;
+    }
+    // initialize k center
+    for(i = 0; i < k; i ++){
+        center.push_back(points[i]);
+        result.push_back(tmp);
+    }
+    for(j = 0; j < 100; j ++){
+        changed = false;
+        for(it = points.begin(); it != points.end(); it++){
+            // despatch all the points to k collection
+            mindist = it->DistanceSquare(center[0]);
+            min = 0;
+            for(i = 1; i < k; i ++){
+                // find the minimum distance center
+                dist = it->DistanceSquare(center[i]);
+                if(dist < mindist){
+                    min = i;
+                    mindist = dist;
+                }
+            }
+            // push the point to minimum distance center
+            result[min].push_back(*it);
+        }
+        for(i = 0; i < k; i ++){
+            // compute the new center
+            tmppoint = GetCenterofPoints(result[i]);
+            if(tmppoint != center[i]){
+                // update the center
+                center[i] = tmppoint;
+                changed = true;
+            }
+        }
+        if(! changed){
+            // end to k-means
+            return k;
+        }
+        // clear the result
+        for(i = 0; i < k; i ++){
+            result[i].clear();
+        }
+    }
+    cout<<"Warning: can not divide points to k collection!"<<endl;
+    return -1;
+}
+
+/*
+   bulk load using grid
+
+   class RTreeLevel : the one level of rtree node when bulk load using grid
+
+*/
+// 3 dimission, x, y and t
+class RTreeLevel
+{
+    private:
+        // rtree to bulk load
+        R_Tree<3, TupleId> *rtree;
+        // the next level pointer, when the number of node entry in this level gird is bigger than max entries number
+        // generate a next level, and insert the entries to next level
+        RTreeLevel *nextlevel;
+        // all the entries in this level
+        int noentries;
+        int entrycount, nodecount;
+        // length, width and time of each grid unit 
+        double  unitx, unity, unittime;
+        // leaf
+        bool isleaf;
+        int maxentries, minentries;
+        map<unsigned long long, R_TreeNode<3, TupleId> *> grid;
+        map<unsigned long long, R_TreeNode<3, TupleId> *>::iterator it;
+        
+        //
+        int Insert(R_TreeNode<3, TupleId> *node);
+
+    public:
+        RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt);
+        RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut);
+        ~RTreeLevel();
+
+        Point3D convertMBR2P(const Rectangle<3> &box){
+            Point3D result;
+            result.x = (box.MaxD(0)-box.MinD(0))/2/unitx;
+            result.y = (box.MaxD(1)-box.MinD(1))/2/unity;
+            result.t = (box.MaxD(2)-box.MinD(2))/2/unittime;
+            return result;
+        }
+        int SaveNode2RTree(R_TreeNode<3, TupleId> *node);
+        //int Insert(TupleId tid, const Rectangle<3> &box);
+        int Insert(SmiRecordId sid, const Rectangle<3> &box);
+        // get the root of all the node
+        SmiRecordId GetRoot();
+        int GetHeight();
+        int Append(RTreeLevel *rl);
+        void SetRTreeRoot();
+        int EntryCount();
+        int NodeCount();
+};
+
+RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt){
+    this->isleaf = isleaf;
+    this->rtree = rt;
+    if(isleaf){
+        // this is leaf level
+        maxentries = rt->MaxLeafEntries();
+        minentries = rt->MinLeafEntries();
+    }
+    else{
+        // this is internal level
+        maxentries = rt->MaxInternalEntries();
+        minentries = rt->MinInternalEntries();
+    }
+    this->unitx = 1000.0;
+    this->unity = 1000.0;
+    this->unittime = 1.0/24;  // one hour
+    this->nextlevel = NULL;
+    entrycount = 0;
+    nodecount = 0;
+}
+
+RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut){
+    this->isleaf = isleaf;
+    this->rtree = rt;
+    if(isleaf){
+        // this is leaf level
+        maxentries = rt->MaxLeafEntries();
+        minentries = rt->MinLeafEntries();
+    }
+    else{
+        // this is internal level
+        maxentries = rt->MaxInternalEntries();
+        minentries = rt->MinInternalEntries();
+    }
+    this->unitx = ux;
+    this->unity = uy;
+    this->unittime = ut;
+    this->nextlevel = NULL;
+    entrycount = 0;
+    nodecount = 0;
+}
+
+RTreeLevel::~RTreeLevel(){
+    if(nextlevel != NULL){
+        delete nextlevel;
+    }
+    for(it = grid.begin(); it != grid.end(); it++){
+        delete it->second;
+    }
+    grid.clear();
+}
+
+// save the data of node to rtree
+// and insert the index entry of this node to nextlevel
+// and minus the number of entries of this node
+int RTreeLevel::SaveNode2RTree(R_TreeNode<3, TupleId> *node){
+    int AppendRecord = 0, tmp = 0;
+    Rectangle<3> bbox;
+    SmiRecord    record;
+    SmiRecordId  sid;
+
+    if(node == NULL){
+        cout<<"node is null!"<<endl;
+        return -1;
+    }
+    bbox = node->BoundingBox();
+    tmp = node->EntryCount();
+    AppendRecord = rtree->file->AppendRecord(sid, record);
+    assert(AppendRecord);
+    node->SetModified();
+    node->Write(record);
+    if(nextlevel == NULL){
+        nextlevel = new RTreeLevel(false, rtree, unitx, unity, unittime);
+    }
+    nextlevel->Insert(sid, bbox);
+    // minus the save entries
+    noentries -= tmp;
+    return 1;
+}
+
+// insert a entry
+int RTreeLevel::Insert(SmiRecordId id, const Rectangle<3> &box){
+    Point3D     p;
+    unsigned long long key;
+    
+    p = convertMBR2P(box);
+    key = p.toULL();
+    it = grid.find(key);
+    if(it == grid.end()){
+        // this is no node with key
+        grid[key] = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
+    }
+    // insert the entry to node
+    if(isleaf){
+        grid[key]->Insert(R_TreeLeafEntry<3, TupleId>(box, id));
+    }
+    else{
+        grid[key]->Insert(R_TreeInternalEntry<3>(box, id));
+    }
+    noentries ++;
+    entrycount ++;
+    // make sure the node is no full
+    if(grid[key]->EntryCount() >= maxentries){
+        // node is full
+        SaveNode2RTree(grid[key]);
+        grid[key]->Clear();
+        nodecount ++;
+    }
+    return 1;
+}
+// insert all entries of a node
+int RTreeLevel::Insert(R_TreeNode<3, TupleId> *node){
+    int            i; 
+    Point3D        p;
+    unsigned long long key;
+
+    if(node == NULL){
+        cout<<"node is null!"<<endl;
+        return -1;
+    }
+    //cout<<"test 1"<<endl;
+    //cout<<"isleaf: "<<isleaf;
+    //cout<<"\t"<<node->IsLeaf()<<endl;
+    if(isleaf != node->IsLeaf()){
+        cout<<"error in insert node to rtreelevel!"<<endl;
+        return -1;
+    }
+    //cout<<"test 2"<<endl;
+    if(node->EntryCount() <= 0){
+        return 0;
+    }
+    p = convertMBR2P(node->BoundingBox());
+    key = p.toULL();
+    it = grid.find(key);
+    if(it == grid.end()){
+        // there is no node in p
+        grid[key] = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
+    }
+    // insert all the entry in node to new node
+    for(i = 0; i < node->EntryCount(); i ++){
+        // get a entry of this node
+        // insert a entry to this node
+        grid[key]->Insert((*node)[i]);
+        noentries ++;
+        entrycount ++;
+        // make sure the node is no full
+        if(grid[key]->EntryCount() >= maxentries){
+            // node is full
+            SaveNode2RTree(grid[key]);
+            grid[key]->Clear();
+            nodecount ++;
+        }
+    }
+    return 1;
+}
+
+int RTreeLevel::Append(RTreeLevel *rl){
+    if(rl->isleaf != isleaf){
+        cout<<"error: in append rtree level!"<<endl;
+        return -1;
+    }
+    cout<<"test append 1"<<endl;
+    for(it = rl->grid.begin(); it != rl->grid.end(); it++){
+        Insert(it->second);
+    }
+    cout<<"test append 2"<<endl;
+    if(rl->nextlevel != NULL){
+        nextlevel->Append(rl->nextlevel);
+    }
+    cout<<"test append 3"<<endl;
+    return 1;
+}
+
+int RTreeLevel::GetHeight(){
+    if(nextlevel == NULL){
+        return 1;
+    }
+    return nextlevel->GetHeight() + 1;
+}
+
+SmiRecordId RTreeLevel::GetRoot(){
+    int          AppendRecord, i, j;
+    unsigned long long key;
+    SmiRecord    record;
+    SmiRecordId  sid;
+    R_TreeNode<3, TupleId> *n;
+    Point3D                p;
+    vector<Point3D>        points;
+    vector<Point3D>::iterator pit;
+    vector<vector<Point3D> > result;
+    RTreeLevel             *rl, *oldrl = this;
+    while(oldrl->noentries > (maxentries * 2)){
+        // more than two node to save
+        rl = new RTreeLevel(isleaf, rtree, oldrl->unitx*2, oldrl->unity*2, oldrl->unittime*2);
+        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
+            rl->Insert(it->second);
+        }
+        if(rl->nextlevel != NULL){
+            // the new rtreelevel's next level is no NULL
+            // add all the entry in the new rtreelevel's next level to this rtreelevel
+            if(this->nextlevel == NULL){
+                // check the nextlevel whether is null
+                this->nextlevel = new RTreeLevel(false, rtree, unitx, unity, unittime);
+            }
+            //this->nextlevel->Append(rl->nextlevel);
+            cout<<"test delete 1"<<endl;
+            delete rl->nextlevel;
+            cout<<"test delete 2"<<endl;
+            rl->nextlevel = NULL;
+        }
+        if(oldrl != this){
+            delete oldrl;
+        }
+        cout<<"test get root 1"<<endl;
+        oldrl = rl;
+    }
+    // old rtreelevel
+    if(oldrl->noentries > maxentries){
+        // devide all the entries in this level to two node
+        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
+        cout<<"test get root 2"<<endl;
+            p.ReadFromULL(it->first);
+            points.push_back(p);
+        }
+        if(2 != KMeans(2, points, result)){
+            cout<<"error in dispatch all entries to two node!"<<endl;
+            return 0;
+        }
+        for(i = 0; i < 2; i ++){
+            n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
+            for(pit = result[i].begin(); pit != result[i].end(); pit++){
+                key = pit->toULL();
+                for(j = 0; j < (oldrl->grid[key])->EntryCount(); j++){
+                    n->Insert((*(oldrl->grid[key]))[j]);
+                    cout<<"test get root 3"<<endl;
+                }
+            }
+            SaveNode2RTree(n);
+            delete n;
+        }
+    }
+    else if(oldrl->noentries >= minentries){
+        // the left entries of this level is less than max entries, collect all the entries as a node
+        n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
+        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
+            for(i = 0; i < (it->second)->EntryCount(); i++){
+                n->Insert((*(it->second))[i]);
+                cout<<"test get root 4"<<endl;
+            }
+        }
+        SaveNode2RTree(n);
+        delete n;
+        if(oldrl != this){
+            delete oldrl;
+        }
+    }
+    else if(this->nextlevel == NULL){
+        // this is a root level
+        // collect all the entries in this level as a root node
+        n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
+        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
+            for(i = 0; i < (it->second)->EntryCount(); i++){
+                n->Insert((*(it->second))[i]);
+                cout<<"test get root 5"<<endl;
+            }
+        }
+        AppendRecord = rtree->file->AppendRecord(sid, record);
+        assert(AppendRecord);
+        n->SetModified();
+        n->Write(record);
+        delete n;
+        if(oldrl != this){
+            delete oldrl;
+        }
+        return sid;
+    }
+    else{
+        cout<<"error in function GetRoot(): the number of entries is less than the min number of entry!"<<endl;
+        return 0;
+    }
+    return nextlevel->GetRoot();
+}
+
+int RTreeLevel::EntryCount(){
+    if(nextlevel == NULL){
+        return entrycount;
+    }
+    return entrycount + nextlevel->EntryCount();
+}
+
+int RTreeLevel::NodeCount(){
+    if(nextlevel == NULL){
+        return nodecount;
+    }
+    return nodecount + nextlevel->NodeCount();
+}
+
+void RTreeLevel::SetRTreeRoot(){
+    rtree->header.rootRecordId = GetRoot();
+    rtree->header.height = GetHeight();
+    rtree->header.entryCount = EntryCount();
+    rtree->header.nodeCount = NodeCount();
+}
 
 #endif

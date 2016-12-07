@@ -1,15 +1,3 @@
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
-/bin/sh: 1: [[: not found
 /home/nuaa/secondo/lib/libUpdateRelAlgebra.a(UpdateRelationAlgebra.o): In function `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)':
 /home/nuaa/secondo/Algebras/UpdateRel/../RTree/RTreeAlgebra.h:2237: multiple definition of `GetCenterofPoints(std::vector<Point3D, std::allocator<Point3D> >)'
 /home/nuaa/secondo/lib/libRTreeAlgebra.a(RTreeAlgebra.o):/home/nuaa/secondo/Algebras/RTree/RTreeAlgebra.h:2237: first defined here

@@ -1623,11 +1623,139 @@ struct CDistRangeMMInfo : OperatorInfo {
 
 /****************************************************************
 
-    9.Data preprocessing
+    11.Data preprocessing
 
 ***************************************************************/
 
+/****************************************************************
 
+    12.operator BLUpdateRelRTree
+
+***************************************************************/
+
+//value map function
+//stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
+int BLUpdateRelRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    Stream<Tuple>       *stream;
+    Tuple               *told, *tnew;
+    Relation            *rel;
+    int                 attrindex, counter = 0;
+    R_Tree<3, TupleId>  *rtree;
+    Rectangle<3>        *box;
+    TupleId             tid;
+    RTreeLevel          *rtreelevel;
+    static MessageCenter *msg = MessageCenter::GetInstance();
+    stream = new Stream<Tuple>(args[0].addr);
+    rel = (Relation *)args[1].addr;
+    attrindex = ((CcInt *)(args[3].addr))->GetValue()-1;
+    rtree = (R_Tree<3, TupleId>*)qp->ResultStorage(s).addr;
+    result.setAddr(rtree);
+    stream->open();
+    rtreelevel = new RTreeLevel(true, rtree, 100.0, 100.0, 1.0/24/12);
+    // deal with the stream
+    while((told = stream->request()) != NULL){
+        if((counter++ % 10000) == 0){
+            NList msgList(NList("simple"), NList(counter));
+            msg->Send(msgList);
+        }
+        tnew = told->Clone();
+        rel->AppendTuple(tnew);
+        //mpoint = (MPoint *)tnew->GetAttribute(attrindex);
+        tid = tnew->GetTupleId();
+        //rect = mpoint->BoundingBox();
+        box = (Rectangle<3> *)tnew->GetAttribute(attrindex);
+        if(box->IsDefined() && tid != 0){
+            //R_TreeLeafEntry<3, TupleId> le(*box, tid);
+            //rtree->InsertBulkLoad(le);
+            rtreelevel->Insert(tid, *box);
+        }
+        told->DeleteIfAllowed();
+    }
+    rtreelevel->SetRTreeRoot();
+    delete rtreelevel;
+    NList msgList(NList("simple"), NList(counter));
+    msg->Send(msgList);
+    return 0;
+}
+
+//
+// operator info
+struct BLUpdateRelRTreeInfo : OperatorInfo {
+    BLUpdateRelRTreeInfo(){
+        name      = "blupdaterelrtree";
+        signature = "((stream (tuple([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x (rel(stream([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x int(index of mpoint) -> rtree";
+        syntax    = "_ blupdaterelrtree [ _, _]";
+        meaning   = "update the stream tuple to rel, and generate a new sub rtree of stream tuple";
+    }
+};
+
+/****************************************************************
+
+    13.operator StreamBLUpdateRTree
+
+***************************************************************/
+//value map function
+//stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
+int StreamBLUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    Stream<Tuple>       *stream;
+    Tuple               *told, *tnew;
+    Relation            *rel;
+    int                 attrindex, counter = 0;
+    R_Tree<3, TupleId>  *rtree, *orginrtree;
+    Rectangle<3>        *box;
+    TupleId             tid;
+    RTreeLevel          *rtreelevel;
+    static MessageCenter *msg = MessageCenter::GetInstance();
+    stream = new Stream<Tuple>(args[0].addr);
+    rel = (Relation *)args[1].addr;
+    orginrtree = (R_Tree<3, TupleId> *)args[2].addr;
+    rtree = new R_Tree<3, TupleId>(orginrtree->FileId(), 4000);
+    attrindex = ((CcInt *)(args[4].addr))->GetValue()-1;
+    stream->open();
+    // init the rtree bulk load
+    rtreelevel = new RTreeLevel(true, rtree, 100.0, 100.0, 1.0/24/12);
+    while((told = stream->request()) != NULL){
+        if((counter++ % 10000) == 0){
+            NList msgList(NList("simple"), NList(counter));
+            msg->Send(msgList);
+        }
+        tnew = told->Clone();
+        rel->AppendTuple(tnew);
+        //mpoint = (MPoint *)tnew->GetAttribute(attrindex);
+        tid = tnew->GetTupleId();
+        //rect = mpoint->BoundingBox();
+        box = (Rectangle<3> *)tnew->GetAttribute(attrindex);
+        if(box->IsDefined() && tid != 0){
+            //R_TreeLeafEntry<3, TupleId> le(*box, tid);
+            //rtree->InsertBulkLoad(le);
+            rtreelevel->Insert(tid, *box);
+        }
+        told->DeleteIfAllowed();
+    }
+    rtreelevel->SetRTreeRoot();
+    delete rtreelevel;
+    NList msgList(NList("simple"), NList(counter));
+    msg->Send(msgList);
+    // merge rtree to ogrin rtree
+    orginrtree->SwitchHeader(rtree);
+    orginrtree->MergeRtree();
+    result.setAddr(new CcBool(true, true));
+    return 0;
+}
+
+//
+// operator info
+struct StreamBLUpdateRTreeInfo : OperatorInfo {
+    StreamBLUpdateRTreeInfo()
+    {
+        name      = "streamblupdatertree";
+        signature = "((stream (tuple([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x (rel(stream([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x rtree x attr -> rtree";
+        syntax    = "_ streamblupdatertree [ _, _, _]";
+        meaning   = "update the stream tuple to rel, and generate a new sub rtree of stream tuple, and merge to orgin rtree";
+    }
+};
 
 /****************************************************************************
  
@@ -1646,8 +1774,10 @@ public:
         AddOperator( TBTreeFilterInfo(), TBTreeFilterVM, TBTreeFilterTM );
         AddOperator( SETIFilterInfo(), SETIFilterVM, SETIFilterTM );
         AddOperator( UpdateRelRTreeInfo(), UpdateRelRTreeVM, UpdateRelRTreeTM );
+        AddOperator( BLUpdateRelRTreeInfo(), BLUpdateRelRTreeVM, UpdateRelRTreeTM );
         AddOperator( MergeRTreeInfo(), MergeRTreeVM, MergeRTreeTM );
         AddOperator( StreamUpdateRTreeInfo(), StreamUpdateRTreeVM, StreamUpdateRTreeTM );
+        AddOperator( StreamBLUpdateRTreeInfo(), StreamBLUpdateRTreeVM, StreamUpdateRTreeTM );
         AddOperator( StreamUpdateTBTreeInfo(), StreamUpdateTBTreeVM, StreamUpdateTBTreeTM );
         AddOperator( StreamUpdateBLTBTreeInfo(), StreamUpdateBLTBTreeVM, StreamUpdateTBTreeTM );
     }
