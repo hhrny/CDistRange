@@ -1757,6 +1757,65 @@ struct StreamBLUpdateRTreeInfo : OperatorInfo {
     }
 };
 
+/****************************************************************
+
+    14.operator StreamOBOUpdateRTree
+
+***************************************************************/
+//value map function
+//stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
+int StreamOBOUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    Stream<Tuple>       *stream;
+    Tuple               *told, *tnew;
+    Relation            *rel;
+    int                 attrindex, counter = 0;
+    R_Tree<3, TupleId>  *rtree;
+    Rectangle<3>        *box;
+    TupleId             tid;
+    static MessageCenter *msg = MessageCenter::GetInstance();
+    stream = new Stream<Tuple>(args[0].addr);
+    rel = (Relation *)args[1].addr;
+    rtree = (R_Tree<3, TupleId> *)args[2].addr;
+    attrindex = ((CcInt *)(args[4].addr))->GetValue()-1;
+    stream->open();
+    while((told = stream->request()) != NULL){
+        if((counter++ % 10000) == 0){
+            NList msgList(NList("simple"), NList(counter));
+            msg->Send(msgList);
+        }
+        tnew = told->Clone();
+        told->DeleteIfAllowed();
+        // append the tuple to relation
+        rel->AppendTuple(tnew);
+        //mpoint = (MPoint *)tnew->GetAttribute(attrindex);
+        tid = tnew->GetTupleId();
+        //rect = mpoint->BoundingBox();
+        box = (Rectangle<3> *)tnew->GetAttribute(attrindex);
+        if(box->IsDefined() && tid != 0){
+            //R_TreeLeafEntry<3, TupleId> le(*box, tid);
+            rtree->Insert(R_TreeLeafEntry<3, TupleId>(*box, tid));
+        }
+    }
+    NList msgList(NList("simple"), NList(counter));
+    msg->Send(msgList);
+    // merge rtree to ogrin rtree
+    result.setAddr(new CcBool(true, true));
+    return 0;
+}
+
+//
+// operator info
+struct StreamOBOUpdateRTreeInfo : OperatorInfo {
+    StreamOBOUpdateRTreeInfo()
+    {
+        name      = "streamoboupdatertree";
+        signature = "((stream (tuple([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x (rel(stream([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x rtree x attr -> rtree";
+        syntax    = "_ streamoboupdatertree [ _, _, _]";
+        meaning   = "update the stream tuple to rel, and generate a new sub rtree of stream tuple, and merge to orgin rtree";
+    }
+};
+
 /****************************************************************************
  
    CDistRangeAlgebra
@@ -1778,6 +1837,7 @@ public:
         AddOperator( MergeRTreeInfo(), MergeRTreeVM, MergeRTreeTM );
         AddOperator( StreamUpdateRTreeInfo(), StreamUpdateRTreeVM, StreamUpdateRTreeTM );
         AddOperator( StreamBLUpdateRTreeInfo(), StreamBLUpdateRTreeVM, StreamUpdateRTreeTM );
+        AddOperator( StreamOBOUpdateRTreeInfo(), StreamOBOUpdateRTreeVM, StreamUpdateRTreeTM );
         AddOperator( StreamUpdateTBTreeInfo(), StreamUpdateTBTreeVM, StreamUpdateTBTreeTM );
         AddOperator( StreamUpdateBLTBTreeInfo(), StreamUpdateBLTBTreeVM, StreamUpdateTBTreeTM );
     }

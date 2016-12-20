@@ -61,6 +61,12 @@ Signature: stream x rel x rtree x attr -> bool
 Example  : query SubTrains feed streamblupdatertree [Trains, rtree, MBR];
 Result   : TRUE
 
+Operator : streamoboupdatertree
+Number   : 4
+Signature: stream x rel x rtree x attr -> bool
+Example  : query SubTrains feed streamoboupdatertree [Trains, rtree, MBR];
+Result   : TRUE
+
 Operator : streamupdatetbtree
 Number   : 3
 Signature: stream x rel x tbtree -> tbtree
