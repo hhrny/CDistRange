@@ -1021,7 +1021,8 @@ class RTreeLevel
         bool isleaf;
         int maxentries, minentries;
         map<unsigned long long, R_TreeNode<3, TupleId> *> grid;
-        
+ 
+        R_TreeNode<3, TupleId> *leftentries; 
         //
         int Insert(R_TreeNode<3, TupleId> *node);
 
@@ -1076,6 +1077,7 @@ RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt){
     noentries = 0;
     entrycount = 0;
     nodecount = 0;
+    leftentries = NULL;
 }
 
 RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut){
@@ -1098,6 +1100,7 @@ RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy
     noentries = 0;
     entrycount = 0;
     nodecount = 0;
+    leftentries = NULL;
 }
 
 RTreeLevel::~RTreeLevel(){
@@ -1243,137 +1246,16 @@ int RTreeLevel::GetHeight(){
     }
     return nextlevel->GetHeight() + 1;
 }
-/*
+//
 SmiRecordId RTreeLevel::GetRoot(){
-    int          i, j;
-    unsigned long long key;
-    SmiRecord    record;
-    //SmiRecordId  sid;
-    //int          AppendRecord = 0;
-    R_TreeNode<3, TupleId> *n;
-    Point3D                p;
-    vector<Point3D>        points;
-    map<unsigned long long, R_TreeNode<3, TupleId> *>::iterator it;
-    vector<Point3D>::iterator pit;
-    vector<vector<Point3D> > result;
-    RTreeLevel             *rl, *oldrl = this;
-    while(oldrl->noentries > (maxentries * 2)){
-        // more than two node to save
-        rl = new RTreeLevel(isleaf, rtree, oldrl->unitx*2, oldrl->unity*2, oldrl->unittime*2);
-        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
-            rl->Insert(it->second);
-        }
-        if(rl->nextlevel != NULL){
-            // the new rtreelevel's next level is no NULL
-            // add all the entry in the new rtreelevel's next level to this rtreelevel
-            if(this->nextlevel == NULL){
-                // check the nextlevel whether is null
-                this->nextlevel = new RTreeLevel(false, rtree, unitx, unity, unittime);
-            }
-            // problem is here
-            this->nextlevel->Append(rl->nextlevel);
-            //cout<<"test delete 1"<<endl;
-            delete rl->nextlevel;
-            //cout<<"test delete 2"<<endl;
-            rl->nextlevel = NULL;
-        }
-        if(oldrl != this){
-            delete oldrl;
-        }
-        //cout<<"test get root 1"<<endl;
-        oldrl = rl;
-    }
-    // old rtreelevel
-    if(oldrl->noentries > maxentries){
-        //cout<<"test get root 3"<<endl;
-        // devide all the entries in this level to two node
-        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
-        //cout<<"test get root 2"<<endl;
-            p.ReadFromULL(it->first);
-            points.push_back(p);
-        }
-        if(2 != KMeans(2, points, result)){
-            cout<<"error in dispatch all entries to two node!"<<endl;
-            return 0;
-        }
-        for(i = 0; i < 2; i ++){
-            n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
-            for(pit = result[i].begin(); pit != result[i].end(); pit++){
-                key = pit->toULL();
-                for(j = 0; j < (oldrl->grid[key])->EntryCount(); j++){
-                    n->Insert((*(oldrl->grid[key]))[j]);
-                }
-            }
-            SaveNode2RTree(n);
-            delete n;
-        }
-    }
-    else if(oldrl->noentries >= minentries){
-        //cout<<"test get root 4"<<endl;
-        // the left entries of this level is less than max entries, collect all the entries as a node
-        n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
-        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
-            for(i = 0; i < (it->second)->EntryCount(); i++){
-                n->Insert((*(it->second))[i]);
-            }
-        }
-        SaveNode2RTree(n);
-        delete n;
-        if(oldrl != this){
-            delete oldrl;
-        }
-    }
-    else if(this->nextlevel == NULL){
-        //cout<<"test get root 5"<<endl;
-        // this is a root level
-        // collect all the entries in this level as a root node
-        //n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
-        // get the root node from rtree
-        n = rtree->GetNode(rtree->RootRecordId(), 0, minentries, maxentries);
-        n->Clear();
-        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
-            for(i = 0; i < (it->second)->EntryCount(); i++){
-                n->Insert((*(it->second))[i]);
-            }
-        }
-        //AppendRecord = rtree->file->AppendRecord(sid, record);
-        //assert(AppendRecord);
-        //n->SetModified();
-        //n->Write(record);
-        rtree->PutNode(rtree->RootRecordId(),&n);
-        //delete n;
-        if(oldrl != this){
-            delete oldrl;
-        }
-        return rtree->RootRecordId();
-    }
-    else{
-        cout<<"error in function GetRoot(): the number of entries is less than the min number of entry!"<<endl;
-        return 0;
-    }
-    return nextlevel->GetRoot();
-}
-*/
-SmiRecordId RTreeLevel::GetRoot(){
-    int          i, j;
-    int          threshold;
+    int          i;
     SmiRecord    record;
     R_TreeNode<3, TupleId> *n;
-    Point3D                p;
-    vector<Point3D>        points;
     map<unsigned long long, R_TreeNode<3, TupleId> *>::iterator it;
     vector<Point3D>::iterator pit;
-    vector<vector<Point3D> > result;
     RTreeLevel             *rl, *oldrl = this;
-    // set the threshold value to stopping reinsert
-    if(entrycount % maxentries < minentries){
-        threshold = maxentries + minentries;
-    }
-    else{
-        threshold = maxentries;
-    }
     //
-    while(oldrl->noentries > threshold){
+    while(oldrl->noentries > maxentries){
         // the number of entries is more than threshold
         rl = new RTreeLevel(isleaf, rtree, oldrl->unitx*2, oldrl->unity*2, oldrl->unittime*2);
         // set the rl->nextlevel as this->nextlevel, add all the internal node to this->nextlevel
@@ -1410,45 +1292,8 @@ SmiRecordId RTreeLevel::GetRoot(){
         //cout<<"test get root 1"<<endl;
         oldrl = rl;
     }
-    // old rtreelevel
-    if(oldrl->noentries > maxentries){
-        //cout<<"test get root 3"<<endl;
-        // devide all the entries in this level to two node
-        n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
-        vector<R_TreeEntry<3> *> entries;
-        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
-            //cout<<"test get root 2"<<endl;
-            for(i = 0; i < (it->second)->EntryCount(); i++){
-                n->Insert((*(it->second))[i]);
-                if(n->EntryCount() >= minentries){
-                    SaveNode2RTree(n);
-                    oldrl->noentries -= minentries;
-                    delete n;
-                }
-            }
-        }
-    }
-    else if(oldrl->noentries >= minentries){
-        //cout<<"test get root 4"<<endl;
-        // the left entries of this level is less than max entries, collect all the entries as a node
-        n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
-        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
-            for(i = 0; i < (it->second)->EntryCount(); i++){
-                n->Insert((*(it->second))[i]);
-            }
-        }
-        SaveNode2RTree(n);
-        delete n;
-        if(oldrl != this){
-            delete oldrl;
-        }
-    }
-    else if(this->nextlevel == NULL){
-        //cout<<"test get root 5"<<endl;
-        // this is a root level
-        // collect all the entries in this level as a root node
-        //n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
-        // get the root node from rtree
+    if(this->nextlevel == NULL){
+        // this is root level, and save all the index entry to root node
         n = rtree->GetNode(rtree->RootRecordId(), 0, minentries, maxentries);
         n->Clear();
         for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
@@ -1456,23 +1301,34 @@ SmiRecordId RTreeLevel::GetRoot(){
                 n->Insert((*(it->second))[i]);
             }
         }
-        //AppendRecord = rtree->file->AppendRecord(sid, record);
-        //assert(AppendRecord);
-        //n->SetModified();
-        //n->Write(record);
         rtree->PutNode(rtree->RootRecordId(),&n);
-        //delete n;
         if(oldrl != this){
+            oldrl->nextlevel = NULL;
             delete oldrl;
         }
+        // return the root id
         return rtree->RootRecordId();
     }
     else{
-        // insert all the entry to rtree
-        
-        return 0;
+        // the left entries of this level is less than max entries, collect all the entries as a node
+        this->leftentries = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
+        for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
+            for(i = 0; i < (it->second)->EntryCount(); i++){
+                this->leftentries->Insert((*(it->second))[i]);
+            }
+        }
+        if(oldrl->noentries >= minentries){
+            //cout<<"test get root 4"<<endl;
+            SaveNode2RTree(this->leftentries);
+            delete this->leftentries;
+            this->leftentries = NULL;
+            if(oldrl != this){
+                oldrl->nextlevel = NULL;
+                delete oldrl;
+            }
+        }
+        return this->nextlevel->GetRoot();
     }
-    return nextlevel->GetRoot();
 }
 
 int RTreeLevel::EntryCount(){
