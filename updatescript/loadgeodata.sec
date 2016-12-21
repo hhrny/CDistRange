@@ -1,0 +1,17 @@
+open database geo;
+
+delete bj;
+let bj = gkproject([const point value (116.424722 39.905555)]);
+
+let geotrip0 = loaddata("/home/hhr/geodata/d0") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip1 = loaddata("/home/hhr/geodata/d1") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip2 = loaddata("/home/hhr/geodata/d2") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip3 = loaddata("/home/hhr/geodata/d3") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip4 = loaddata("/home/hhr/geodata/d4") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip5 = loaddata("/home/hhr/geodata/d5") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip6 = loaddata("/home/hhr/geodata/d6") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip7 = loaddata("/home/hhr/geodata/d7") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip8 = loaddata("/home/hhr/geodata/d8") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+let geotrip9 = loaddata("/home/hhr/geodata/d9") projectextend [Id, Datetime; Position:gkproject(.Position) pointminus bj] convertP2UU [Id, Datetime, Position] convertUU2UP[Pos] convertUP2MP[UTrip, Id] consume;
+
+#let geotrips = geotrip0 feed geotrip1 feed concat geotrip2 feed concat geotrip3 feed concat geotrip4 feed concat geotrip5 feed concat geotrip6 feed concat geotrip7 feed concat geotrip8 feed concat geotrip9 feed concat consume;
