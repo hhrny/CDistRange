@@ -495,6 +495,7 @@ class TraSplitLocalInfo
 
         TraSplitLocalInfo()
         {
+            tuple = NULL;
             mpoint = NULL;
             upptr = 0;
             numofupoint = 0;
@@ -588,6 +589,10 @@ int TrajectorySplitValueMap(Word *args, Word &result, int message, Word &local, 
                         return CANCEL;
                     }
                     tuple = (Tuple*)t.addr;
+                    // delete old tuple
+                    if(localinfo->tuple != NULL){
+                        localinfo->tuple->DeleteIfAllowed();
+                    }
                     localinfo->tuple = tuple;
                     mpoint = (MPoint *)tuple->GetAttribute(localinfo->attrindex);
                     localinfo->Set(mpoint);
@@ -945,6 +950,7 @@ int ConvertUU2UPVM(Word* args, Word& result, int message, Word& local, Supplier 
     Tuple                 *tuple = NULL;
     UploadUnit            *uploadunit;
     UPoint                *upoint;
+    int                   id;
     Interval<Instant>     uiv;
     ConvertUU2UPLocalInfo *localinfo = NULL;
 
@@ -972,6 +978,8 @@ int ConvertUU2UPVM(Word* args, Word& result, int message, Word& local, Supplier 
                 return CANCEL;
             }
             localinfo->uu = (UploadUnit *)tuple->GetAttribute(localinfo->attrindex);
+            //
+            localinfo->tuple = NULL;
             // set the local
             local = SetWord(localinfo);
             return 0;
@@ -990,6 +998,12 @@ int ConvertUU2UPVM(Word* args, Word& result, int message, Word& local, Supplier 
                     return CANCEL;
                 }
                 uploadunit = (UploadUnit *)tuple->GetAttribute(localinfo->attrindex);
+                // delete old tuple
+                if(localinfo->tuple != NULL){
+                    localinfo->tuple->DeleteIfAllowed();
+                    localinfo->tuple = NULL;
+                }
+                localinfo->tuple = tuple;
                 //cout<<"address of uploadunit(in convertUU2UP function): "<<uploadunit<<endl;
                 // check the uu and uploadunit have the same id
                 if(uploadunit->GetID() == localinfo->uu->GetID()){
@@ -1005,17 +1019,19 @@ int ConvertUU2UPVM(Word* args, Word& result, int message, Word& local, Supplier 
                     uiv.CopyFrom(Interval<Instant>(localinfo->uu->GetTime(), uploadunit->GetTime(), true, false));
                     // construct the upoint
                     upoint = new UPoint(uiv, localinfo->uu->GetPos().x, localinfo->uu->GetPos().y, uploadunit->GetPos().x, uploadunit->GetPos().y);
+                    id = uploadunit->GetID();
                     // construct the tuple
                     tuple = new Tuple(localinfo->tupletype);
-                    tuple->PutAttribute(0, new CcInt(uploadunit->GetID()));
+                    tuple->PutAttribute(0, new CcInt(id));
                     tuple->PutAttribute(1, upoint);
                     result.setAddr(tuple);
 
                     //
                     localinfo->uu = uploadunit;
-
                     return YIELD;
                 }
+                // delete old tuple
+                //tuple->DeleteIfAllowed();
                 //
                 localinfo->uu = uploadunit;
             }
@@ -1150,13 +1166,6 @@ int MeanFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
 
             // open the stream
             localinfo->stream->open();
-            /*
-               tuple = localinfo->stream->request();
-               if(tuple == NULL){
-               return CANCEL;
-               }
-               localinfo->uu = (UploadUnit *)tuple->GetAttribute(localinfo->attrindex);
-               */
             //
             localinfo->sumofx = localinfo->sumofy = 0.0;
             localinfo->uuqueue.clear();
@@ -1179,11 +1188,6 @@ int MeanFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
                     return CANCEL;
                 }
                 uploadunit = new UploadUnit(*((UploadUnit *)tuple->GetAttribute(localinfo->attrindex)));
-                //uploadunit = (UploadUnit *)tuple->GetAttribute(localinfo->attrindex);
-                //cout<<"address of uploadunit(in mean filter function): "<<uploadunit<<endl;
-                //cout<<"uploadunit: "<<endl;
-                //uploadunit->GetTime().Print(cout);
-                //cout<<endl;
                 // the upload unit queue is empty
                 if(localinfo->uuqueue.empty()){
                     //cout<<"test 2"<<endl;
@@ -1191,6 +1195,8 @@ int MeanFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
                     localinfo->sumofx = uploadunit->GetPos().x;
                     localinfo->sumofy = uploadunit->GetPos().y;
                     result.setAddr(tuple);
+                    // delete the old tuple
+                    //tuple->DeleteIfAllowed();
                     return YIELD;
                 }
                 // check the uu and uploadunit in the queue have the same id
@@ -1209,6 +1215,8 @@ int MeanFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
                         localinfo->sumofx = uploadunit->GetPos().x;
                         localinfo->sumofy = uploadunit->GetPos().y;
                         result.setAddr(tuple);
+                        // delete the old tuple
+                        //tuple->DeleteIfAllowed();
                         return YIELD;
                     }
                     // deal with upload unit
@@ -1219,6 +1227,8 @@ int MeanFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
                     if(localinfo->uuqueue.size() < localinfo->n){
                         //cout<<"test 5"<<endl;
                         result.setAddr(tuple);
+                        // delete the old tuple
+                        //tuple->DeleteIfAllowed();
                         return YIELD;
                     }
                     //cout<<"test 6"<<endl;
@@ -1244,6 +1254,8 @@ int MeanFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
                         }
                     }
                     result.setAddr(tuplenew);
+                    // delete the old tuple
+                    tuple->DeleteIfAllowed();
                     return YIELD;
                 }
                 else{
@@ -1257,6 +1269,8 @@ int MeanFilterVM(Word* args, Word& result, int message, Word& local, Supplier s)
                     localinfo->sumofx = uploadunit->GetPos().x;
                     localinfo->sumofy = uploadunit->GetPos().y;
                     result.setAddr(tuple);
+                    // delete the old tuple
+                    //tuple->DeleteIfAllowed();
                     return YIELD;
                 }
             }
@@ -1303,7 +1317,7 @@ class MedianFilterLocalInfo
         int             attrindex;
         //UploadUnit      *uu;
         Stream<Tuple>   *stream;
-        //Tuple           *tuple;
+        Tuple           *tuple;
         ListExpr        tupletype;
         list<UploadUnit *>  uuqueue;
         unsigned int        n;
@@ -1386,6 +1400,8 @@ int MedianFilterVM(Word* args, Word& result, int message, Word& local, Supplier 
                 if(localinfo->uuqueue.empty()){
                     localinfo->uuqueue.push_back(uploadunit);
                     result.setAddr(tuple);
+                    // delete the old tuple
+                    //tuple->DeleteIfAllowed();
                     return YIELD;
                 }
                 // check the uu and uploadunit in the queue have the same id
@@ -1403,6 +1419,8 @@ int MedianFilterVM(Word* args, Word& result, int message, Word& local, Supplier 
                         }
                         localinfo->uuqueue.push_back(uploadunit);
                         result.setAddr(tuple);
+                        // delete the old tuple
+                        //tuple->DeleteIfAllowed();
                         return YIELD;
                     }
                     // deal with upload unit
@@ -1410,6 +1428,8 @@ int MedianFilterVM(Word* args, Word& result, int message, Word& local, Supplier 
                     // elements in upload unit queue is less than n-1
                     if(localinfo->uuqueue.size() < localinfo->n){
                         result.setAddr(tuple);
+                        // delete the old tuple
+                        //tuple->DeleteIfAllowed();
                         return YIELD;
                     }
                     //cout<<"test 6"<<endl;
@@ -1432,6 +1452,8 @@ int MedianFilterVM(Word* args, Word& result, int message, Word& local, Supplier 
                         }
                     }
                     result.setAddr(tuplenew);
+                    // delete the old tuple
+                    tuple->DeleteIfAllowed();
                     return YIELD;
                 }
                 else{
@@ -1443,6 +1465,8 @@ int MedianFilterVM(Word* args, Word& result, int message, Word& local, Supplier 
                     }
                     localinfo->uuqueue.push_back(uploadunit);
                     result.setAddr(tuple);
+                    // delete the old tuple
+                    //tuple->DeleteIfAllowed();
                     return YIELD;
                 }
             }
@@ -1579,7 +1603,9 @@ class ConvertUP2MPLocalInfo
             told = tuple;
             id = ((CcInt *)tuple->GetAttribute(indexofid))->GetValue();
             upoint = (UPoint *)tuple->GetAttribute(attrindex);
-            mpoint->MergeAdd(*upoint);
+            if(upoint->IsValid()){
+                mpoint->MergeAdd(*upoint);
+            }
             //
             while((tuple = stream->request()) != NULL){
                 tmpid = ((CcInt *)tuple->GetAttribute(indexofid))->GetValue();
@@ -1590,7 +1616,11 @@ class ConvertUP2MPLocalInfo
                 }
                 //upoint = ((UPoint *)tuple->GetAttribute(attrindex))->Clone();
                 upoint = (UPoint *)tuple->GetAttribute(attrindex);
-                mpoint->MergeAdd(*upoint);
+                if(upoint->IsValid()){
+                    mpoint->MergeAdd(*upoint);
+                }
+                // delete the old tuple
+                tuple->DeleteIfAllowed();
             }
             mpoint->EndBulkLoad();
             return mpoint;
@@ -1614,6 +1644,8 @@ class ConvertUP2MPLocalInfo
                     tnew->CopyAttribute(i, told, i);
                 }
             }
+            // delete the old tuple
+            told->DeleteIfAllowed();
             return tnew;
         }
 };
@@ -2039,6 +2071,8 @@ class TrajSplitLocalInfo
             }
             mp = (MPoint *)tuple->GetAttribute(mpindex);
             TrajSplitLocalInfo::TrajSplit(mp, length, width, trips, starttimes);
+            // delete the old tuple
+            //tuple->DeleteIfAllowed();
             delete mp;
             return true;
         }
@@ -2055,7 +2089,7 @@ class TrajSplitLocalInfo
                     return true;
                 }
                 delete mp;
-                tuple->DeleteIfAllowed();
+                //tuple->DeleteIfAllowed();
             }
             // there is no tuple to deal with
             return false;

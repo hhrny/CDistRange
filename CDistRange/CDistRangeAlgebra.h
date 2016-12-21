@@ -980,7 +980,7 @@ int PointsDivide(vector<Point3D> &points, vector<vector<Point3D> > &result, int 
         // no need to balance index entry of two node
         return 2;
     }
-    center = GetCenterofPoints(*p);
+    center = GetCenterofPoints(*pmin);
     tmp = min - pmin->size();
     for(i = 0; i < tmp; i ++){
         mindist = INT_MAX;
@@ -1357,7 +1357,6 @@ SmiRecordId RTreeLevel::GetRoot(){
 SmiRecordId RTreeLevel::GetRoot(){
     int          i, j;
     int          threshold;
-    unsigned long long key;
     SmiRecord    record;
     R_TreeNode<3, TupleId> *n;
     Point3D                p;
@@ -1416,7 +1415,7 @@ SmiRecordId RTreeLevel::GetRoot(){
         //cout<<"test get root 3"<<endl;
         // devide all the entries in this level to two node
         n = new R_TreeNode<3, TupleId>(isleaf, minentries, maxentries);
-        vector<R_TreeEntry<3> > entries;
+        vector<R_TreeEntry<3> *> entries;
         for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
             //cout<<"test get root 2"<<endl;
             for(i = 0; i < (it->second)->EntryCount(); i++){
