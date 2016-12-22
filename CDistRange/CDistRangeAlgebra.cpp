@@ -1896,8 +1896,10 @@ int GridBulkLoadRTreeVM(Word* args, Word& result, int message, Word& local, Supp
     stream = new Stream<Tuple>(args[0].addr);
     mbrindex = ((CcInt *)(args[3].addr))->GetValue()-1;
     tidindex = ((CcInt *)(args[4].addr))->GetValue()-1;
+    //cout<<"index of tid:"<<tidindex<<endl;
     stream->open();
     rtree = (R_Tree<3, TupleId> *)qp->ResultStorage(s).addr;
+    result.setAddr(rtree);
     rtreelevel = new RTreeLevel(true, rtree, 100.0, 100.0, 1.0/24/12);
     // deal with the stream
     while((tuple = stream->request()) != NULL){
@@ -1907,6 +1909,8 @@ int GridBulkLoadRTreeVM(Word* args, Word& result, int message, Word& local, Supp
         }
         box = (Rectangle<3> *)tuple->GetAttribute(mbrindex);
         tid = ((TupleIdentifier *)tuple->GetAttribute(tidindex))->GetTid();
+        //box->Print(cout);
+        //cout<<"tid:"<<tid<<endl;
         if(box->IsDefined() && tid != 0){
             rtreelevel->Insert(tid, *box);
         }

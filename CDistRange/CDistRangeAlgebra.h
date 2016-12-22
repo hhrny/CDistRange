@@ -10,9 +10,9 @@
 #include "TupleIdentifier.h"
 #include "TemporalAlgebra.h"
 #include "Symbols.h"
-#include "../RTree/RTreeAlgebra.h"
-#include "../TBTree/TBTree.h"
-#include "../SETI/SETIAlgebra.h"
+#include "RTreeAlgebra.h"
+#include "TBTree.h"
+#include "SETIAlgebra.h"
 #include <stack>
 #include <queue>
 #include <list>
@@ -1020,15 +1020,15 @@ class RTreeLevel
         double  unitx, unity, unittime;
         // leaf
         bool isleaf;
+        int height;
         int maxentries, minentries;
         map<unsigned long long, R_TreeNode<3, TupleId> *> grid;
  
         R_TreeNode<3, TupleId> *leftentries; 
         //
         int Insert(R_TreeNode<3, TupleId> *node);
-
-        int height;
-
+        int Insert2RTree(const R_TreeEntry<3> &entry, int height);
+        int DealWithLeftEntries();
     public:
         RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt);
         RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut);
@@ -1049,9 +1049,19 @@ class RTreeLevel
         int GetHeight();
         int Append(RTreeLevel *rl);
         void SetRTreeRoot();
+        int AllEntryCount();
         int EntryCount();
         int NodeCount();
-        
+        void PrintIsLeaf(){
+            if(isleaf){
+                cout<<"yes"<<endl;
+            }else{
+                cout<<"no"<<endl;
+            }
+            if(nextlevel != NULL){
+                nextlevel->PrintIsLeaf();
+            }
+        }
         void SetNextLevel(RTreeLevel *nl){
             nextlevel = nl;
         }
@@ -1081,7 +1091,7 @@ RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt){
     entrycount = 0;
     nodecount = 0;
     leftentries = NULL;
-    height = 1;
+    height = 0;
 }
 
 RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut){
@@ -1105,7 +1115,7 @@ RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy
     entrycount = 0;
     nodecount = 0;
     leftentries = NULL;
-    height = 1;
+    height = 0;
 }
 
 RTreeLevel::~RTreeLevel(){
@@ -1135,6 +1145,7 @@ int RTreeLevel::SaveNode2RTree(R_TreeNode<3, TupleId> *node){
     }
     bbox = node->BoundingBox();
     //tmp = node->EntryCount();
+    assert(node->IsLeaf() == this->isleaf);
     AppendRecord = rtree->file->AppendRecord(sid, record);
     assert(AppendRecord);
     node->SetModified();
@@ -1179,6 +1190,14 @@ int RTreeLevel::Insert(SmiRecordId id, const Rectangle<3> &box){
         noentries -= maxentries;
         nodecount ++;
     }
+    return 1;
+}
+// insert entries to rtree at height
+int RTreeLevel::Insert2RTree(const R_TreeEntry<3> &entry, int height)
+{
+    rtree->searchType = R_Tree<3, TupleId>::NoSearch;
+    rtree->LocateBestNode(entry, height);
+    rtree->InsertEntry(entry);
     return 1;
 }
 // insert all entries of a node
@@ -1253,14 +1272,32 @@ int RTreeLevel::GetHeight(){
     }
     return nextlevel->GetHeight();
 }
+// deal with the left entries in rtree level
+int RTreeLevel::DealWithLeftEntries()
+{
+    int i;
+    int insertHeight = rtree->Height() - this->height;
+    if(this->noentries != 0){
+        for(i = 0; i < this->leftentries->EntryCount(); i ++){
+            this->Insert2RTree((*(this->leftentries))[i], insertHeight);
+        }
+    }
+    if(this->nextlevel != NULL){
+        return this->nextlevel->DealWithLeftEntries();
+    }
+    return 1;
+}
 //
 SmiRecordId RTreeLevel::GetRoot(){
     int          i;
     SmiRecord    record;
-    R_TreeNode<3, TupleId> *n;
+    SmiRecordId  sid;
+    RTreeLevel   *rl, *oldrl = this;
+    
+    R_TreeNode<3, TupleId>      *n;
+    vector<Point3D>::iterator   pit;
+    
     map<unsigned long long, R_TreeNode<3, TupleId> *>::iterator it;
-    vector<Point3D>::iterator pit;
-    RTreeLevel             *rl, *oldrl = this;
     //
     while(oldrl->noentries > maxentries){
         // the number of entries is more than threshold
@@ -1302,20 +1339,24 @@ SmiRecordId RTreeLevel::GetRoot(){
     }
     if(this->nextlevel == NULL){
         // this is root level, and save all the index entry to root node
-        n = rtree->GetNode(rtree->RootRecordId(), 0, minentries, maxentries);
-        n->Clear();
+        rtree->file->DeleteRecord(rtree->RootRecordId());
+        n = new R_TreeNode<3,TupleId>(false, minentries, maxentries);
+        int RecordAppend = rtree->file->AppendRecord(sid, record); 
+        assert(RecordAppend);
+
         for(it = oldrl->grid.begin(); it != oldrl->grid.end(); it++){
             for(i = 0; i < (it->second)->EntryCount(); i++){
                 n->Insert((*(it->second))[i]);
             }
         }
-        rtree->PutNode(rtree->RootRecordId(),&n);
+        n->Write(record);
         if(oldrl != this){
             oldrl->nextlevel = NULL;
             delete oldrl;
         }
         this->noentries = 0;
         // return the root id
+        rtree->header.rootRecordId = sid;
         return rtree->RootRecordId();
     }
     else{
@@ -1341,11 +1382,15 @@ SmiRecordId RTreeLevel::GetRoot(){
     }
 }
 
-int RTreeLevel::EntryCount(){
+int RTreeLevel::AllEntryCount(){
     if(nextlevel == NULL){
         return entrycount;
     }
     return entrycount + nextlevel->EntryCount();
+}
+
+int RTreeLevel::EntryCount(){
+    return entrycount;
 }
 
 int RTreeLevel::NodeCount(){
@@ -1356,15 +1401,28 @@ int RTreeLevel::NodeCount(){
 }
 
 void RTreeLevel::SetRTreeRoot(){
+    //PrintIsLeaf();
     GetRoot();
     rtree->header.height = GetHeight();
+    //cout<<rtree->header.height<<endl;
     rtree->header.entryCount = EntryCount();
+    //cout<<rtree->header.entryCount<<endl;
     rtree->header.nodeCount = NodeCount();
+    //cout<<rtree->header.nodeCount<<endl;
     if(rtree->nodePtr != NULL){
         delete rtree->nodePtr;
     }
-    rtree->WriteHeader();
+    rtree->nodePtr = NULL;
+    rtree->currLevel = 0;
+    rtree->currEntry = -1;
+    rtree->reportLevel = -1;
+    rtree->searchBox = false;
+    rtree->searchType = R_Tree<3, TupleId>::NoSearch;
     rtree->nodePtr = rtree->GetNode(rtree->RootRecordId(), 0, rtree->MinEntries(0), rtree->MaxEntries(0));
+    rtree->path[0] = rtree->RootRecordId();
+    rtree->WriteHeader();
+    // deal with the left entries
+    DealWithLeftEntries();
 }
 
 #endif
