@@ -1816,6 +1816,122 @@ struct StreamOBOUpdateRTreeInfo : OperatorInfo {
     }
 };
 
+/****************************************************************
+
+    15.operator GridBulkLoadRTree
+
+***************************************************************/
+// type map function
+// stream(tuple(MBR:rect3,TID:tid)) x attr(index of MBR) x attr(index of TID)-> rtree
+ListExpr GridBulkLoadRTreeTM(ListExpr args)
+{
+    //error message;
+    string msg = "stream(tuple(MBR:rect3,TID:tid)) x MBR x TID expected";
+    //the number of args is 4: stream x rel x rtree x attr
+    if(nl->ListLength(args) != 3)
+    {
+        ErrorReporter::ReportError(msg + " (invalid number of arguments)");
+        return nl->TypeError();
+    }
+    //
+    ListExpr stream = nl->First(args);
+    ListExpr mbrindex = nl->Second(args);
+    ListExpr tidindex = nl->Third(args);
+    // check the stream
+    if(! listutils::isStream(stream)){
+        ErrorReporter::ReportError(msg + " (first args is not a stream)");
+        return listutils::typeError();
+    }   
+    // check the attribute index of mbr
+    string   attrname = nl->SymbolValue(mbrindex);
+    ListExpr attrtype = nl->Empty();
+    ListExpr attrlist = nl->Second(nl->Second(stream));
+    int index = listutils::findAttribute(attrlist, attrname, attrtype);
+
+    if (0 == index)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != Rectangle<3u>::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type is not of type rectangle.");
+        }
+    }
+    // check the attribute index of tid
+    attrname = nl->SymbolValue(tidindex);
+    attrtype = nl->Empty();
+    attrlist = nl->Second(nl->Second(stream));
+    int index2 = listutils::findAttribute(attrlist, attrname, attrtype);
+
+    if (0 == index2)
+    {
+        return NList::typeError( "Attribute name '" + attrname +"' is not known!");
+    }else{
+        if (nl->SymbolValue(attrtype) != TupleIdentifier::BasicType()) //basic type
+        {
+            return NList::typeError("Attribute type is not of type rectangle.");
+        }
+    }
+    // construct the result type ListExpr
+    ListExpr resType = nl->FourElemList(
+            nl->SymbolAtom(R_Tree<3, TupleId>::BasicType()),
+            nl->Second(stream),   // tuple type
+            attrtype,
+            nl->BoolAtom(false)); 
+    return nl->ThreeElemList(nl->SymbolAtom(Symbol::APPEND()), nl->TwoElemList(nl->IntAtom(index), nl->IntAtom(index2)), resType);
+}
+
+//value map function
+//stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
+int GridBulkLoadRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+{
+    Stream<Tuple>       *stream;
+    Tuple               *tuple;
+    int                 mbrindex, tidindex, counter = 0;
+    R_Tree<3, TupleId>  *rtree;
+    Rectangle<3>        *box;
+    TupleId             tid;
+    RTreeLevel          *rtreelevel;
+    static MessageCenter *msg = MessageCenter::GetInstance();
+    stream = new Stream<Tuple>(args[0].addr);
+    mbrindex = ((CcInt *)(args[3].addr))->GetValue()-1;
+    tidindex = ((CcInt *)(args[4].addr))->GetValue()-1;
+    stream->open();
+    rtree = (R_Tree<3, TupleId> *)qp->ResultStorage(s).addr;
+    rtreelevel = new RTreeLevel(true, rtree, 100.0, 100.0, 1.0/24/12);
+    // deal with the stream
+    while((tuple = stream->request()) != NULL){
+        if((counter++ % 10000) == 0){
+            NList msgList(NList("simple"), NList(counter));
+            msg->Send(msgList);
+        }
+        box = (Rectangle<3> *)tuple->GetAttribute(mbrindex);
+        tid = ((TupleIdentifier *)tuple->GetAttribute(tidindex))->GetTid();
+        if(box->IsDefined() && tid != 0){
+            rtreelevel->Insert(tid, *box);
+        }
+        tuple->DeleteIfAllowed();
+    }
+    rtreelevel->SetRTreeRoot();
+    delete rtreelevel;
+    NList msgList(NList("simple"), NList(counter));
+    msg->Send(msgList);
+    return 0;
+}
+
+//
+// operator info
+struct GridBulkLoadRTreeInfo : OperatorInfo {
+    GridBulkLoadRTreeInfo()
+    {
+        name      = "gridbulkloadrtree";
+        signature = "((stream (tuple([a1:d1, ..., MBR:rect3, TID:tid, ..., an:dn]))) x attr x attr -> rtree";
+        syntax    = "_ gridbulkloadrtree [ _, _]";
+        meaning   = "bulk loading rtree using grid";
+    }
+};
+
+
 /****************************************************************************
  
    CDistRangeAlgebra
@@ -1836,6 +1952,7 @@ public:
         AddOperator( BLUpdateRelRTreeInfo(), BLUpdateRelRTreeVM, UpdateRelRTreeTM );
         AddOperator( MergeRTreeInfo(), MergeRTreeVM, MergeRTreeTM );
         AddOperator( StreamUpdateRTreeInfo(), StreamUpdateRTreeVM, StreamUpdateRTreeTM );
+        AddOperator( GridBulkLoadRTreeInfo(), GridBulkLoadRTreeVM, GridBulkLoadRTreeTM );
         AddOperator( StreamBLUpdateRTreeInfo(), StreamBLUpdateRTreeVM, StreamUpdateRTreeTM );
         AddOperator( StreamOBOUpdateRTreeInfo(), StreamOBOUpdateRTreeVM, StreamUpdateRTreeTM );
         AddOperator( StreamUpdateTBTreeInfo(), StreamUpdateTBTreeVM, StreamUpdateTBTreeTM );

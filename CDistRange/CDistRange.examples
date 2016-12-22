@@ -55,6 +55,12 @@ Signature: stream x rel x rtree x attr -> bool
 Example  : query SubTrains feed streamupdatertree [Trains, rtree, MBR];
 Result   : TRUE
 
+Operator : gridbulkloadrtree
+Number   : 4
+Signature: stream x rel x rtree x attr -> bool
+Example  : query Trains feed addid gridbulkloadrtree [MBR, TID];
+Result   : TRUE
+
 Operator : streamblupdatertree
 Number   : 4
 Signature: stream x rel x rtree x attr -> bool

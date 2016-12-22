@@ -7,6 +7,7 @@
 #include "Attribute.h"
 #include "DateTime.h"
 #include "RectangleAlgebra.h"
+#include "TupleIdentifier.h"
 #include "TemporalAlgebra.h"
 #include "Symbols.h"
 #include "../RTree/RTreeAlgebra.h"
@@ -957,10 +958,10 @@ int KMeans(unsigned int k, vector<Point3D> &points, vector<vector<Point3D> > &re
     return -1;
 }
 
-int PointsDivide(vector<Point3D> &points, vector<vector<Point3D> > &result, int min){
+int PointsDivide(vector<Point3D> &points, vector<vector<Point3D> > &result, unsigned int min){
     Point3D center;
     vector<Point3D> *pmin, *pmax;
-    int i, j, tmp, tmpdist, minindex, mindist = INT_MAX;;
+    unsigned int i, j, tmp, tmpdist, minindex, mindist = INT_MAX;;
     if(2 != KMeans(2, points, result)){
         cout<<"error in points divide!"<<endl;
         return 0;
@@ -1026,6 +1027,8 @@ class RTreeLevel
         //
         int Insert(R_TreeNode<3, TupleId> *node);
 
+        int height;
+
     public:
         RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt);
         RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut);
@@ -1078,6 +1081,7 @@ RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt){
     entrycount = 0;
     nodecount = 0;
     leftentries = NULL;
+    height = 1;
 }
 
 RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy, double ut){
@@ -1101,6 +1105,7 @@ RTreeLevel::RTreeLevel(bool isleaf, R_Tree<3, TupleId> *rt, double ux, double uy
     entrycount = 0;
     nodecount = 0;
     leftentries = NULL;
+    height = 1;
 }
 
 RTreeLevel::~RTreeLevel(){
@@ -1118,7 +1123,8 @@ RTreeLevel::~RTreeLevel(){
 // and insert the index entry of this node to nextlevel
 // and minus the number of entries of this node
 int RTreeLevel::SaveNode2RTree(R_TreeNode<3, TupleId> *node){
-    int AppendRecord = 0, tmp = 0;
+    int AppendRecord = 0;
+    //int tmp = 0;
     Rectangle<3> bbox;
     SmiRecord    record;
     SmiRecordId  sid;
@@ -1128,13 +1134,14 @@ int RTreeLevel::SaveNode2RTree(R_TreeNode<3, TupleId> *node){
         return -1;
     }
     bbox = node->BoundingBox();
-    tmp = node->EntryCount();
+    //tmp = node->EntryCount();
     AppendRecord = rtree->file->AppendRecord(sid, record);
     assert(AppendRecord);
     node->SetModified();
     node->Write(record);
     if(nextlevel == NULL){
         nextlevel = new RTreeLevel(false, rtree, unitx, unity, unittime);
+        nextlevel->height = this->height+1;
     }
     nextlevel->Insert(sid, bbox);
     // minus the save entries
@@ -1242,9 +1249,9 @@ int RTreeLevel::Append(RTreeLevel *rl){
 
 int RTreeLevel::GetHeight(){
     if(nextlevel == NULL){
-        return 0;
+        return height;
     }
-    return nextlevel->GetHeight() + 1;
+    return nextlevel->GetHeight();
 }
 //
 SmiRecordId RTreeLevel::GetRoot(){
@@ -1258,6 +1265,7 @@ SmiRecordId RTreeLevel::GetRoot(){
     while(oldrl->noentries > maxentries){
         // the number of entries is more than threshold
         rl = new RTreeLevel(isleaf, rtree, oldrl->unitx*2, oldrl->unity*2, oldrl->unittime*2);
+        rl->height = oldrl->height;
         // set the rl->nextlevel as this->nextlevel, add all the internal node to this->nextlevel
         if(this->nextlevel != NULL){
             //rl->SetNextLevel(this->nextlevel);
@@ -1306,6 +1314,7 @@ SmiRecordId RTreeLevel::GetRoot(){
             oldrl->nextlevel = NULL;
             delete oldrl;
         }
+        this->noentries = 0;
         // return the root id
         return rtree->RootRecordId();
     }
@@ -1326,6 +1335,7 @@ SmiRecordId RTreeLevel::GetRoot(){
                 oldrl->nextlevel = NULL;
                 delete oldrl;
             }
+            this->noentries = 0;
         }
         return this->nextlevel->GetRoot();
     }
@@ -1353,6 +1363,7 @@ void RTreeLevel::SetRTreeRoot(){
     if(rtree->nodePtr != NULL){
         delete rtree->nodePtr;
     }
+    rtree->WriteHeader();
     rtree->nodePtr = rtree->GetNode(rtree->RootRecordId(), 0, rtree->MinEntries(0), rtree->MaxEntries(0));
 }
 
