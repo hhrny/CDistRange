@@ -1,0 +1,123 @@
+open database geo;
+
+# bulk loading
+# k1
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+
+# k10
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+
+# k100
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+
+# m1
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+query m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+
+# m10
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+#query m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID];
+
+# grid bulk loading
+# k1
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+query k1 feed addid gridbulkloadrtree[MBR,TID];
+
+# k10
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+query k10 feed addid gridbulkloadrtree[MBR,TID];
+
+# k100
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+query k100 feed addid gridbulkloadrtree[MBR,TID];
+
+# m1
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+query m1 feed addid gridbulkloadrtree[MBR,TID];
+
+# m10
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];
+#query m10 feed addid gridbulkloadrtree[MBR,TID];

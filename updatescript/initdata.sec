@@ -1,0 +1,22 @@
+open database geo;
+
+let ugeotrip0 = geotrip0 feed projectextendstream[Id; UTrip:units(.Trip)] extend[MBR:bbox(.UTrip)] consume;
+let ugeotrip1 = geotrip1 feed projectextendstream[Id; UTrip:units(.Trip)] extend[MBR:bbox(.UTrip)] consume;
+let ugeotrip2 = geotrip2 feed projectextendstream[Id; UTrip:units(.Trip)] extend[MBR:bbox(.UTrip)] consume;
+let ugeotrip3 = geotrip3 feed projectextendstream[Id; UTrip:units(.Trip)] extend[MBR:bbox(.UTrip)] consume;
+
+
+#delete k1;
+let k1 = ugeotrip0 feed head[1000] consume;
+
+#delete k10;
+let k10 = ugeotrip0 feed head[10000] consume;
+
+#delete k100;
+let k100 = ugeotrip0 feed head[100000] consume;
+
+#delete m1;
+let m1 = ugeotrip0 feed head[1000000] consume;
+
+#delete m10;
+let m10 = ugeotrip0 feed ugeotrip1 feed concat ugeotrip2 feed concat ugeotrip3 feed concat consume;
