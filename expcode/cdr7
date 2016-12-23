@@ -9,20 +9,16 @@ let uploads = Trains feed convertMP2UU [1000000, Id, Trip] consume;
 query uploads feed insertStream [seti, Upload];
 
 delete res1;
-let res1 = seti setifilter [ bbox(train7), 0.0, 5000.0] cdist_range [train7, 0.0, 5000.0, UTrip] consume;
-#let res1 = seti setifilter [ bbox(train7), 0.0, 5000.0] consume;
+let res1 = setifilter (seti,  bbox(train7), 0.0, 5000.0)  cdist_range [train7, 0.0, 5000.0, UTrip] consume;
 
 delete res2;
-let res2 = seti setifilter [ bbox(train7), 5000.0, inf] cdist_range [train7, 5000.0, inf, UTrip] consume;
-#let res2 = seti setifilter [ bbox(train7), 5000.0, inf] consume;
+let res2 = setifilter (seti,  bbox(train7), 5000.0, inf)  cdist_range [train7, 5000.0, inf, UTrip] consume;
 
 delete res3;
-let res3 = seti setifilter [ bbox(train7), 0.0, inf] cdist_range [train7, 0.0, inf, UTrip] consume;
-#let res3 = seti setifilter [ bbox(train7), 0.0, inf] consume;
+let res3 = setifilter (seti,  bbox(train7), 0.0, inf)  cdist_range [train7, 0.0, inf, UTrip] consume;
 
 delete res4;
-let res4 = seti setifilter [ bbox(train7), 3000.0, 7000.0] cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
-#let res4 = seti setifilter [ bbox(train7), 3000.0, 7000.0] consume;
+let res4 = setifilter (seti,  bbox(train7), 3000.0, 7000.0)  cdist_range [train7, 3000.0, 7000.0, UTrip] consume;
 
 query res1 feed count;
 query res2 feed count;
