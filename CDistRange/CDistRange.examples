@@ -31,10 +31,10 @@ Signature: seti x rect3 x real x real -> stream(tuple(x1 y2)(x2 y2)...(xn yn))
 Example  : query setifilter (seti, bbox(train2), 100.0, 1000.0) count
 Result   : 10
 
-Operator : updaterelrtree
+Operator : gridblupdaterelrtree
 Number   : 3
 Signature: stream x rel x attr -> rtree
-Example  : query SubTrains feed updaterelrtree [Trains, MBR]
+Example  : query SubTrains feed gridblupdaterelrtree [Trains, MBR]
 Result   : file
 
 Operator : blupdaterelrtree

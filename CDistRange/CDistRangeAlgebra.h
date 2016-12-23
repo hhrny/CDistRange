@@ -20,8 +20,6 @@
 
 using namespace std;
 
-
-
 //      1: d1 = 0.0,  0.0 < d2 < inf
 //      2: 0.0 < d1 < inf, d2 = inf
 //      3: d1 = 0.0, d2 = inf
