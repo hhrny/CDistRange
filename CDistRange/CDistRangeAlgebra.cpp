@@ -1860,7 +1860,6 @@ ListExpr GridBulkLoadRTreeTM(ListExpr args)
     // check the attribute index of tid
     attrname = nl->SymbolValue(tidindex);
     attrtype = nl->Empty();
-    attrlist = nl->Second(nl->Second(stream));
     int index2 = listutils::findAttribute(attrlist, attrname, attrtype);
 
     if (0 == index2)
@@ -1872,11 +1871,35 @@ ListExpr GridBulkLoadRTreeTM(ListExpr args)
             return NList::typeError("Attribute type is not of type rectangle.");
         }
     }
+    // construct the new attrlist, ignore the tid index
+    ListExpr first, rest, newAttrList=nl->Empty(), lastAttrList;
+    rest = attrlist;
+    int j = 1;
+    bool firstcall = true;
+    while(! nl->IsEmpty(rest)){
+        first = nl->First(rest);
+        rest = nl->Rest(rest);
+        
+        if(j != index2){  // index2 is tid index
+            if(firstcall){
+                firstcall = false;
+                newAttrList = nl->OneElemList(first);
+                lastAttrList = newAttrList;
+            }else{
+                lastAttrList = nl->Append(lastAttrList, first);
+            }
+        }
+        j++;
+    }
     // construct the result type ListExpr
     ListExpr resType = nl->FourElemList(
             nl->SymbolAtom(R_Tree<3, TupleId>::BasicType()),
-            nl->Second(stream),   // tuple type
-            attrtype,
+            nl->TwoElemList(
+                nl->SymbolAtom("tuple"),
+                newAttrList),
+            //nl->Second(stream),   // tuple type
+            nl->SymbolAtom(Rectangle<3u>::BasicType()),   // key type, spaial attribute
+            //attrlist,
             nl->BoolAtom(false)); 
     return nl->ThreeElemList(nl->SymbolAtom(Symbol::APPEND()), nl->TwoElemList(nl->IntAtom(index), nl->IntAtom(index2)), resType);
 }

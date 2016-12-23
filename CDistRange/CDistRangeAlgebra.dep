@@ -1,0 +1,75 @@
+CDistRangeAlgebra.o: CDistRangeAlgebra.cpp \
+ /home/nuaa/secondo/include/Algebra.h \
+ /home/nuaa/secondo/include/NestedList.h \
+ /home/nuaa/secondo/Tools/ListsAndTables/CTable.h \
+ /home/nuaa/secondo/include/PagedArray.h \
+ /home/nuaa/secondo/include/SecondoSMI.h \
+ /home/nuaa/secondo/include/ErrorCodes.h \
+ /home/nuaa/secondo/include/SecondoConfig.h \
+ /home/nuaa/secondo/include/CacheInfo.h \
+ /home/nuaa/secondo/include/LogMsg.h \
+ /home/nuaa/secondo/Tools/ListsAndTables/PCTable.cpp \
+ /home/nuaa/secondo/include/WinUnix.h \
+ /home/nuaa/secondo/include/AlgebraTypes.h \
+ /home/nuaa/secondo/include/Operator.h /home/nuaa/secondo/include/NList.h \
+ /home/nuaa/secondo/include/CostEstimation.h \
+ /home/nuaa/secondo/include/TypeConstructor.h \
+ /home/nuaa/secondo/include/ConstructorTemplates.h \
+ /home/nuaa/secondo/include/Attribute.h \
+ /home/nuaa/secondo/include/SecondoSystem.h \
+ /home/nuaa/secondo/include/Messages.h \
+ /home/nuaa/secondo/include/SecondoCatalog.h \
+ /home/nuaa/secondo/include/AlgebraManager.h \
+ /home/nuaa/secondo/include/AlgebraInit.h \
+ /home/nuaa/secondo/include/AlgebraClassDef.h \
+ /home/nuaa/secondo/include/SystemInfoRel.h \
+ /home/nuaa/secondo/include/NameIndex.h \
+ /home/nuaa/secondo/include/SystemTables.h \
+ /home/nuaa/secondo/include/ListUtils.h \
+ /home/nuaa/secondo/include/QueryProcessor.h \
+ /home/nuaa/secondo/include/StopWatch.h \
+ /home/nuaa/secondo/include/DotSpec.h \
+ /home/nuaa/secondo/include/Counter.h \
+ /home/nuaa/secondo/include/CharTransform.h \
+ /home/nuaa/secondo/include/WinUnix.h \
+ /home/nuaa/secondo/include/../Tools/Flob/Flob.h \
+ /home/nuaa/secondo/include/../Tools/Flob/FlobId.h \
+ /home/nuaa/secondo/include/SecondoSMI.h \
+ /home/nuaa/secondo/include/../Tools/Flob/FlobManager.h \
+ /home/nuaa/secondo/include/Serialize.h \
+ /home/nuaa/secondo/include/AlmostEqual.h \
+ /home/nuaa/secondo/include/NestedList.h \
+ /home/nuaa/secondo/include/QueryProcessor.h \
+ /home/nuaa/secondo/include/StandardTypes.h \
+ /home/nuaa/secondo/include/Trace.h \
+ /home/nuaa/secondo/include/TraceMacros.h \
+ /home/nuaa/secondo/include/Symbols.h \
+ /home/nuaa/secondo/include/Serialize.h \
+ /home/nuaa/secondo/include/StringUtils.h \
+ /home/nuaa/secondo/include/Symbols.h \
+ /home/nuaa/secondo/include/DateTime.h \
+ /home/nuaa/secondo/include/IndexableAttribute.h \
+ /home/nuaa/secondo/include/StandardTypes.h \
+ /home/nuaa/secondo/include/BigInt.h ../Stream/Stream.h \
+ /home/nuaa/secondo/include/ListUtils.h \
+ /home/nuaa/secondo/include/SecondoSystem.h \
+ /home/nuaa/secondo/include/Attribute.h ../Rectangle/RectangleAlgebra.h \
+ /home/nuaa/secondo/include/Messages.h ../Spatial/Geoid.h \
+ /home/nuaa/secondo/include/GenericTC.h \
+ /home/nuaa/secondo/include/Algebra.h ../Temporal/TemporalAlgebra.h \
+ ../Spatial/SpatialAlgebra.h ../Spatial/../../Tools/Flob/DbArray.h \
+ ../Spatial/../../Tools/Flob/Flob.h \
+ ../Spatial/../Rectangle/RectangleAlgebra.h \
+ /home/nuaa/secondo/include/AvlTree.h \
+ /home/nuaa/secondo/include/AlmostEqual.h ../Spatial/AVLSegment.h \
+ ../Spatial/HalfSegment.h ../Spatial/Coord.h ../Spatial/Point.h \
+ ../Spatial/Geoid.h ../Spatial/AttrType.h \
+ ../Temporal/../../Tools/Flob/DbArray.h \
+ /home/nuaa/secondo/include/Progress.h ../Temporal/CellGrid.h \
+ ../Temporal/../../include/CharTransform.h \
+ ../Relation-C++/RelationAlgebra.h /home/nuaa/secondo/include/Trace.h \
+ /home/nuaa/secondo/include/Counter.h \
+ ../Relation-C++/../TupleIdentifier/TupleIdentifier.h CDistRangeAlgebra.h \
+ ../TupleIdentifier/TupleIdentifier.h ../RTree/RTreeAlgebra.h \
+ ../BTree/BTreeAlgebra.h ../TBTree/TBTree.h ../SETI/SETIAlgebra.h \
+ ../SETI/UploadUnit.h
