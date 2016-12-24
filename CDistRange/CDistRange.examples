@@ -40,7 +40,7 @@ Result   : file
 Operator : blupdaterelrtree
 Number   : 3
 Signature: stream x rel x attr -> rtree
-Example  : query SubTrains feed blupdaterelrtree [Trains, MBR]
+Example  : query SubTrains feed sortby[MBR asc] blupdaterelrtree [Trains, MBR]
 Result   : file
 
 Operator : mergertree
@@ -49,22 +49,22 @@ Signature: rtree x rtree -> rtree
 Example  : query mergertree(rtree1, rtree2)
 Result   : file
 
-Operator : streamupdatertree
+Operator : streamgridblupdatertree
 Number   : 4
 Signature: stream x rel x rtree x attr -> bool
-Example  : query SubTrains feed streamupdatertree [Trains, rtree, MBR];
+Example  : query SubTrains feed streamgridblupdatertree [Trains, rtree, MBR];
 Result   : TRUE
 
 Operator : gridbulkloadrtree
 Number   : 4
-Signature: stream x rel x rtree x attr -> bool
+Signature: stream x attr x attr -> rtree
 Example  : query Trains feed addid gridbulkloadrtree [MBR, TID];
 Result   : TRUE
 
 Operator : streamblupdatertree
 Number   : 4
 Signature: stream x rel x rtree x attr -> bool
-Example  : query SubTrains feed streamblupdatertree [Trains, rtree, MBR];
+Example  : query SubTrains feed sortby[MBR asc] streamblupdatertree [Trains, rtree, MBR];
 Result   : TRUE
 
 Operator : streamoboupdatertree

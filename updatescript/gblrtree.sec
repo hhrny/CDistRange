@@ -1,0 +1,61 @@
+open database geo;
+# grid bulk loading
+# k1
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k1 feed addid gridbulkloadrtree[MBR,TID];
+
+# k10
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k10 feed addid gridbulkloadrtree[MBR,TID];
+
+# k100
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+let r =  k100 feed addid gridbulkloadrtree[MBR,TID];
+
+# m1
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+let r =  m1 feed addid gridbulkloadrtree[MBR,TID];
+
+# m10
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];
+#let r =  m10 feed addid gridbulkloadrtree[MBR,TID];

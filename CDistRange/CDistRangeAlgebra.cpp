@@ -1121,7 +1121,7 @@ ListExpr StreamUpdateRTreeTM(ListExpr args)
 
 //value map function
 //stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
-int StreamUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+int StreamBLUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
 {
     Stream<Tuple>       *stream;
     Tuple               *told, *tnew;
@@ -1170,12 +1170,12 @@ int StreamUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Supp
 
 //
 // operator info
-struct StreamUpdateRTreeInfo : OperatorInfo {
-    StreamUpdateRTreeInfo()
+struct StreamBLUpdateRTreeInfo : OperatorInfo {
+    StreamBLUpdateRTreeInfo()
     {
-        name      = "streamupdatertree";
+        name      = "streamblupdatertree";
         signature = "((stream (tuple([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x (rel(stream([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x rtree x attr -> rtree";
-        syntax    = "_ streamupdatertree [ _, _, _]";
+        syntax    = "_ streamblupdatertree [ _, _, _]";
         meaning   = "update the stream tuple to rel, and generate a new sub rtree of stream tuple, and merge to orgin rtree";
     }
 };
@@ -1692,12 +1692,12 @@ struct GridBLUpdateRelRTreeInfo : OperatorInfo {
 
 /****************************************************************
 
-    13.operator StreamBLUpdateRTree
+    13.operator StreamGridBLUpdateRTree
 
 ***************************************************************/
 //value map function
 //stream(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) x rel(tuple([a1:d1, ..., Trip:mpoint, ..., an:dn])) -> rtree
-int StreamBLUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
+int StreamGridBLUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Supplier s)
 {
     Stream<Tuple>       *stream;
     Tuple               *told, *tnew;
@@ -1747,12 +1747,12 @@ int StreamBLUpdateRTreeVM(Word* args, Word& result, int message, Word& local, Su
 
 //
 // operator info
-struct StreamBLUpdateRTreeInfo : OperatorInfo {
-    StreamBLUpdateRTreeInfo()
+struct StreamGridBLUpdateRTreeInfo : OperatorInfo {
+    StreamGridBLUpdateRTreeInfo()
     {
-        name      = "streamblupdatertree";
+        name      = "streamgridblupdatertree";
         signature = "((stream (tuple([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x (rel(stream([a1:d1, ..., Trip:mpoint, ..., an:dn]))) x rtree x attr -> rtree";
-        syntax    = "_ streamblupdatertree [ _, _, _]";
+        syntax    = "_ streamgridblupdatertree [ _, _, _]";
         meaning   = "update the stream tuple to rel, and generate a new sub rtree of stream tuple, and merge to orgin rtree";
     }
 };
@@ -1978,7 +1978,7 @@ public:
         AddOperator( GridBLUpdateRelRTreeInfo(), GridBLUpdateRelRTreeVM, UpdateRelRTreeTM );
         AddOperator( BLUpdateRelRTreeInfo(), BLUpdateRelRTreeVM, UpdateRelRTreeTM );
         AddOperator( MergeRTreeInfo(), MergeRTreeVM, MergeRTreeTM );
-        AddOperator( StreamUpdateRTreeInfo(), StreamUpdateRTreeVM, StreamUpdateRTreeTM );
+        AddOperator( StreamGridBLUpdateRTreeInfo(), StreamGridBLUpdateRTreeVM, StreamUpdateRTreeTM );
         AddOperator( GridBulkLoadRTreeInfo(), GridBulkLoadRTreeVM, GridBulkLoadRTreeTM );
         AddOperator( StreamBLUpdateRTreeInfo(), StreamBLUpdateRTreeVM, StreamUpdateRTreeTM );
         AddOperator( StreamOBOUpdateRTreeInfo(), StreamOBOUpdateRTreeVM, StreamUpdateRTreeTM );
