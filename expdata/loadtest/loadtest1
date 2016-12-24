@@ -1,0 +1,418 @@
+
+(OBJECT SEC2COMMANDS 
+    (rel) 
+    (trel 
+        (tuple 
+            (
+                (CmdNr int) 
+                (CmdStr text) 
+                (ElapsedTime real) 
+                (CpuTime real) 
+                (CommitTime real) 
+                (QueryReal real) 
+                (QueryCPU real) 
+                (OutObjReal real) 
+                (CopyReal real)))) 
+    (
+        (1 
+            'open database geo' 0.12422 0.0 0.0 0.0 0.0 0.0 0.0) 
+        (2 
+            'delete r1' 0.128881 0.01 0.049149 0.0 0.0 0.0 0.0) 
+        (3 
+            'delete r2' 0.011717 0.0 0.010727 0.0 0.0 0.0 3e-05) 
+        (4 
+            'delete r3' 0.001067 0.0 7.4e-05 0.0 0.0 0.0 1.5e-05) 
+        (5 
+            'delete r4' 0.00106 0.0 6.9e-05 0.0 0.0 0.0 1.4e-05) 
+        (6 
+            'delete r5' 0.000935 0.0 6.1e-05 0.0 0.0 0.0 1.3e-05) 
+        (7 
+            'delete r6' 0.000901 0.0 6.4e-05 0.0 0.0 0.0 1.2e-05) 
+        (8 
+            'delete r7' 0.000867 0.0 5.6e-05 0.0 0.0 0.0 1.1e-05) 
+        (9 
+            'delete r8' 0.000837 0.0 5.6e-05 0.0 0.0 0.0 1.1e-05) 
+        (10 
+            'delete r9' 0.000839 0.0 5.9e-05 0.0 0.0 0.0 1.1e-05) 
+        (11 
+            'delete r10' 0.000842 0.0 5.9e-05 0.0 0.0 0.0 1.1e-05) 
+        (12 
+            'let r1 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.236516 0.01 0.123144 0.0 0.0 0.0 0.0) 
+        (13 
+            'let r2 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.180411 0.01 0.102629 0.0 0.0 0.0 0.0) 
+        (14 
+            'let r3 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.192375 0.01 0.112334 0.0 0.0 0.0 0.0) 
+        (15 
+            'let r4 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.193733 0.02 0.111088 0.0 0.0 0.0 0.0) 
+        (16 
+            'let r5 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.197203 0.01 0.113843 0.0 0.0 0.0 0.0) 
+        (17 
+            'let r6 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.166457 0.01 0.09482400000000001 0.0 0.0 0.0 0.0) 
+        (18 
+            'let r7 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.186854 0.01 0.104242 0.0 0.0 0.0 0.0) 
+        (19 
+            'let r8 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.180689 0.01 0.094903 0.0 0.0 0.0 0.0) 
+        (20 
+            'let r9 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.192861 0.01 0.112625 0.0 0.0 0.0 0.0) 
+        (21 
+            'let r10 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.194302 0.01 0.111623 0.0 0.0 0.0 0.0) 
+        (22 
+            'delete r1' 0.042549 0.01 0.041275 0.0 0.0 0.0 0.0) 
+        (23 
+            'delete r2' 0.042235 0.01 0.040784 0.0 0.0 0.0 0.0) 
+        (24 
+            'delete r3' 0.041316 0.0 0.040052 0.0 0.0 0.0 0.0) 
+        (25 
+            'delete r4' 0.040889 0.0 0.039539 0.0 0.0 0.0 0.0) 
+        (26 
+            'delete r5' 0.04034 0.0 0.038972 0.0 0.0 0.0 0.0) 
+        (27 
+            'delete r6' 0.039921 0.0 0.038583 0.0 0.0 0.0 0.0) 
+        (28 
+            'delete r7' 0.039135 0.0 0.037798 0.0 0.0 0.0 0.0) 
+        (29 
+            'delete r8' 0.047059 0.0 0.045846 0.0 0.0 0.0 0.0) 
+        (30 
+            'delete r9' 0.046498 0.01 0.045188 0.0 0.0 0.0 0.0) 
+        (31 
+            'delete r10' 0.03746 0.0 0.036149 0.0 0.0 0.0 0.0) 
+        (32 
+            'let r1 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.173466 0.01 0.108177 0.0 0.0 0.0 0.0) 
+        (33 
+            'let r2 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.17502 0.01 0.098787 0.0 0.0 0.0 0.0) 
+        (34 
+            'let r3 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.176688 0.0 0.09875900000000004 0.0 0.0 0.0 0.0) 
+        (35 
+            'let r4 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.187836 0.01 0.108462 0.0 0.0 0.0 0.0) 
+        (36 
+            'let r5 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.164153 0.0 0.09929 0.0 0.0 0.0 0.0) 
+        (37 
+            'let r6 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.253502 0.01 0.179851 0.0 0.0 0.0 0.0) 
+        (38 
+            'let r7 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.3186099999999999 0.01 0.175557 0.0 0.0 0.0 0.0) 
+        (39 
+            'let r8 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.287604 0.02 0.173849 0.0 0.0 0.0 0.0) 
+        (40 
+            'let r9 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.278151 0.01 0.165021 0.0 0.0 0.0 0.0) 
+        (41 
+            'let r10 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.260258 0.01 0.154966 0.0 0.0 0.0 0.0) 
+        (42 
+            'delete r1' 0.07547 0.0 0.074155 0.0 0.0 0.0 0.0) 
+        (43 
+            'delete r2' 0.083908 0.01 0.082533 0.0 0.0 0.0 0.0) 
+        (44 
+            'delete r3' 0.07577 0.01 0.07434399999999999 0.0 0.0 0.0 0.0) 
+        (45 
+            'delete r4' 0.07555000000000001 0.0 0.07423200000000001 0.0 0.0 0.0 0.0) 
+        (46 
+            'delete r5' 0.06723800000000001 0.0 0.06596200000000001 0.0 0.0 0.0 0.0) 
+        (47 
+            'delete r6' 0.06725 0.0 0.06582499999999999 0.0 0.0 0.0 0.0) 
+        (48 
+            'delete r7' 0.068495 0.01 0.067052 0.0 0.0 0.0 0.0) 
+        (49 
+            'delete r8' 0.067235 0.0 0.065923 0.0 0.0 0.0 0.0) 
+        (50 
+            'delete r9' 0.075631 0.01 0.074256 0.0 0.0 0.0 0.0) 
+        (51 
+            'delete r10' 0.07561 0.0 0.074212 0.0 0.0 0.0 0.0) 
+        (52 
+            'let r1 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.435247 0.11 0.215266 0.0 0.0 0.0 0.0) 
+        (53 
+            'let r2 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.410277 0.11 0.211124 0.0 0.0 0.0 0.0) 
+        (54 
+            'let r3 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.455858 0.1 0.191562 0.0 0.0 0.0 0.0) 
+        (55 
+            'let r4 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.385364 0.09999999999999999 0.206266 0.0 0.0 0.0 0.0) 
+        (56 
+            'let r5 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.4098810000000001 0.11 0.203811 0.0 0.0 0.0 0.0) 
+        (57 
+            'let r6 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.505843 0.11 0.20599 0.0 0.0 0.0 0.0) 
+        (58 
+            'let r7 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.418552 0.09999999999999999 0.221119 0.0 0.0 0.0 0.0) 
+        (59 
+            'let r8 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.410317 0.11 0.213403 0.0 0.0 0.0 0.0) 
+        (60 
+            'let r9 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.4713039999999999 0.11 0.200512 0.0 0.0 0.0 0.0) 
+        (61 
+            'let r10 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.401679 0.11 0.213795 0.0 0.0 0.0 0.0) 
+        (62 
+            'delete r1' 0.075725 0.0 0.074326 0.0 0.0 0.0 0.0) 
+        (63 
+            'delete r2' 0.075679 0.0 0.074291 0.0 0.0 0.0 0.0) 
+        (64 
+            'delete r3' 0.06713000000000002 0.0 0.06579900000000005 0.0 0.0 0.0 0.0) 
+        (65 
+            'delete r4' 0.075499 0.01 0.074193 0.0 0.0 0.0 0.0) 
+        (66 
+            'delete r5' 0.07573199999999999 0.0 0.074309 0.0 0.0 0.0 0.0) 
+        (67 
+            'delete r6' 0.08387799999999999 0.01 0.08255 0.0 0.0 0.0 0.0) 
+        (68 
+            'delete r7' 0.07559 0.0 0.07423399999999999 0.0 0.0 0.0 0.0) 
+        (69 
+            'delete r8' 0.084138 0.0 0.082716 0.0 0.0 0.0 0.0) 
+        (70 
+            'delete r9' 0.08412799999999999 0.01 0.08273999999999999 0.0 0.0 0.0 0.0) 
+        (71 
+            'delete r10' 0.075682 0.01 0.074269 0.0 0.0 0.0 0.0) 
+        (72 
+            'let r1 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.351993 0.06 0.219803 0.0 0.0 0.0 0.0) 
+        (73 
+            'let r2 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 1.056466 0.06 0.84312 0.0 0.0 0.0 0.0) 
+        (74 
+            'let r3 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.360493 0.06 0.217621 0.0 0.0 0.0 0.0) 
+        (75 
+            'let r4 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.351961 0.05 0.212541 0.0 0.0 0.0 0.0) 
+        (76 
+            'let r5 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.445788 0.05 0.23607 0.0 0.0 0.0 0.0) 
+        (77 
+            'let r6 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.419703 0.06 0.251898 0.0 0.0 0.0 0.0) 
+        (78 
+            'let r7 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.421306 0.05 0.20913 0.0 0.0 0.0 0.0) 
+        (79 
+            'let r8 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.426752 0.06 0.277196 0.0 0.0 0.0 0.0) 
+        (80 
+            'let r9 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.444956 0.06 0.270115 0.0 0.0 0.0 0.0) 
+        (81 
+            'let r10 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.446272 0.06 0.227004 0.0 0.0 0.0 0.0) 
+        (82 
+            'delete r1' 0.100841 0.0 0.09941500000000003 0.0 0.0 0.0 0.0) 
+        (83 
+            'delete r2' 0.07586 0.0 0.074098 0.0 0.0 0.0 0.0) 
+        (84 
+            'delete r3' 0.075763 0.01 0.0743 0.0 0.0 0.0 0.0) 
+        (85 
+            'delete r4' 0.075587 0.0 0.074211 0.0 0.0 0.0 0.0) 
+        (86 
+            'delete r5' 0.07555199999999999 0.0 0.074128 0.0 0.0 0.0 0.0) 
+        (87 
+            'delete r6' 0.084019 0.0 0.082604 0.0 0.0 0.0 0.0) 
+        (88 
+            'delete r7' 0.083916 0.0 0.082581 0.0 0.0 0.0 0.0) 
+        (89 
+            'delete r8' 0.083972 0.0 0.082498 0.0 0.0 0.0 0.0) 
+        (90 
+            'delete r9' 0.092241 0.0 0.09089800000000001 0.0 0.0 0.0 0.0) 
+        (91 
+            'delete r10' 0.08395600000000003 0.0 0.08260800000000001 0.0 0.0 0.0 0.0) 
+        (92 
+            'let r1 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.818102 0.8999999999999999 0.352514 0.0 0.0 0.0 0.0) 
+        (93 
+            'let r2 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.682176 0.8200000000000001 0.49076 0.0 0.0 0.0 0.0) 
+        (94 
+            'let r3 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.726407 0.85 0.459421 0.0 0.0 0.0 0.0) 
+        (95 
+            'let r4 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.701571 0.8400000000000001 0.389873 0.0 0.0 0.0 0.0) 
+        (96 
+            'let r5 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.709364 0.8200000000000001 0.366769 0.0 0.0 0.0 0.0) 
+        (97 
+            'let r6 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.634701 0.8300000000000001 0.320479 0.0 0.0 0.0 0.0) 
+        (98 
+            'let r7 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.615822 0.8100000000000001 0.454209 0.0 0.0 0.0 0.0) 
+        (99 
+            'let r8 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.627009 0.8100000000000001 0.407218 0.0 0.0 0.0 0.0) 
+        (100 
+            'let r9 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 2.426223 0.8300000000000001 1.154982 0.0 0.0 0.0 0.0) 
+        (101 
+            'let r10 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.677601 0.8400000000000001 0.39234 0.0 0.0 0.0 0.0) 
+        (102 
+            'delete r1' 0.067357 0.01 0.065931 0.0 0.0 0.0 0.0) 
+        (103 
+            'delete r2' 0.06737700000000001 0.0 0.065904 0.0 0.0 0.0 0.0) 
+        (104 
+            'delete r3' 0.059151 0.01 0.057675 0.0 0.0 0.0 0.0) 
+        (105 
+            'delete r4' 0.07585699999999999 0.0 0.074407 0.0 0.0 0.0 0.0) 
+        (106 
+            'delete r5' 0.058941 0.01 0.057471 0.0 0.0 0.0 0.0) 
+        (107 
+            'delete r6' 0.059142 0.01 0.057652 0.0 0.0 0.0 0.0) 
+        (108 
+            'delete r7' 0.067328 0.0 0.065945 0.0 0.0 0.0 0.0) 
+        (109 
+            'delete r8' 0.06744 0.0 0.066025 0.0 0.0 0.0 0.0) 
+        (110 
+            'delete r9' 0.067408 0.01 0.06607300000000001 0.0 0.0 0.0 0.0) 
+        (111 
+            'delete r10' 0.06744 0.01 0.065993 0.0 0.0 0.0 0.0) 
+        (112 
+            'let r1 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.032173 0.3100000000000001 0.380803 0.0 0.0 0.0 0.0) 
+        (113 
+            'let r2 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.109772 0.35 0.313921 0.0 0.0 0.0 0.0) 
+        (114 
+            'let r3 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.057377 0.33 0.394023 0.0 0.0 0.0 0.0) 
+        (115 
+            'let r4 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.060764 0.33 0.302364 0.0 0.0 0.0 0.0) 
+        (116 
+            'let r5 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.031995 0.32 0.346176 0.0 0.0 0.0 0.0) 
+        (117 
+            'let r6 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 3.350783 0.35 2.714414 0.0 0.0 0.0 0.0) 
+        (118 
+            'let r7 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.084898 0.35 0.343841 0.0 0.0 0.0 0.0) 
+        (119 
+            'let r8 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.033557 0.33 0.368546 0.0 0.0 0.0 0.0) 
+        (120 
+            'let r9 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.051511 0.33 0.29884 0.0 0.0 0.0 0.0) 
+        (121 
+            'let r10 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.074921 0.34 0.3522690000000001 0.0 0.0 0.0 0.0) 
+        (122 
+            'delete r1' 0.058949 0.0 0.057443 0.0 0.0 0.0 0.0) 
+        (123 
+            'delete r2' 0.059065 0.01 0.057548 0.0 0.0 0.0 0.0) 
+        (124 
+            'delete r3' 0.084329 0.01 0.082816 0.0 0.0 0.0 0.0) 
+        (125 
+            'delete r4' 0.058972 0.0 0.057607 0.0 0.0 0.0 0.0) 
+        (126 
+            'delete r5' 0.058913 0.0 0.057524 0.0 0.0 0.0 0.0) 
+        (127 
+            'delete r6' 0.067328 0.0 0.065835 0.0 0.0 0.0 0.0) 
+        (128 
+            'delete r7' 0.059009 0.01 0.057585 0.0 0.0 0.0 0.0) 
+        (129 
+            'delete r8' 0.058803 0.01 0.05706 0.0 0.0 0.0 0.0) 
+        (130 
+            'delete r9' 0.059119 0.0 0.057659 0.0 0.0 0.0 0.0) 
+        (131 
+            'delete r10' 0.059006 0.0 0.057626 0.0 0.0 0.0 0.0) 
+        (132 
+            'let r1 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 23.509567 10.11 2.853576 0.0 0.0 0.0 0.0) 
+        (133 
+            'let r2 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 20.827032 9.459999999999999 4.317868 0.0 0.0 0.0 0.0) 
+        (134 
+            'let r3 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 21.276409 9.440000000000001 4.389675 0.0 0.0 0.0 0.0) 
+        (135 
+            'let r4 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 22.008516 9.300000000000001 5.69947 0.0 0.0 0.0 0.0) 
+        (136 
+            'let r5 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 20.684267 9.460000000000001 4.937895 0.0 0.0 0.0 0.0) 
+        (137 
+            'let r6 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 21.594545 9.449999999999999 3.176875 0.0 0.0 0.0 0.0) 
+        (138 
+            'let r7 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 23.076616 9.58 6.436579 0.0 0.0 0.0 0.0) 
+        (139 
+            'let r8 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 22.09579 9.380000000000001 3.686938 0.0 0.0 0.0 0.0) 
+        (140 
+            'let r9 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 20.992196 9.51 4.312792 0.0 0.0 0.0 0.0) 
+        (141 
+            'let r10 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 19.761723 9.32 3.450096 0.0 0.0 0.0 0.0) 
+        (142 
+            'delete r1' 0.06754300000000001 0.0 0.066125 0.0 0.0 0.0 0.0) 
+        (143 
+            'delete r2' 0.075942 0.0 0.074378 0.0 0.0 0.0 0.0) 
+        (144 
+            'delete r3' 0.075862 0.01 0.074258 0.0 0.0 0.0 0.0) 
+        (145 
+            'delete r4' 0.06743499999999999 0.01 0.066028 0.0 0.0 0.0 0.0) 
+        (146 
+            'delete r5' 0.067395 0.0 0.065863 0.0 0.0 0.0 0.0) 
+        (147 
+            'delete r6' 0.067417 0.01 0.06591 0.0 0.0 0.0 0.0) 
+        (148 
+            'delete r7' 0.06742099999999995 0.0 0.06573399999999996 0.0 0.0 0.0 0.0) 
+        (149 
+            'delete r8' 0.060452 0.01 0.058795 0.0 0.0 0.0 0.0) 
+        (150 
+            'delete r9' 0.067458 0.01 0.065974 0.0 0.0 0.0 0.0) 
+        (151 
+            'delete r10' 0.06735099999999999 0.0 0.065926 0.0 0.0 0.0 0.0) 
+        (152 
+            'let r1 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 14.984488 3.51 1.355877 0.0 0.0 0.0 0.0) 
+        (153 
+            'let r2 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 13.453791 3.47 3.858845 0.0 0.0 0.0 0.0) 
+        (154 
+            'let r3 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 13.084096 3.49 3.399873 0.0 0.0 0.0 0.0) 
+        (155 
+            'let r4 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 13.217395 3.48 3.737272 0.0 0.0 0.0 0.0) 
+        (156 
+            'let r5 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 14.217815 3.48 4.693107 0.0 0.0 0.0 0.0) 
+        (157 
+            'let r6 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 12.029075 3.54 1.120216 0.0 0.0 0.0 0.0) 
+        (158 
+            'let r7 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 15.310272 3.52 1.06224 0.0 0.0 0.0 0.0) 
+        (159 
+            'let r8 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 13.244468 3.53 3.792139 0.0 0.0 0.0 0.0) 
+        (160 
+            'let r9 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 11.960128 3.51 1.124878 0.0 0.0 0.0 0.0) 
+        (161 
+            'let r10 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 15.963565 3.55 1.155715 0.0 0.0 0.0 0.0) 
+        (162 
+            'delete r1' 0.06761200000000001 0.0 0.06603299999999999 0.0 0.0 0.0 0.0) 
+        (163 
+            'delete r2' 0.059106 0.01 0.057674 0.0 0.0 0.0 0.0) 
+        (164 
+            'delete r3' 0.059236 0.01 0.057557 0.0 0.0 0.0 0.0) 
+        (165 
+            'delete r4' 0.067563 0.0 0.06597799999999999 0.0 0.0 0.0 0.0) 
+        (166 
+            'delete r5' 0.067429 0.0 0.06592000000000001 0.0 0.0 0.0 0.0) 
+        (167 
+            'delete r6' 0.067566 0.01 0.066006 0.0 0.0 0.0 0.0) 
+        (168 
+            'delete r7' 0.067412 0.0 0.065915 0.0 0.0 0.0 0.0) 
+        (169 
+            'delete r8' 0.068619 0.01 0.067122 0.0 0.0 0.0 0.0) 
+        (170 
+            'delete r9' 0.09269700000000003 0.01 0.09106700000000001 0.0 0.0 0.0 0.0) 
+        (171 
+            'delete r10' 0.059282 0.0 0.057401 0.0 0.0 0.0 0.0) 
+        (172 
+            'let r1 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 709.381828 183.36 30.619717 0.0 0.0 0.0 0.0) 
+        (173 
+            'let r2 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 816.5296059999999 184.16 23.05939 0.0 0.0 0.0 0.0) 
+        (174 
+            'let r3 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 915.110355 191.16 28.784387 0.0 0.0 0.0 0.0) 
+        (175 
+            'let r4 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 802.6966629999999 187.91 26.038921 0.0 0.0 0.0 0.0) 
+        (176 
+            'let r5 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1004.782983 187.8 28.792594 0.0 0.0 0.0 0.0) 
+        (177 
+            'let r6 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 971.138453 182.5 25.784712 0.0 0.0 0.0 0.0) 
+        (178 
+            'let r7 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 843.837402 183.47 25.634093 0.0 0.0 0.0 0.0) 
+        (179 
+            'let r8 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 821.596344 186.08 31.230134 0.0 0.0 0.0 0.0) 
+        (180 
+            'let r9 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 964.738619 185.1 34.138932 0.0 0.0 0.0 0.0) 
+        (181 
+            'let r10 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 936.118349 183.45 32.186485 0.0 0.0 0.0 0.0) 
+        (182 
+            'delete r1' 0.623525 0.01 0.077819 0.0 0.0 0.0 0.0) 
+        (183 
+            'delete r2' 0.167316 0.0 0.095738 0.0 0.0 0.0 0.0) 
+        (184 
+            'delete r3' 0.292302 0.0 0.113945 0.0 0.0 0.0 0.0) 
+        (185 
+            'delete r4' 0.167581 0.01 0.09069000000000001 0.0 0.0 0.0 0.0) 
+        (186 
+            'delete r5' 0.225843 0.01 0.171715 0.0 0.0 0.0 0.0) 
+        (187 
+            'delete r6' 1.00048 0.0 0.506426 0.0 0.0 0.0 0.0) 
+        (188 
+            'delete r7' 0.234147 0.0 0.075653 0.0 0.0 0.0 0.0) 
+        (189 
+            'delete r8' 0.176864 0.0 0.09551800000000001 0.0 0.0 0.0 0.0) 
+        (190 
+            'delete r9' 0.250692 0.0 0.117087 0.0 0.0 0.0 0.0) 
+        (191 
+            'delete r10' 0.07563599999999999 0.0 0.074017 0.0 0.0 0.0 0.0) 
+        (192 
+            'let r1 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 260.029097 35.37 20.697554 0.0 0.0 0.0 0.0) 
+        (193 
+            'let r2 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 251.134908 35.65 9.985573 0.0 0.0 0.0 0.0) 
+        (194 
+            'let r3 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 298.889744 36.45 12.728179 0.0 0.0 0.0 0.0) 
+        (195 
+            'let r4 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 383.560853 38.02 9.68708 0.0 0.0 0.0 0.0) 
+        (196 
+            'let r5 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 519.085047 39.36 16.922587 0.0 0.0 0.0 0.0) 
+        (197 
+            'let r6 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 747.123516 41.81 8.693505 0.0 0.0 0.0 0.0) 
+        (198 
+            'let r7 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 825.639302 42.75 15.550313 0.0 0.0 0.0 0.0) 
+        (199 
+            'let r8 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 1021.607516 44.28 11.773201 0.0 0.0 0.0 0.0) 
+        (200 
+            'let r9 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 1056.167109 44.25 13.063933 0.0 0.0 0.0 0.0) 
+        (201 
+            'let r10 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 1104.314387 44.8 11.298891 0.0 0.0 0.0 0.0)))
