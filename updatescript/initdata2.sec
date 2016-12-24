@@ -1,7 +1,7 @@
 open database geo;
 
 delete rel;
-let rel = geotrip9 feed projectextendstream[Id; UTrip:units(.Trip)] extend[MBR:bbox(.UTrip)] head [1000000] consume;
+let rel = geotrip9 feed projectextendstream[Id; UTrip:units(.Trip)] extend[MBR:bbox(.UTrip)] head [100000] consume;
 
 delete rtree;
 let rtree = rel feed addid gridbulkloadrtree[MBR,TID];
@@ -49,15 +49,24 @@ delete rtree10;
 let rtree10 = rtree;
 
 # k1
-query k1 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]; 
+query k1 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR];
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel2, rtree2, MBR]; 
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel3, rtree3, MBR]; 
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel4, rtree4, MBR]; 
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel5, rtree5, MBR]; 
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel6, rtree6, MBR]; 
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel7, rtree7, MBR]; 
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel8, rtree8, MBR]; 
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel9, rtree9, MBR]; 
+
 query k1 feed sortby [MBR asc] streamblupdatertree[rel10, rtree10, MBR]; 
 
 delete rel1;
