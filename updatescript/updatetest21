@@ -56,23 +56,23 @@ let rtree1 = rel1 feed addid gridbulkloadrtree[MBR, TID];
 
 query rel feed streamgridblupdatertree[rel1, rtree1, MBR]; 
 
-# m1
-delete rel1;
-let rel1 = m1;
-
-delete rtree1;
-let rtree1 = rel1 feed addid sortby[MBR asc] bulkloadrtree[MBR, TID];
-
-query rel feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR];
-
-# m1
-delete rel1;
-let rel1 = m1;
-
-delete rtree1;
-let rtree1 = rel1 feed addid gridbulkloadrtree[MBR, TID];
-
-query rel feed streamgridblupdatertree[rel1, rtree1, MBR]; 
+## m1
+#delete rel1;
+#let rel1 = m1;
+#
+#delete rtree1;
+#let rtree1 = rel1 feed addid sortby[MBR asc] bulkloadrtree[MBR, TID];
+#
+#query rel feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR];
+#
+## m1
+#delete rel1;
+#let rel1 = m1;
+#
+#delete rtree1;
+#let rtree1 = rel1 feed addid gridbulkloadrtree[MBR, TID];
+#
+#query rel feed streamgridblupdatertree[rel1, rtree1, MBR]; 
 
 ## m10
 #delete rel1;
@@ -92,6 +92,10 @@ query rel feed streamgridblupdatertree[rel1, rtree1, MBR];
 #
 #query rel feed streamgridblupdatertree[rel1, rtree1, MBR];
 
-save SEC2COMMANDS to update2011;
-save SEC2FILEINFO to update2012;
-save SEC2CACHEINFO to update2013;
+save SEC2COMMANDS to testdata1;
+save SEC2FILEINFO to testdata2;
+save SEC2CACHEINFO to testdata3;
+
+close database;
+q
+
