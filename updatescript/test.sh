@@ -1,10 +1,14 @@
 #/bin/bash
 
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 then
-    echo args error!
+    echo test.sh usage:
+    echo 
+    echo ./test.sh testfile testflag
+    echo 
 else
     testfile=$1
+    testflag=$2
     echo test the file $testfile
     for ((i=0;i<10;i++))
     do
@@ -12,8 +16,8 @@ else
         echo        do test ${i}
         echo *****************************
         echo @updatescript/${testfile} | secondo
-        mv /home/hhr/secondo/bin/testdata1 /home/hhr/secondo/bin/testdata1${i}
-        mv /home/hhr/secondo/bin/testdata2 /home/hhr/secondo/bin/testdata2${i}
-        mv /home/hhr/secondo/bin/testdata3 /home/hhr/secondo/bin/testdata3${i}
+        mv /home/hhr/secondo/bin/testdata1 /home/hhr/secondo/bin/${testflag}${i}testdata1
+        mv /home/hhr/secondo/bin/testdata2 /home/hhr/secondo/bin/${testflag}${i}testdata2
+        mv /home/hhr/secondo/bin/testdata3 /home/hhr/secondo/bin/${testflag}${i}testdata3
     done
 fi
