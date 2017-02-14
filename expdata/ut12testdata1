@@ -1,0 +1,98 @@
+
+(OBJECT SEC2COMMANDS 
+    (rel) 
+    (trel 
+        (tuple 
+            (
+                (CmdNr int) 
+                (CmdStr text) 
+                (ElapsedTime real) 
+                (CpuTime real) 
+                (CommitTime real) 
+                (QueryReal real) 
+                (QueryCPU real) 
+                (OutObjReal real) 
+                (CopyReal real)))) 
+    (
+        (1 
+            'open database geo' 0.033025 0.0 0.0 0.0 0.0 0.0 0.0) 
+        (2 
+            'delete rel1' 0.033933 0.0 0.032846 0.0 0.0 0.0 0.0) 
+        (3 
+            'let rel1 = rel' 48.213962 15.97 6.697113 0.0 0.0 0.0 0.0) 
+        (4 
+            'delete rtree1' 0.234269 0.0 0.233152 0.0 0.0 0.0 0.0) 
+        (5 
+            'let rtree1 = rtree' 9.891259 1.87 1.426826 0.0 0.0 0.0 0.0) 
+        (6 
+            'query k1 feed streamgridblupdatertree[rel1, rtree1, MBR];' 0.240111 0.04 0.205184 0.033568 0.04 1.6e-05 4.7e-05) 
+        (7 
+            'delete rel1' 0.08838699999999999 0.0 0.08719499999999999 0.0 0.0 0.0 0.0) 
+        (8 
+            'let rel1 = rel' 49.065504 16.09 2.99714 0.0 0.0 0.0 0.0) 
+        (9 
+            'delete rtree1' 0.226165 0.01 0.224875 0.0 0.0 0.0 0.0) 
+        (10 
+            'let rtree1 = rtree' 10.269974 1.86 3.320268 0.0 0.0 0.0 0.0) 
+        (11 
+            'query k1 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]' 0.389274 0.04 0.279259 0.108604 0.03 1.8e-05 3.4e-05) 
+        (12 
+            'delete rel1' 0.134652 0.0 0.133434 0.0 0.0 0.0 0.0) 
+        (13 
+            'let rel1 = rel' 50.904253 16.62 1.915074 0.0 0.0 0.0 0.0) 
+        (14 
+            'delete rtree1' 0.12735 0.0 0.126339 0.0 0.0 0.0 0.0) 
+        (15 
+            'let rtree1 = rtree' 11.31198 1.86 2.650545 0.0 0.0 0.0 0.0) 
+        (16 
+            'query k10 feed streamgridblupdatertree[rel1, rtree1, MBR];' 0.804318 0.27 0.399861 0.403135 0.25 1.7e-05 3.5e-05) 
+        (17 
+            'delete rel1' 0.09937600000000001 0.0 0.09818499999999999 0.0 0.0 0.0 0.0) 
+        (18 
+            'let rel1 = rel' 60.404765 16.26 3.122922 0.0 0.0 0.0 0.0) 
+        (19 
+            'delete rtree1' 0.143255 0.0 0.14213 0.0 0.0 0.0 0.0) 
+        (20 
+            'let rtree1 = rtree' 12.582835 1.89 2.899269 0.0 0.0 0.0 0.0) 
+        (21 
+            'query k10 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR];' 0.822388 0.29 0.4519570000000001 0.369265 0.28 1.4e-05 3.4e-05) 
+        (22 
+            'delete rel1' 0.104204 0.0 0.103151 0.0 0.0 0.0 0.0) 
+        (23 
+            'let rel1 = rel' 59.188724 16.87 6.147145 0.0 0.0 0.0 0.0) 
+        (24 
+            'delete rtree1' 0.150764 0.0 0.149589 0.0 0.0 0.0 0.0) 
+        (25 
+            'let rtree1 = rtree' 12.566963 1.88 4.00802 0.0 0.0 0.0 0.0) 
+        (26 
+            'query k100 feed streamgridblupdatertree[rel1, rtree1, MBR]' 4.709172 2.1 0.906119 3.801889 2.02 1.7e-05 3.3e-05) 
+        (27 
+            'delete rel1' 0.135235 0.0 0.133933 0.0 0.0 0.0 0.0) 
+        (28 
+            'let rel1 = rel' 53.148767 16.34 5.273574 0.0 0.0 0.0 0.0) 
+        (29 
+            'delete rtree1' 0.152036 0.0 0.151132 0.0 0.0 0.0 0.0) 
+        (30 
+            'let rtree1 = rtree' 13.548878 1.92 4.480878 0.0 0.0 0.0 0.0) 
+        (31 
+            'query k100 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR];' 5.400576 2.47 0.949056 4.450391 2.38 1.2e-05 3.4e-05) 
+        (32 
+            'delete rel1' 0.158694 0.0 0.157555 0.0 0.0 0.0 0.0) 
+        (33 
+            'let rel1 = rel' 49.793978 16.03 3.591415 0.0 0.0 0.0 0.0) 
+        (34 
+            'delete rtree1' 0.127159 0.0 0.126147 0.0 0.0 0.0 0.0) 
+        (35 
+            'let rtree1 = rtree' 18.915681 1.95 6.303455 0.0 0.0 0.0 0.0) 
+        (36 
+            'query m1 feed streamgridblupdatertree[rel1, rtree1, MBR];' 72.072062 20.92 5.063049 67.008008 20.59 3.5e-05 2.7e-05) 
+        (37 
+            'delete rel1' 0.151677 0.0 0.150408 0.0 0.0 0.0 0.0) 
+        (38 
+            'let rel1 = rel' 62.327729 16.55 6.71509 0.0 0.0 0.0 0.0) 
+        (39 
+            'delete rtree1' 0.159493 0.0 0.158313 0.0 0.0 0.0 0.0) 
+        (40 
+            'let rtree1 = rtree' 18.933618 2.04 5.535816 0.0 0.0 0.0 0.0) 
+        (41 
+            'query m1 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR];' 105.913904 26.83 5.879406 100.033391 26.47 3.4e-05 2.8e-05)))

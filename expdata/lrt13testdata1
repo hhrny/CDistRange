@@ -1,0 +1,58 @@
+
+(OBJECT SEC2COMMANDS 
+    (rel) 
+    (trel 
+        (tuple 
+            (
+                (CmdNr int) 
+                (CmdStr text) 
+                (ElapsedTime real) 
+                (CpuTime real) 
+                (CommitTime real) 
+                (QueryReal real) 
+                (QueryCPU real) 
+                (OutObjReal real) 
+                (CopyReal real)))) 
+    (
+        (1 
+            'open database geo' 0.153857 0.01 0.0 0.0 0.0 0.0 0.0) 
+        (2 
+            'delete r1' 0.038016 0.0 0.036829 0.0 0.0 0.0 0.0) 
+        (3 
+            'let r1 =  k1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 0.209572 0.01 0.122093 0.0 0.0 0.0 0.0) 
+        (4 
+            'delete r1' 0.039835 0.01 0.038631 0.0 0.0 0.0 0.0) 
+        (5 
+            'let r1 =  k1 feed addid  gridbulkloadrtree[MBR,TID]' 0.167606 0.0 0.090673 0.0 0.0 0.0 0.0) 
+        (6 
+            'delete r1' 0.049295 0.01 0.048017 0.0 0.0 0.0 0.0) 
+        (7 
+            'let r1 =  k10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 3.42956 0.13 3.155466 0.0 0.0 0.0 0.0) 
+        (8 
+            'delete r1' 0.03561 0.0 0.034164 0.0 0.0 0.0 0.0) 
+        (9 
+            'let r1 =  k10 feed addid  gridbulkloadrtree[MBR,TID]' 0.321925 0.05 0.174823 0.0 0.0 0.0 0.0) 
+        (10 
+            'delete r1' 0.057597 0.01 0.056236 0.0 0.0 0.0 0.0) 
+        (11 
+            'let r1 =  k100 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 1.776147 0.84 0.346176 0.0 0.0 0.0 0.0) 
+        (12 
+            'delete r1' 0.05907 0.0 0.057738 0.0 0.0 0.0 0.0) 
+        (13 
+            'let r1 =  k100 feed addid  gridbulkloadrtree[MBR,TID]' 1.053952 0.33 0.3484429999999999 0.0 0.0 0.0 0.0) 
+        (14 
+            'delete r1' 0.059032 0.01 0.057664 0.0 0.0 0.0 0.0) 
+        (15 
+            'let r1 =  m1 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 19.458703 9.800000000000001 2.767112 0.0 0.0 0.0 0.0) 
+        (16 
+            'delete r1' 0.059085 0.0 0.057652 0.0 0.0 0.0 0.0) 
+        (17 
+            'let r1 =  m1 feed addid  gridbulkloadrtree[MBR,TID]' 11.128452 3.34 1.17502 0.0 0.0 0.0 0.0) 
+        (18 
+            'delete r1' 0.058979 0.0 0.057493 0.0 0.0 0.0 0.0) 
+        (19 
+            'let r1 =  m10 feed addid sortby[MBR asc] bulkloadrtree[MBR,TID]' 633.993866 178.03 25.629558 0.0 0.0 0.0 0.0) 
+        (20 
+            'delete r1' 0.124805 0.01 0.038969 0.0 0.0 0.0 0.0) 
+        (21 
+            'let r1 =  m10 feed addid  gridbulkloadrtree[MBR,TID]' 243.68445 35.01000000000001 8.473096 0.0 0.0 0.0 0.0)))

@@ -1,0 +1,98 @@
+
+(OBJECT SEC2COMMANDS 
+    (rel) 
+    (trel 
+        (tuple 
+            (
+                (CmdNr int) 
+                (CmdStr text) 
+                (ElapsedTime real) 
+                (CpuTime real) 
+                (CommitTime real) 
+                (QueryReal real) 
+                (QueryCPU real) 
+                (OutObjReal real) 
+                (CopyReal real)))) 
+    (
+        (1 
+            'open database geo' 0.13781 0.0 0.0 0.0 0.0 0.0 0.0) 
+        (2 
+            'delete rel1' 0.06336 0.0 0.061901 0.0 0.0 0.0 0.0) 
+        (3 
+            'let rel1 = k1' 0.378062 0.02 0.121229 0.0 0.0 0.0 0.0) 
+        (4 
+            'delete rtree1' 0.193161 0.0 0.174466 0.0 0.0 0.0 0.0) 
+        (5 
+            'let rtree1 = rel1 feed addid gridbulkloadrtree[MBR, TID]' 0.4705240000000001 0.01 0.357093 0.0 0.0 0.0 0.0) 
+        (6 
+            'query rel feed streamgridblupdatertree[rel1, rtree1, MBR];' 69.395662 21.98 3.187868 66.20663999999999 21.69 3.1e-05 3.8e-05) 
+        (7 
+            'delete rel1' 0.075632 0.0 0.074682 0.0 0.0 0.0 0.0) 
+        (8 
+            'let rel1 = k1' 0.370793 0.02 0.183543 0.0 0.0 0.0 0.0) 
+        (9 
+            'delete rtree1' 0.06862799999999999 0.0 0.067355 0.0 0.0 0.0 0.0) 
+        (10 
+            'let rtree1 = rel1 feed addid sortby[MBR asc] bulkloadrtree[MBR, TID]' 0.455654 0.01 0.182769 0.0 0.0 0.0 0.0) 
+        (11 
+            'query rel feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]' 79.57931499999999 25.38 6.284168 73.29410799999999 25.05 3.2e-05 2.9e-05) 
+        (12 
+            'delete rel1' 0.125687 0.0 0.124598 0.0 0.0 0.0 0.0) 
+        (13 
+            'let rel1 = k10' 0.764456 0.2 0.339197 0.0 0.0 0.0 0.0) 
+        (14 
+            'delete rtree1' 0.072961 0.01 0.07188799999999999 0.0 0.0 0.0 0.0) 
+        (15 
+            'let rtree1 = rel1 feed addid gridbulkloadrtree[MBR, TID]' 0.470072 0.05 0.301593 0.0 0.0 0.0 0.0) 
+        (16 
+            'query rel feed streamgridblupdatertree[rel1, rtree1, MBR];' 80.433561 20.91 2.94594 77.47493799999999 20.6 0.011761 2.8e-05) 
+        (17 
+            'delete rel1' 0.076664 0.0 0.06791899999999999 0.0 0.0 0.0 0.0) 
+        (18 
+            'let rel1 = k10' 0.663114 0.19 0.2892940000000001 0.0 0.0 0.0 0.0) 
+        (19 
+            'delete rtree1' 0.10067 0.01 0.099343 0.0 0.0 0.0 0.0) 
+        (20 
+            'let rtree1 = rel1 feed addid sortby[MBR asc] bulkloadrtree[MBR, TID]' 0.451506 0.11 0.258149 0.0 0.0 0.0 0.0) 
+        (21 
+            'query rel feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]' 123.720969 26.45 5.632243 118.071714 26.05 0.015887 2.8e-05) 
+        (22 
+            'delete rel1' 0.08411299999999999 0.0 0.08329499999999999 0.0 0.0 0.0 0.0) 
+        (23 
+            'let rel1 = k100' 13.152826 1.95 1.939367 0.0 0.0 0.0 0.0) 
+        (24 
+            'delete rtree1' 0.09255599999999997 0.01 0.09141999999999995 0.0 0.0 0.0 0.0) 
+        (25 
+            'let rtree1 = rel1 feed addid gridbulkloadrtree[MBR, TID]' 3.219713 0.37 0.439894 0.0 0.0 0.0 0.0) 
+        (26 
+            'query rel feed streamgridblupdatertree[rel1, rtree1, MBR];' 150.602643 22.82 8.494325999999999 142.107245 22.5 4.8e-05 2.9e-05) 
+        (27 
+            'delete rel1' 0.100367 0.0 0.08986499999999997 0.0 0.0 0.0 0.0) 
+        (28 
+            'let rel1 = k100' 15.111835 2.15 2.990394 0.0 0.0 0.0 0.0) 
+        (29 
+            'delete rtree1' 0.10111 0.0 0.099827 0.0 0.0 0.0 0.0) 
+        (30 
+            'let rtree1 = rel1 feed addid sortby[MBR asc] bulkloadrtree[MBR, TID]' 6.069071 0.96 0.458392 0.0 0.0 0.0 0.0) 
+        (31 
+            'query rel feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]' 230.74926 29.82 13.434652 217.313324 29.42 5.9e-05 3.2e-05) 
+        (32 
+            'delete rel1' 0.125712 0.0 0.111534 0.0 0.0 0.0 0.0) 
+        (33 
+            'let rel1 = m1' 263.008009 23.27 8.002228000000001 0.0 0.0 0.0 0.0) 
+        (34 
+            'delete rtree1' 0.176179 0.01 0.087981 0.0 0.0 0.0 0.0) 
+        (35 
+            'let rtree1 = rel1 feed addid gridbulkloadrtree[MBR, TID]' 126.489189 5.12 6.239089 0.0 0.0 0.0 0.0) 
+        (36 
+            'query rel feed streamgridblupdatertree[rel1, rtree1, MBR];' 405.004527 31.11 16.077007 388.804983 30.77 0.061013 3.2e-05) 
+        (37 
+            'delete rel1' 0.196552 0.01 0.068415 0.0 0.0 0.0 0.0) 
+        (38 
+            'let rel1 = m1' 394.271569 25.44 12.346292 0.0 0.0 0.0 0.0) 
+        (39 
+            'delete rtree1' 0.2362 0.01 0.134249 0.0 0.0 0.0 0.0) 
+        (40 
+            'let rtree1 = rel1 feed addid sortby[MBR asc] bulkloadrtree[MBR, TID]' 540.9020870000001 15.96 17.116216 0.0 0.0 0.0 0.0) 
+        (41 
+            'query rel feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]' 934.835132 39.86 42.958905 891.465864 39.27 0.081021 0.013526)))

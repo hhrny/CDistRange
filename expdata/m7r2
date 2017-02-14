@@ -1,0 +1,58 @@
+
+(OBJECT SEC2COMMANDS 
+    (rel) 
+    (trel 
+        (tuple 
+            (
+                (CmdNr int) 
+                (CmdStr text) 
+                (ElapsedTime real) 
+                (CpuTime real) 
+                (CommitTime real) 
+                (QueryReal real) 
+                (QueryCPU real) 
+                (OutObjReal real) 
+                (CopyReal real)))) 
+    (
+        (1 
+            'open database berlintest' 0.202609 0.01 0.0 0.0 0.0 0.0 0.0) 
+        (2 
+            'delete res1' 0.044012 0.0 0.042619 0.0 0.0 0.0 0.0) 
+        (3 
+            'delete res2' 0.033831 0.0 0.032614 0.0 0.0 0.0 0.0) 
+        (4 
+            'delete res3' 0.049995 0.01 0.048817 0.0 0.0 0.0 0.0) 
+        (5 
+            'delete res4' 0.049585 0.0 0.048222 0.0 0.0 0.0 0.0) 
+        (6 
+            'delete res5' 0.048877 0.0 0.047517 0.0 0.0 0.0 0.0) 
+        (7 
+            'delete res6' 0.040153 0.0 0.038875 0.0 0.0 0.0 0.0) 
+        (8 
+            'delete res7' 0.04777 0.0 0.046546 0.0 0.0 0.0 0.0) 
+        (9 
+            'delete res8' 0.038874 0.0 0.03758 0.0 0.0 0.0 0.0) 
+        (10 
+            'delete res9' 0.038268 0.01 0.036956 0.0 0.0 0.0 0.0) 
+        (11 
+            'delete res10' 0.037726 0.0 0.036417 0.0 0.0 0.0 0.0) 
+        (12 
+            'let res1 = rtreefilter(m7, m7r2, bbox(mq1), 0.0, 10000.0) cdist_range [mq1, 0.0, 10000.0, UTrip] consume' 22.403199 2.18 0.307102 0.0 0.0 0.0 0.0) 
+        (13 
+            'let res2 = rtreefilter(m7, m7r2, bbox(mq2), 0.0, 10000.0) cdist_range [mq2, 0.0, 10000.0, UTrip] consume' 17.400897 2.64 0.333133 0.0 0.0 0.0 0.0) 
+        (14 
+            'let res3 = rtreefilter(m7, m7r2, bbox(mq3), 0.0, 10000.0) cdist_range [mq3, 0.0, 10000.0, UTrip] consume' 40.0743 4.41 0.388729 0.0 0.0 0.0 0.0) 
+        (15 
+            'let res4 = rtreefilter(m7, m7r2, bbox(mq4), 0.0, 10000.0) cdist_range [mq4, 0.0, 10000.0, UTrip] consume' 7.869927 2.23 0.27478 0.0 0.0 0.0 0.0) 
+        (16 
+            'let res5 = rtreefilter(m7, m7r2, bbox(mq5), 0.0, 10000.0) cdist_range [mq5, 0.0, 10000.0, UTrip] consume' 4.548217 1.29 0.291466 0.0 0.0 0.0 0.0) 
+        (17 
+            'let res6 = rtreefilter(m7, m7r2, bbox(mq6), 0.0, 10000.0) cdist_range [mq6, 0.0, 10000.0, UTrip] consume' 10.44706 2.23 0.353603 0.0 0.0 0.0 0.0) 
+        (18 
+            'let res7 = rtreefilter(m7, m7r2, bbox(mq7), 0.0, 10000.0) cdist_range [mq7, 0.0, 10000.0, UTrip] consume' 6.452211 2.14 0.317713 0.0 0.0 0.0 0.0) 
+        (19 
+            'let res8 = rtreefilter(m7, m7r2, bbox(mq8), 0.0, 10000.0) cdist_range [mq8, 0.0, 10000.0, UTrip] consume' 13.597922 2.53 0.294195 0.0 0.0 0.0 0.0) 
+        (20 
+            'let res9 = rtreefilter(m7, m7r2, bbox(mq9), 0.0, 10000.0) cdist_range [mq9, 0.0, 10000.0, UTrip] consume' 8.67318 2.13 0.3448 0.0 0.0 0.0 0.0) 
+        (21 
+            'let res10 = rtreefilter(m7, m7r2, bbox(mq10), 0.0, 10000.0) cdist_range [mq10, 0.0, 10000.0, UTrip] consume' 7.485562 2.21 0.33336 0.0 0.0 0.0 0.0)))
