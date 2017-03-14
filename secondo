@@ -1,0 +1,31 @@
+#/bin/bash
+
+if [ $# -eq 0 ]
+then
+    cd /home/nuaa/secondo/bin
+    SecondoTTYBDB
+    
+elif [ $# -eq 1 ]
+then
+    if [ $1 = "make" ]
+    then
+        cd /home/nuaa/secondo
+        make TTY
+    elif [ $1 = "makeall" ]
+    then
+        cd /home/nuaa/secondo
+        make
+    elif [ $1 = "monitor" ]
+    then
+        cd /home/nuaa/secondo/bin
+        SecondoMonitor -s
+    elif [ $1 = "gui" ]
+    then
+        cd /home/nuaa/secondo/Javagui
+        sgui
+    else
+        echo 'error argument: '$1
+    fi
+else
+    echo 'error argument: '$0
+fi

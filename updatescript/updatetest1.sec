@@ -1,0 +1,104 @@
+open database geo;
+
+delete rel;
+let rel = geotrip9 feed projectextendstream[Id; UTrip:units(.Trip)] extend[MBR:bbox(.UTrip)] head [100000] consume;
+
+delete rtree;
+let rtree = rel feed addid gridbulkloadrtree[MBR,TID];
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# k1
+query k1 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR];
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# k1
+query k1 feed streamgridblupdatertree[rel1, rtree1, MBR]; 
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# k10
+query k10 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]; 
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# k10
+query k10 feed streamgridblupdatertree[rel1, rtree1, MBR]; 
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# k100
+query k100 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]; 
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# k100
+query k100 feed streamgridblupdatertree[rel1, rtree1, MBR];
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# m1
+query m1 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]; 
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# m1
+query m1 feed streamgridblupdatertree[rel1, rtree1, MBR]; 
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# m10
+query m10 feed sortby [MBR asc] streamblupdatertree[rel1, rtree1, MBR]; 
+
+delete rel1;
+let rel1 = rel;
+
+delete rtree1;
+let rtree1 = rtree;
+
+# m10
+query m10 feed streamgridblupdatertree[rel1, rtree1, MBR]; 
+
+
+save SEC2COMMANDS to updatetest11;
+
+save SEC2FILEINFO to updatetest12;
+
+save SEC2CACHEINFO to updatetest13;
