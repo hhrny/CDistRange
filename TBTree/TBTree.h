@@ -1176,7 +1176,7 @@ namespace tbtree{
             TBTree(const SmiFileId id, SmiRecordId hid): file(true), headerId(hid){
                 file.Open(id);
                 readHeader();
-                
+
                 bulkloading = false;
             }
 
@@ -1614,7 +1614,7 @@ namespace tbtree{
 
 
         private:
-            
+
             // tbtree bulk load
             SmiRecordId              sid;
             map<int, SmiRecordId>            sidmap;
@@ -1766,7 +1766,7 @@ namespace tbtree{
                     return *in1 == *in2;
                 }
             }
-            
+
             SmiRecordId appendLeafNode(const BasicNode<3>& n){
                 noNodes++;
                 noLeafNodes++;
