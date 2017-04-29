@@ -1,40 +1,321 @@
 CDistRange
-├── CDistRange
-│   ├── CDistRangeAlgebra.cpp      // 主要实现代码
+├── CDistRange                      // CDistRange查询的主要代码
+│   ├── CDistRange
+│   ├── CDistRangeAlgebra.cpp
+│   ├── CDistRangeAlgebra.dep
 │   ├── CDistRangeAlgebra.h
-│   ├── CDistRangeAlgebra.h.gch
 │   ├── CDistRangeAlgebra.spec
 │   ├── CDistRange.examples
 │   └── makefile
+├── include
+│   └── SecondoSMI.h      //具体改动见下面
+├── Load                 //从文本中导入数据的操作
+│   ├── LoadAlgebra.cpp
+│   ├── LoadAlgebra.h
+│   ├── LoadAlgebra.spec
+│   ├── Load.examples
+│   └── makefile
+├── README
+├── Rectangle
+│   └── RectangleAlgebra.h     // add define and implement of function MaxDist and MinDist in class Rectangle
 ├── RTree
-│   ├── CostFunctions.txt
-│   ├── makefile
-│   ├── ProgressCurvesWindowIntersectsSGettuples.xls
-│   ├── Progress Curves.xls
 │   ├── RTreeAlgebra.cpp
-│   ├── RTreeAlgebra.h        //添加一个R_Tree::GetEntry(int index)函数
+│   ├── RTreeAlgebra.h         //add friend class RTreeLevel defination in class RTree;
+│   ├── RTreeAlgebra.h.2     // back up file
 │   ├── RTreeAlgebra.spec
 │   └── RTree.examples
-├── script                   //演示脚本
-│   └── cdistrange
-├── Rectangle                   //修改后的Rectangle.h文件
-│   └── RectangleAlgebra.h       //添加了Rectangle::MaxDist()函数和Rectangle::MinDist()函数
-├── SETI                     // 修改后的SETI，可编译运行
+├── script
+│   ├── berlintest
+│   ├── cdistrange_scr     // query script of cdist_range and rtreefilter, tbtreefilter and setifilter
+│   └── seti_scr
+├── SETI           // the SETI code
 │   ├── makefile
 │   ├── SETIAlgebra.cpp
-│   ├── SETIAlgebra.h        //添加函数FindCells(SETI *seti, double dist1, double dist2, int condition, queue<SETICell *> &cellsqueue)
-│   │                        //查找所有可能的SETI Cells
+│   ├── SETIAlgebra.h
 │   ├── SETIAlgebra.spec
 │   ├── SETI.examples
 │   ├── UploadUnit.cpp
 │   └── UploadUnit.h
-└── Temporal                 //修改过的Temporal Algebra， 在class UReal中添加PeriodsAtValA(double d, periods p)、
-    ├── CellGrid.h
+├── Spatial                         
+│   ├── SpatialAlgebra.cpp    // 增加函数void WGSGK::setUseWGS(bool b)的实现
+│   └── SpatialAlgebra.h     // add function define "void setUseWGS(bool b);" in class WGSGK, 用于导入数据时的坐标转换
+├── StorageManager
+│   ├── bdbBtreeFile.cpp
+│   ├── bdbCachedFile.cpp
+│   ├── bdbEnvironment.cpp
+│   ├── bdbFile.cpp
+│   ├── bdbHashFile.cpp
+│   ├── bdbKeyedFile.cpp
+│   ├── bdbRecord.cpp
+│   ├── bdbRecordFile.cpp
+│   ├── bdbUpdateFile.cpp
+│   ├── makefile
+│   ├── SmiBDB.h
+│   ├── smiEnvironment.cpp
+│   └── smiKey.cpp
+├── TBTree
+│   └── TBTree.h      //具体修改如后面所示
+├── Temporal
+│   ├── TemporalAlgebra.cpp   // add implement of function "int PeriodsAtValInterval(const double& value1, const double& value2, Periods& times)" , "int PeriodsAtValB(const double& value, Periods& times)" and "int PeriodsAtValA(const double& value, Periods& times)".
+│   └── TemporalAlgebra.h  // add defination of function "int PeriodsAtValInterval(const double& value1, const double& value2, Periods& times)" , "int PeriodsAtValB(const double& value, Periods& times)" and "int PeriodsAtValA(const double& value, Periods& times)".
+└── TransportationMode
+    ├── BusNetwork.cpp
+    ├── BusNetwork.h
+    ├── GeneralType.cpp
+    ├── GeneralType.h
+    ├── Indoor2.h
+    ├── Indoor.cpp
+    ├── Indoor.h
     ├── makefile
-    ├── RefinementStream.h
-    ├── TemporalAlgebra.cpp  //PeriodsAtValB(double d, periods p) 和 PeriodsAtValInterval(double d1, double d2, periods p)等函数。
-    ├── TemporalAlgebra.h    //PeriodsAtValA(double d, periods p)函数计算UReal中值大于d的时间区间，
-    │                        //PeriodsAtValB(double d, periods p)函数计算UReal中值小于d的时间区间，
-    │                        //PeriodsAtValInterval(double d1, double d2, periods p)函数计算UReal中值在[d1,d2]的区间。
-    ├── TemporalAlgebra.spec
-    └── Temporal.examples
+    ├── Partition.cpp
+    ├── Partition.h
+    ├── PaveGraph.cpp
+    ├── PaveGraph.h
+    ├── QueryTM.cpp
+    ├── QueryTM.h
+    ├── RoadNetwork.cpp
+    ├── RoadNetwork.h
+    ├── TMRTree.h
+    ├── TransportationMode.cpp
+    ├── TransportationMode.examples
+    ├── TransportationMode.h
+    ├── TransportationMode.spec
+    ├── Triangulate.cpp
+    └── Triangulate.h
+
+
+//***************************************
+//  SecondoSMI.h文件改动
+//***************************************
+343   //第343行修改如下
+{ Unknown, RecNo, Integer, Float, String, Composite }; -> { Unknown, RecNo, Integer, Longint, Float, String, Composite };  
+
+364,365 //364至365行删除
+SmiKey( const SmiRecordId key );
+SmiKey( const long key );
+
+366,369  //增加一下内容
+SmiKey( const long key );
+SmiKey( const uint32_t key);
+SmiKey( const uint64_t key);
+SmiKey( const int64_t key);
+
+387,391 //修改一下内容
+bool GetKey( SmiRecordId& key );
+bool GetKey( long& key );
+bool GetKey( double& key );
+bool GetKey( string& key );
+bool GetKey( IndexableAttribute* key );
+->
+bool GetKey( uint32_t& key ) const;
+bool GetKey( long& key ) const;
+bool GetKey( int64_t& key ) const;
+bool GetKey( uint64_t& key ) const;
+bool GetKey( double& key ) const;
+bool GetKey( string& key ) const;
+bool GetKey( IndexableAttribute* key ) const;
+
+402 //修改一下内容
+static void Map( const long   inData, void* outData );
+->
+static void Map( const long inData, void* outData );
+static void Map( const uint32_t inData, void* outData );
+static void Map( const int64_t inData, void* outData );
+static void Map( const uint64_t inData, void* outData );
+
+增加函数
+static KeyDataType getKeyType(SmiRecordId dummy)
+{
+    return SmiKey::RecNo;
+}
+425,426 //修改一下内容
+void  SetKey( const SmiRecordId key );
+void  SetKey( const long key );
+->
+void  SetKey( const long key);
+void  SetKey( const uint32_t key);
+void  SetKey( const int64_t key);
+void  SetKey( const uint64_t key);
+
+442 //增加定义
+uint64_t    longintKey;
+
+//***************************************
+//  TBTree.h文件改动
+//***************************************
+1166a1167,1168    //第1166行增加以下内容
+> 
+>                 bulkloading = false;
+1176a1179,1180
+> 
+>                 bulkloading = false;
+1474a1479,1614
+>             /*
+>              *  GetLastLeafNodeofTraj
+>              *  get the last leaf node of trajectory id
+>              *
+>              */
+>             SmiRecordId getLastLeafNodeofTrjId(int trjid){
+>                 stack<SmiRecordId> nodes;
+>                 SmiRecordId        sid;
+>                 BasicNode<3>       *node = NULL;
+>                 nodes.push(getRootId());
+>                 while(! nodes.empty()){
+>                     // nodes is no empty
+>                     sid = nodes.top();
+>                     nodes.pop();
+>                     if(node != NULL){
+>                         delete node;
+>                     }
+>                     node = getNode(sid);
+>                     if(node->isLeaf()){
+>                         if(((TBLeafNode<3, TupleId>*)node)->getTrjId() == trjid){
+>                             // find the leaf node which id is trjid
+>                             while(((TBLeafNode<3, TupleId>*)node)->getNext() != 0){
+>                                 // get the last leaf node of the trjid
+>                                 sid = ((TBLeafNode<3, TupleId>*)node)->getNext();
+>                                 if(node != NULL){
+>                                     delete node;
+>                                 }
+>                                 node = getNode(sid);
+>                             }
+>                             if(node != NULL){
+>                                 delete node;
+>                             }
+>                             return sid;
+>                         }
+>                         else{
+>                             // the trjid of leaf node is different from search trjid
+>                             continue;
+>                         }
+>                     }
+>                     else{
+>                         // the node is inner node
+>                     }
+>                 }
+>                 // can not find the node which id is trjid
+>                 if(node != NULL){
+>                     delete node;
+>                 }
+>                 // append a new empty leaf node, and save to tbtree
+>                 node = getEmptyLeaf(trjid);
+>                 sid = appendLeafNode(*node);
+>                 return sid;
+>             }
+> 
+>             // tbtree bulk load
+>             void startBulkLoad(){
+>                 // check the flag of bulkloading
+>                 if(bulkloading){
+>                     cout<<"Warning: tbtree is bulk loading!"<<endl;
+>                     return;
+>                 }
+>                 bulkloading = true;
+>                 sidmap.clear();
+>                 nodemap.clear();
+>                 sid = 0;
+>                 basicnode = NULL;
+>             }
+>             void endBulkLoad(){
+>                 if(! bulkloading){
+>                     cout<<"Warning: tbtree is no bulk loading now!"<<endl;
+>                     return;
+>                 }
+>                 for(it = nodemap.begin(); it != nodemap.end(); it++){
+>                     updateNode(sidmap[it->first], *(it->second));
+>                     insertLeaf(sidmap[it->first], it->second->getBox());
+>                 }
+>                 nodemap.clear();
+>                 sidmap.clear();
+>             }
+>             void bulkLoadInsert(const UPoint &upoint, int trjid, TupleId tid){
+>                 // bulk load tbtree
+>                 it = nodemap.find(trjid);
+>                 if(it == nodemap.end()){
+>                     // node map has not id
+>                     // find the node in tbtree
+>                     sid = getLastLeafNodeofTrjId(trjid);
+>                     basicnode = getNode(sid);
+>                     nodemap[trjid] = basicnode;
+>                     sidmap[trjid] = sid;
+>                 }
+>                 if(((tbtree::Node<3, TBLeafInfo> *)(nodemap[trjid]))->isFull()){
+>                     // the leaf node is full
+>                     // add a new empty node
+>                     basicnode = getEmptyLeaf(trjid);
+>                     sid = appendLeafNode(*basicnode);
+>                     // set the sid of new leaf node as processor's next, and update the processor
+>                     ((TBLeafNode<3, TBLeafInfo>*)(nodemap[trjid]))->setNext(sid);
+>                     updateNode(sidmap[trjid], *(nodemap[trjid]));
+>                     insertLeaf(sidmap[trjid], nodemap[trjid]->getBox());
+>                     // update the node map and sid map
+>                     nodemap[trjid] = basicnode;
+>                     sidmap[trjid] = sid;
+>                 }
+>                 // insert the leaf entry to leaf node
+>                 TBLeafInfo li(tid);
+>                 ((TBLeafNode<3, TBLeafInfo> *)(nodemap[trjid]))->insert(Entry<3, TBLeafInfo>(upoint.BoundingBox(), li));
+>                 noEntries ++;
+>             }
+>             void bulkLoadInsert(const Rectangle<3> &upointbbox, int trjid, TupleId tid){
+>                 // bulk load tbtree
+>                 it = nodemap.find(trjid);
+>                 if(it == nodemap.end()){
+>                     // node map has not id
+>                     // find the node in tbtree
+>                     sid = getLastLeafNodeofTrjId(trjid);
+>                     basicnode = getNode(sid);
+>                     nodemap[trjid] = basicnode;
+>                     sidmap[trjid] = sid;
+>                 }
+>                 if(((tbtree::Node<3, TBLeafInfo> *)(nodemap[trjid]))->isFull()){
+>                     // the leaf node is full
+>                     // add a new empty node
+>                     basicnode = getEmptyLeaf(trjid);
+>                     sid = appendLeafNode(*basicnode);
+>                     // set the sid of new leaf node as processor's next, and update the processor
+>                     ((TBLeafNode<3, TBLeafInfo>*)(nodemap[trjid]))->setNext(sid);
+>                     updateNode(sidmap[trjid], *(nodemap[trjid]));
+>                     // update the node map and sid map
+>                     nodemap[trjid] = basicnode;
+>                     sidmap[trjid] = sid;
+>                 }
+>                 // insert the leaf entry to leaf node
+>                 TBLeafInfo li(tid);
+>                 ((TBLeafNode<3, TBLeafInfo> *)(nodemap[trjid]))->insert(Entry<3, TBLeafInfo>(upointbbox, li));
+>                 noEntries ++;
+>             }
+> 
+1476a1617,1626
+> 
+>             // tbtree bulk load
+>             SmiRecordId              sid;
+>             map<int, SmiRecordId>            sidmap;
+>             tbtree::BasicNode<3>             *basicnode, *tmpnode;
+>             map<int, tbtree::BasicNode<3> *>           nodemap;
+>             map<int, tbtree::BasicNode<3> *>::iterator it;
+>             bool bulkloading;
+>             //
+> 
+1619a1770,1790
+>             SmiRecordId appendLeafNode(const BasicNode<3>& n){
+>                 noNodes++;
+>                 noLeafNodes++;
+>                 unsigned int size = recordLength;
+>                 char buffer[size];
+>                 memset(buffer,0,size);
+>                 char leaf = n.isLeaf()?1:0;
+>                 unsigned int offset = 0;
+>                 memcpy(buffer , &leaf, sizeof(char));
+>                 offset += sizeof(char);
+>                 n.writeTo(buffer, offset);
+>                 SmiRecordId id = 0;
+>                 SmiRecord record;
+>                 file.AppendRecord(id, record);
+>                 SmiSize os = 0; // offset
+>                 SmiSize rss = record.Write(buffer, size, os);
+>                 assert(rss == size);
+>                 record.Finish();
+>                 return id;
+>             }
+
